@@ -1,0 +1,45 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<h2>Attendance</h2>
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>Name</th>
+
+<th>Event</th>
+
+<th>College</th>
+
+<th>Status</th>
+
+</tr>
+
+{% for reg in registrations %}
+
+<tr>
+
+<td>{{ reg.full_name }}</td>
+
+<td>{{ reg.event.title }}</td>
+
+<td>{{ reg.college }}</td>
+
+<td>
+
+<input type="checkbox">
+
+Present
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

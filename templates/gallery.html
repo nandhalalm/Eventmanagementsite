@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Gallery</h2>
+
+<hr>
+
+<div class="row">
+
+{% for image in gallery %}
+
+<div class="col-md-3">
+
+<div class="card mb-3">
+
+<img src="{{ image.image.url }}" class="card-img-top" height="220">
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

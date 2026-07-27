@@ -1,0 +1,94 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h2>EVENT TICKET</h2>
+
+</div>
+
+<div class="card-body">
+
+<h3>{{ registration.event.title }}</h3>
+
+<hr>
+
+<p><b>Name :</b> {{ registration.full_name }}</p>
+
+<p><b>College :</b> {{ registration.college }}</p>
+
+<p><b>Department :</b> {{ registration.department }}</p>
+
+<p><b>Semester :</b> {{ registration.semester }}</p>
+
+<p><b>Email :</b> {{ registration.email }}</p>
+
+<p><b>Phone :</b> {{ registration.phone }}</p>
+
+<hr>
+
+<h5>Event Details</h5>
+
+<p><b>Date :</b> {{ registration.event.event_date }}</p>
+
+<p><b>Time :</b> {{ registration.event.event_time }}</p>
+
+<p><b>Venue :</b> {{ registration.event.venue }}</p>
+
+<hr>
+
+{% if token %}
+
+<p>
+
+<b>Token Number :</b>
+
+{{ token.token_number }}
+
+</p>
+
+<p>
+
+<b>Seat Number :</b>
+
+{{ token.seat_number }}
+
+</p>
+
+{% endif %}
+
+{% if payment %}
+
+<p>
+
+<b>Payment Status :</b>
+
+<span class="badge bg-success">
+
+{{ payment.payment_status }}
+
+</span>
+
+</p>
+
+{% endif %}
+
+<button onclick="window.print()"
+class="btn btn-primary">
+
+Download Ticket
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

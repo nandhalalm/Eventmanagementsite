@@ -1,0 +1,35 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header bg-dark text-white">
+
+<h3>My Profile</h3>
+
+</div>
+
+<div class="card-body">
+
+<p><b>Username :</b> {{ request.user.username }}</p>
+
+<p><b>First Name :</b> {{ request.user.first_name }}</p>
+
+<p><b>Last Name :</b> {{ request.user.last_name }}</p>
+
+<p><b>Email :</b> {{ request.user.email }}</p>
+
+<a href="#" class="btn btn-primary">
+
+Edit Profile
+
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

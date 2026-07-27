@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+Home
+
+{% endblock %}
+
+{% block content %}
+
+<div class="p-5 mb-4 bg-primary text-white rounded">
+
+<h1>College Event Management System</h1>
+
+<p>
+
+Register for Technical, Cultural, Sports and Workshop Events.
+
+</p>
+
+<a href="{% url 'event_list' %}" class="btn btn-warning">
+
+Explore Events
+
+</a>
+
+</div>
+
+
+<div class="row">
+
+{% for event in events %}
+
+<div class="col-md-4">
+
+<div class="card shadow mb-4">
+
+<img src="{{ event.image.url }}" height="220">
+
+<div class="card-body">
+
+<h4>{{ event.title }}</h4>
+
+<p>{{ event.venue }}</p>
+
+<p>{{ event.event_date }}</p>
+
+<a href="{% url 'event_detail' event.id %}"
+
+class="btn btn-primary">
+
+View Details
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

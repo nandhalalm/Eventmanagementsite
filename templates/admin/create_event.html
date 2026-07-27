@@ -1,0 +1,144 @@
+{% extends 'admin/base.html' %} 
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <!-- Premium Card Container -->
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                
+                <!-- Elegant Card Header -->
+                <div class="card-header bg-gradient bg-dark text-white p-4 border-0 position-relative">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-success bg-opacity-25 rounded-3 p-3 me-3 text-success">
+                            <i class="bi bi-calendar-plus fs-3"></i>
+                        </div>
+                        <div>
+                            <h2 class="h4 fw-bold mb-1 m-0 text-white">Create New Event</h2>
+                            <p class="text-muted small mb-0">Fill in the details below to publish your event</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Body -->
+                <div class="card-body p-4 p-sm-5 bg-light bg-opacity-50">
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation">
+                        {% csrf_token %}
+
+                        <!-- Section: Basic Info -->
+                        <div class="mb-4">
+                            <label class="form-label text-uppercase fs-7 text-muted fw-semibold tracking-wider mb-3">Event Overview</label>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control border-0 shadow-sm rounded-3" id="title" name="title" placeholder="e.g. Annual Tech Conference 2026">
+                                <label for="title" class="text-muted"><i class="bi bi-type-h1 me-2"></i>Event Title</label>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control border-0 shadow-sm rounded-3" id="category" name="category" placeholder="e.g. Technology">
+                                        <label for="category" class="text-muted"><i class="bi bi-tags me-2"></i>Category</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control border-0 shadow-sm rounded-3" id="venue" name="venue" placeholder="e.g. Grand Ballroom, NY">
+                                        <label for="venue" class="text-muted"><i class="bi bi-geo-alt me-2"></i>Venue / Location</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Date & Time -->
+                        <div class="mb-4">
+                            <label class="form-label text-uppercase fs-7 text-muted fw-semibold tracking-wider mb-3">Schedule & Deadlines</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control border-0 shadow-sm rounded-3" id="event_date" name="event_date" placeholder="Event Date">
+                                        <label for="event_date" class="text-muted"><i class="bi bi-calendar-event me-2"></i>Event Date</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="time" class="form-control border-0 shadow-sm rounded-3" id="event_time" name="event_time" placeholder="Event Time">
+                                        <label for="event_time" class="text-muted"><i class="bi bi-clock me-2"></i>Event Time</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control border-0 shadow-sm rounded-3" id="last_date" name="last_date" placeholder="Last Registration Date">
+                                        <label for="last_date" class="text-muted"><i class="bi bi-calendar-x me-2"></i>Last Date to Register</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Extended Details -->
+                        <div class="mb-4">
+                            <label class="form-label text-uppercase fs-7 text-muted fw-semibold tracking-wider mb-3">Additional Details</label>
+                            
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control border-0 shadow-sm rounded-3" id="description" name="description" placeholder="Describe your event details..." style="height: 120px"></textarea>
+                                <label for="description" class="text-muted"><i class="bi bi-file-text me-2"></i>Event Description</label>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-white rounded-3 shadow-sm border border-dashed text-center">
+                                        <label for="image" class="form-label text-muted small mb-2 d-block"><i class="bi bi-image me-1 text-primary"></i>Upload Event Image</label>
+                                        <input class="form-control form-control-sm" type="file" id="image" name="image">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-white rounded-3 shadow-sm border border-dashed text-center">
+                                        <label for="brochure" class="form-label text-muted small mb-2 d-block"><i class="bi bi-file-pdf me-1 text-danger"></i>Upload Event Brochure</label>
+                                        <input class="form-control form-control-sm" type="file" id="brochure" name="brochure">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control border-0 shadow-sm rounded-3" id="total_seats" name="total_seats" placeholder="Total Available Seats">
+                                        <label for="total_seats" class="text-muted"><i class="bi bi-people me-2"></i>Total Capacity (Seats)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="number" step="0.01" class="form-control border-0 shadow-sm rounded-3" id="registration_fee" name="registration_fee" placeholder="Registration Fee">
+                                        <label for="registration_fee" class="text-muted"><i class="bi bi-currency-dollar me-2"></i>Registration Fee ($)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="d-grid mt-4pt-2">
+                            <button type="submit" class="btn btn-success btn-lg py-3 rounded-3 fw-bold shadow border-0 bg-gradient text-uppercase tracking-wider transition-all">
+                                <i class="bi bi-check-circle-fill me-2"></i>Publish Event
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS Elements for spacing tweaks and transitions -->
+<style>
+    .fs-7 { font-size: 0.75rem; }
+    .tracking-wider { letter-spacing: 0.08em; }
+    .border-dashed { border: 2px dashed #e3e6ec !important; }
+    .form-control:focus { box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15) !important; border: 1px solid #198754 !important; }
+    .transition-all { transition: all 0.2s ease-in-out; }
+    .transition-all:hover { transform: translateY(-1px); filter: brightness(1.05); }
+</style>
+
+<!-- Bootstrap Icons Link (Add to base.html if missing) -->
+<link rel="stylesheet" href="https://jsdelivr.net">
+{% endblock %}

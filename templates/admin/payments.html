@@ -1,0 +1,55 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<h2>Payment Details</h2>
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>ID</th>
+
+<th>Student</th>
+
+<th>Event</th>
+
+<th>Amount</th>
+
+<th>Payment ID</th>
+
+<th>Status</th>
+
+</tr>
+
+{% for payment in payments %}
+
+<tr>
+
+<td>{{ payment.id }}</td>
+
+<td>{{ payment.registration.full_name }}</td>
+
+<td>{{ payment.registration.event.title }}</td>
+
+<td>₹{{ payment.amount }}</td>
+
+<td>{{ payment.stripe_payment_id }}</td>
+
+<td>
+
+<span class="badge bg-success">
+
+{{ payment.payment_status }}
+
+</span>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<h2>Student Registrations</h2>
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Event</th>
+<th>College</th>
+<th>Department</th>
+<th>Phone</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for reg in registrations %}
+
+<tr>
+
+<td>{{ reg.id }}</td>
+
+<td>{{ reg.full_name }}</td>
+
+<td>{{ reg.event.title }}</td>
+
+<td>{{ reg.college }}</td>
+
+<td>{{ reg.department }}</td>
+
+<td>{{ reg.phone }}</td>
+
+<td>
+
+{% if reg.payment_status == "Paid" %}
+
+<span class="badge bg-success">
+
+Paid
+
+</span>
+
+{% else %}
+
+<span class="badge bg-warning">
+
+Pending
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endblock %}

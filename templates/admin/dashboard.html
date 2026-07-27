@@ -1,0 +1,109 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+<h2>Admin Dashboard</h2>
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-3">
+
+<div class="card bg-primary text-white">
+
+<div class="card-body">
+
+<h3>{{ total_events }}</h3>
+
+<p>Total Events</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card bg-success text-white">
+
+<div class="card-body">
+
+<h3>{{ total_students }}</h3>
+
+<p>Students</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card bg-warning">
+
+<div class="card-body">
+
+<h3>{{ total_registrations }}</h3>
+
+<p>Registrations</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card bg-danger text-white">
+
+<div class="card-body">
+
+<h3>{{ total_payments }}</h3>
+
+<p>Payments</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<br>
+
+<h4>Recent Registrations</h4>
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>Name</th>
+
+<th>Event</th>
+
+<th>Status</th>
+
+</tr>
+
+{% for reg in recent_registrations %}
+
+<tr>
+
+<td>{{ reg.full_name }}</td>
+
+<td>{{ reg.event.title }}</td>
+
+<td>{{ reg.payment_status }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

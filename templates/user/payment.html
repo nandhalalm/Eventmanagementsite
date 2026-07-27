@@ -1,0 +1,45 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="card shadow">
+
+<div class="card-body text-center">
+
+<h2>
+
+{{ registration.event.title }}
+
+</h2>
+
+<hr>
+
+<h4>
+
+Registration Fee
+
+</h4>
+
+<h1>
+
+₹{{ registration.event.registration_fee }}
+
+</h1>
+
+<a href="{% url 'payment' registration.id %}"
+
+class="btn btn-success btn-lg">
+
+Pay with Stripe
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

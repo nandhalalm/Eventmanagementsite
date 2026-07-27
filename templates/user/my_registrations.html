@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Registrations</title>
+</head>
+<body>
+
+<h2>My Registrations</h2>
+Logged in user: {{ request.user }}
+
+{% for reg in registrations %}
+
+<p>
+ID: {{ reg.id }} <br>
+PK: {{ reg.pk }} <br>
+Name: {{ reg.full_name }} <br>
+Status: {{ reg.payment_status }}
+</p>
+
+{% if reg.payment_status == "Pending" %}
+<a href="{% url 'payment' reg.id %}">Pay Now</a>
+{% else %}
+<a href="{% url 'ticket' reg.id %}">View Ticket</a>
+{% endif %}
+
+<hr>
+
+{% empty %}
+<p>No registrations found.</p>
+{% endfor %}
+
+</body>
+</html>
