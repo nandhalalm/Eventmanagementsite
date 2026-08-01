@@ -1,59 +1,325 @@
 {% extends 'base.html' %}
 
+{% block title %}Login{% endblock %}
+
 {% block content %}
 
-<div class="row justify-content-center">
+<style>
+  :root{
+    --ink:#161320;
+    --indigo:#2B2470;
+    --indigo-deep:#1A1540;
+    --coral:#FF5A45;
+    --gold:#FFC24B;
+    --paper:#FBFAF7;
+    --line:#e7e4dd;
+  }
 
-<div class="col-md-5">
+  .login-wrap{
+    display:grid;
+    grid-template-columns:1fr;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(22,19,32,0.04), 0 24px 60px rgba(22,19,32,0.1);
+    margin:2rem auto 3rem;
+    max-width:960px;
+    opacity:0;
+    transform:translateY(18px);
+    animation:riseIn .6s ease forwards;
+  }
+  @media (min-width:800px){
+    .login-wrap{ grid-template-columns:1fr 1fr; }
+  }
+  @keyframes riseIn{
+    to{ opacity:1; transform:translateY(0); }
+  }
 
-<div class="card shadow">
+  /* ---------- Brand panel ---------- */
+  .login-brand{
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 85% 12%, rgba(255,194,75,0.28), transparent 45%),
+      radial-gradient(circle at 8% 90%, rgba(255,90,69,0.3), transparent 42%),
+      linear-gradient(150deg, var(--indigo-deep), var(--indigo));
+    color:#fff;
+    padding:3rem 2.4rem;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-height:340px;
+  }
+  .login-brand .float-ring{
+    position:absolute;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.15);
+    animation:drift 9s ease-in-out infinite;
+  }
+  .login-brand .float-ring.r1{ width:140px; height:140px; top:-40px; right:-40px; animation-delay:0s; }
+  .login-brand .float-ring.r2{ width:90px; height:90px; bottom:-20px; left:-20px; animation-delay:1.5s; }
+  @keyframes drift{
+    0%, 100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-12px) rotate(8deg); }
+  }
+  .login-brand .eyebrow{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.75rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    margin-bottom:1rem;
+    opacity:0;
+    animation:fadeUp .5s ease .15s forwards;
+  }
+  .login-brand .eyebrow::before{
+    content:"";
+    width:8px;height:8px;border-radius:50%;
+    background:var(--coral);
+  }
+  .login-brand h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:1.9rem;
+    line-height:1.15;
+    margin-bottom:.9rem;
+    opacity:0;
+    animation:fadeUp .5s ease .28s forwards;
+  }
+  .login-brand p{
+    font-family:'Inter', sans-serif;
+    color:rgba(255,255,255,0.78);
+    font-size:.96rem;
+    max-width:32ch;
+    opacity:0;
+    animation:fadeUp .5s ease .4s forwards;
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
 
-<div class="card-header bg-primary text-white">
+  /* ---------- Form panel ---------- */
+  .login-form-panel{
+    background:#fff;
+    padding:3rem 2.6rem;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .login-form-panel .form-eyebrow{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.78rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--coral);
+    margin-bottom:.5rem;
+    display:block;
+  }
+  .login-form-panel h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    font-size:1.5rem;
+    margin-bottom:1.8rem;
+  }
 
-<h3>Login</h3>
+  .field-group{
+    position:relative;
+    margin-bottom:1.6rem;
+    opacity:0;
+    transform:translateY(10px);
+    animation:fadeUp .5s ease forwards;
+  }
+  .field-group:nth-of-type(1){ animation-delay:.2s; }
+  .field-group:nth-of-type(2){ animation-delay:.3s; }
+
+  .field-group label{
+    position:absolute;
+    left:.9rem;
+    top:.85rem;
+    font-family:'Inter', sans-serif;
+    font-size:.95rem;
+    color:#8b8794;
+    pointer-events:none;
+    transition:transform .2s ease, font-size .2s ease, color .2s ease, top .2s ease;
+    background:transparent;
+    padding:0 .25rem;
+  }
+  .field-group input{
+    width:100%;
+    font-family:'Inter', sans-serif;
+    font-size:.95rem;
+    color:var(--ink);
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:1.15rem .9rem .5rem;
+    transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .field-group input::placeholder{ color:transparent; }
+  .field-group input:focus,
+  .field-group input:not(:placeholder-shown){
+    outline:none;
+    border-color:var(--coral);
+    box-shadow:0 0 0 3px rgba(255,90,69,0.12);
+    background:#fff;
+  }
+  .field-group input:focus + label,
+  .field-group input:not(:placeholder-shown) + label{
+    top:-.55rem;
+    left:.7rem;
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.03em;
+    color:var(--coral);
+    background:#fff;
+  }
+
+  /* typing pulse — a brief ripple on the border each keystroke */
+  .field-group.pulse input{
+    animation:keyPulse .3s ease;
+  }
+  @keyframes keyPulse{
+    0%{ box-shadow:0 0 0 0 rgba(255,90,69,0.35); }
+    100%{ box-shadow:0 0 0 6px rgba(255,90,69,0); }
+  }
+
+  #id_password{
+    padding-right:2.7rem;
+  }
+
+  .password-toggle{
+    position:absolute;
+    right:.7rem;
+    top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    color:#8b8794;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:.3rem;
+    cursor:pointer;
+    transition:color .18s ease;
+  }
+  .password-toggle:hover{ color:var(--coral); }
+  .password-toggle svg{
+    transition:opacity .18s ease, transform .18s ease;
+  }
+  .password-toggle .icon-off{ display:none; }
+  .password-toggle.showing .icon-on{ display:none; }
+  .password-toggle.showing .icon-off{ display:block; }
+
+  .btn-login{
+    width:100%;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:.97rem;
+    color:#fff;
+    background:var(--coral);
+    border:none;
+    padding:.85rem 1.5rem;
+    border-radius:999px;
+    box-shadow:0 8px 20px rgba(255,90,69,0.32);
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    opacity:0;
+    transform:translateY(10px);
+    animation:fadeUp .5s ease .42s forwards;
+  }
+  .btn-login:hover{
+    background:#ff6f5c;
+    color:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 12px 26px rgba(255,90,69,0.42);
+  }
+  .btn-login:active{
+    transform:translateY(0);
+  }
+
+  .login-footer-link{
+    text-align:center;
+    margin-top:1.4rem;
+    font-family:'Inter', sans-serif;
+    font-size:.88rem;
+    color:#5c586a;
+    opacity:0;
+    animation:fadeUp .5s ease .5s forwards;
+  }
+  .login-footer-link a{
+    color:var(--coral);
+    font-weight:600;
+    text-decoration:none;
+  }
+  .login-footer-link a:hover{
+    text-decoration:underline;
+  }
+</style>
+
+<div class="login-wrap">
+
+  <div class="login-brand">
+    <span class="float-ring r1"></span>
+    <span class="float-ring r2"></span>
+    <span class="eyebrow">Welcome back</span>
+    <h2>Sign in to keep track of your events</h2>
+    <p>Access your registrations, tickets and upcoming events from your personal dashboard.</p>
+  </div>
+
+  <div class="login-form-panel">
+    <span class="form-eyebrow">Account</span>
+    <h3>Login</h3>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="field-group">
+        <input type="text" id="id_username" name="username" placeholder=" " autocomplete="username" required>
+        <label for="id_username">Username</label>
+      </div>
+
+      <div class="field-group">
+        <input type="password" id="id_password" name="password" placeholder=" " autocomplete="current-password" required>
+        <label for="id_password">Password</label>
+        <button type="button" class="password-toggle" id="pwToggle" aria-label="Show password">
+          <svg class="icon-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="icon-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 5c7 0 11 7 11 7a18.6 18.6 0 0 1-2.16 3.19M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>
+        </button>
+      </div>
+
+      <button type="submit" class="btn-login">Login</button>
+    </form>
+
+    <div class="login-footer-link">
+      Don't have an account? <a href="{% url 'register' %}">Register</a>
+    </div>
+  </div>
 
 </div>
 
-<div class="card-body">
+<script>
+  // Typing pulse: brief ripple on the field border each keystroke
+  document.querySelectorAll('.field-group input').forEach(function(input){
+    input.addEventListener('input', function(){
+      const group = input.closest('.field-group');
+      group.classList.remove('pulse');
+      void group.offsetWidth; // restart animation
+      group.classList.add('pulse');
+    });
+  });
 
-<form method="POST">
-
-{% csrf_token %}
-
-<input class="form-control mb-3"
-
-type="text"
-
-name="username"
-
-placeholder="Username"
-
-required>
-
-<input class="form-control mb-3"
-
-type="password"
-
-name="password"
-
-placeholder="Password"
-
-required>
-
-<button class="btn btn-success w-100">
-
-Login
-
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+  // Password show/hide toggle
+  const pwToggle = document.getElementById('pwToggle');
+  const pwInput = document.getElementById('id_password');
+  pwToggle.addEventListener('click', function(){
+    const showing = pwInput.type === 'text';
+    pwInput.type = showing ? 'password' : 'text';
+    pwToggle.classList.toggle('showing', !showing);
+    pwToggle.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+  });
+</script>
 
 {% endblock %}
