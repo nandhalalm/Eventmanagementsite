@@ -1,66 +1,264 @@
 {% extends 'base.html' %}
 
 {% block title %}
-
 Home
-
 {% endblock %}
 
 {% block content %}
 
-<div class="p-5 mb-4 bg-primary text-white rounded">
+<style>
+  :root{
+    --ink:#161320;
+    --indigo:#2B2470;
+    --indigo-deep:#1A1540;
+    --coral:#FF5A45;
+    --gold:#FFC24B;
+    --paper:#FBFAF7;
+    --line:#e7e4dd;
+  }
 
-<h1>College Event Management System</h1>
+  .hero-poster{
+    position:relative;
+    overflow:hidden;
+    padding:4.5rem 2.5rem;
+    margin-bottom:3.5rem;
+    border-radius:22px;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(255,194,75,0.35), transparent 45%),
+      radial-gradient(circle at 10% 90%, rgba(255,90,69,0.35), transparent 40%),
+      linear-gradient(135deg, var(--indigo-deep), var(--indigo));
+    color:#fff;
+    isolation:isolate;
+  }
+  .hero-poster::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 22px);
+    z-index:-1;
+  }
+  .hero-eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.75rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:1rem;
+  }
+  .hero-eyebrow::before{
+    content:"";
+    width:8px;height:8px;border-radius:50%;
+    background:var(--coral);
+    display:inline-block;
+  }
+  .hero-poster h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(2.1rem, 4vw, 3.2rem);
+    line-height:1.05;
+    letter-spacing:-.01em;
+    margin-bottom:1rem;
+    max-width:16ch;
+  }
+  .hero-poster p{
+    font-family:'Inter', sans-serif;
+    font-size:1.05rem;
+    color:rgba(255,255,255,0.82);
+    max-width:44ch;
+    margin-bottom:2rem;
+  }
+  .btn-explore{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    letter-spacing:.02em;
+    background:var(--coral);
+    color:#fff;
+    border:none;
+    padding:.85rem 1.9rem;
+    border-radius:999px;
+    box-shadow:0 8px 22px rgba(255,90,69,0.35);
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn-explore:hover{
+    background:#ff6f5c;
+    color:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(255,90,69,0.45);
+  }
 
-<p>
+  .section-label{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.78rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--indigo);
+    margin-bottom:1.6rem;
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+  }
+  .section-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
 
-Register for Technical, Cultural, Sports and Workshop Events.
+  .ticket-card{
+    position:relative;
+    background:var(--paper);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(22,19,32,0.04), 0 10px 24px rgba(22,19,32,0.06);
+    transition:transform .22s ease, box-shadow .22s ease;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+  }
+  .ticket-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 34px rgba(22,19,32,0.14);
+  }
+  .ticket-img-wrap{
+    position:relative;
+    height:200px;
+    overflow:hidden;
+  }
+  .ticket-img-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform .35s ease;
+  }
+  .ticket-card:hover .ticket-img-wrap img{
+    transform:scale(1.06);
+  }
+  .ticket-perf{
+    position:relative;
+    height:0;
+    border-top:2px dashed var(--line);
+    margin:0 1.4rem;
+  }
+  .ticket-perf::before,
+  .ticket-perf::after{
+    content:"";
+    position:absolute;
+    top:-11px;
+    width:22px;height:22px;
+    background:#fff;
+    border-radius:50%;
+  }
+  .ticket-perf::before{ left:-2.4rem; }
+  .ticket-perf::after{ right:-2.4rem; }
 
-</p>
+  .ticket-body{
+    padding:1.4rem 1.4rem 1.6rem;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+  .ticket-body h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    font-size:1.15rem;
+    margin-bottom:.6rem;
+  }
+  .ticket-meta{
+    font-family:'Inter', sans-serif;
+    font-size:.88rem;
+    color:#5c586a;
+    display:flex;
+    align-items:center;
+    gap:.4rem;
+    margin-bottom:.25rem;
+  }
+  .ticket-meta svg{ flex:none; opacity:.6; }
 
-<a href="{% url 'event_list' %}" class="btn btn-warning">
+  .btn-view{
+    margin-top:1.1rem;
+    align-self:flex-start;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:.88rem;
+    color:var(--indigo);
+    background:transparent;
+    border:1.5px solid var(--indigo);
+    padding:.55rem 1.3rem;
+    border-radius:999px;
+    transition:background .18s ease, color .18s ease;
+  }
+  .btn-view:hover{
+    background:var(--indigo);
+    color:#fff;
+  }
 
-Explore Events
+  .empty-state{
+    text-align:center;
+    padding:4rem 1rem;
+    font-family:'Inter', sans-serif;
+    color:#8b8794;
+  }
+  .empty-state .glyph{
+    font-size:2.2rem;
+    margin-bottom:.75rem;
+  }
 
-</a>
+  @media (prefers-reduced-motion: reduce){
+    .ticket-card, .ticket-card:hover, .ticket-img-wrap img, .btn-explore{
+      transition:none;
+      transform:none;
+    }
+  }
+</style>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<div class="hero-poster">
+  <span class="hero-eyebrow">Now open for registration</span>
+  <h1>College Event Management System</h1>
+  <p>Register for Technical, Cultural, Sports and Workshop events — all in one place, all one click away.</p>
+  <a href="{% url 'event_list' %}" class="btn btn-explore">Explore Events</a>
 </div>
 
+<div class="section-label">Upcoming events</div>
 
-<div class="row">
-
-{% for event in events %}
-
-<div class="col-md-4">
-
-<div class="card shadow mb-4">
-
-<img src="{{ event.image.url }}" height="220">
-
-<div class="card-body">
-
-<h4>{{ event.title }}</h4>
-
-<p>{{ event.venue }}</p>
-
-<p>{{ event.event_date }}</p>
-
-<a href="{% url 'event_detail' event.id %}"
-
-class="btn btn-primary">
-
-View Details
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-{% endfor %}
-
+<div class="row g-4 mb-5">
+  {% for event in events %}
+  <div class="col-md-4">
+    <div class="ticket-card">
+      <div class="ticket-img-wrap">
+        <img src="{{ event.image.url }}" alt="{{ event.title }}">
+      </div>
+      <div class="ticket-perf"></div>
+      <div class="ticket-body">
+        <h4>{{ event.title }}</h4>
+        <div class="ticket-meta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          {{ event.venue }}
+        </div>
+        <div class="ticket-meta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          {{ event.event_date }}
+        </div>
+        <a href="{% url 'event_detail' event.id %}" class="btn btn-view">View Details</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="empty-state">
+      <div class="glyph">🎟️</div>
+      No events are live right now — check back soon.
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
 {% endblock %}

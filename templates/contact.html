@@ -1,23 +1,234 @@
 {% extends 'base.html' %}
 
+{% block title %}Contact{% endblock %}
+
 {% block content %}
 
-<h2>Contact Us</h2>
+<style>
+  :root{
+    --ink:#161320;
+    --indigo:#2B2470;
+    --indigo-deep:#1A1540;
+    --coral:#FF5A45;
+    --gold:#FFC24B;
+    --paper:#FBFAF7;
+    --line:#e7e4dd;
+  }
 
-<hr>
+  .contact-wrap{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:0;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(22,19,32,0.04), 0 20px 50px rgba(22,19,32,0.08);
+    margin:1rem 0 3rem;
+  }
+  @media (min-width:860px){
+    .contact-wrap{ grid-template-columns:0.85fr 1.15fr; }
+  }
 
-<form method="POST">
+  /* ---------- Info panel ---------- */
+  .contact-info{
+    background:
+      radial-gradient(circle at 85% 12%, rgba(255,194,75,0.25), transparent 45%),
+      radial-gradient(circle at 8% 92%, rgba(255,90,69,0.28), transparent 42%),
+      linear-gradient(150deg, var(--indigo-deep), var(--indigo));
+    color:#fff;
+    padding:3rem 2.4rem;
+  }
+  .contact-info .eyebrow{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.75rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    margin-bottom:1rem;
+  }
+  .contact-info .eyebrow::before{
+    content:"";
+    width:8px;height:8px;border-radius:50%;
+    background:var(--coral);
+  }
+  .contact-info h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:1.9rem;
+    line-height:1.15;
+    margin-bottom:.9rem;
+  }
+  .contact-info p.lead{
+    font-family:'Inter', sans-serif;
+    color:rgba(255,255,255,0.8);
+    font-size:.98rem;
+    max-width:36ch;
+    margin-bottom:2.4rem;
+  }
 
-{% csrf_token %}
+  .contact-detail{
+    display:flex;
+    align-items:flex-start;
+    gap:.9rem;
+    margin-bottom:1.6rem;
+  }
+  .contact-detail .icon{
+    flex:none;
+    width:38px; height:38px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1rem;
+  }
+  .contact-detail .label{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.78rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.55);
+    margin-bottom:.15rem;
+  }
+  .contact-detail .value{
+    font-family:'Inter', sans-serif;
+    font-size:.95rem;
+    color:#fff;
+  }
 
-{{ form.as_p }}
+  /* ---------- Form panel ---------- */
+  .contact-form-panel{
+    background:#fff;
+    padding:3rem 2.6rem;
+  }
+  .contact-form-panel .form-eyebrow{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.78rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--coral);
+    margin-bottom:.5rem;
+    display:block;
+  }
+  .contact-form-panel h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    font-size:1.5rem;
+    margin-bottom:1.8rem;
+  }
 
-<button class="btn btn-success">
+  /* Generic styling for Django's {{ form.as_p }} output */
+  .contact-form-panel form p{
+    margin-bottom:1.3rem;
+  }
+  .contact-form-panel form label{
+    display:block;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:.4rem;
+  }
+  .contact-form-panel form input,
+  .contact-form-panel form textarea,
+  .contact-form-panel form select{
+    width:100%;
+    font-family:'Inter', sans-serif;
+    font-size:.95rem;
+    color:var(--ink);
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:.75rem .9rem;
+    transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  .contact-form-panel form textarea{
+    min-height:130px;
+    resize:vertical;
+  }
+  .contact-form-panel form input:focus,
+  .contact-form-panel form textarea:focus,
+  .contact-form-panel form select:focus{
+    outline:none;
+    border-color:var(--coral);
+    box-shadow:0 0 0 3px rgba(255,90,69,0.12);
+    background:#fff;
+  }
+  .contact-form-panel form ul.errorlist{
+    list-style:none;
+    padding:0;
+    margin:.35rem 0 0;
+    font-family:'Inter', sans-serif;
+    font-size:.82rem;
+    color:var(--coral);
+  }
 
-Send Message
+  .btn-send{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:.95rem;
+    color:#fff;
+    background:var(--coral);
+    border:none;
+    padding:.85rem 2.1rem;
+    border-radius:999px;
+    box-shadow:0 8px 20px rgba(255,90,69,0.32);
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn-send:hover{
+    background:#ff6f5c;
+    color:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 12px 26px rgba(255,90,69,0.42);
+  }
+</style>
 
-</button>
+<div class="contact-wrap">
 
-</form>
+  <div class="contact-info">
+    <span class="eyebrow">Get in touch</span>
+    <h2>Contact Us</h2>
+    <p class="lead">Questions about an event, registration, or partnering with us? Send a message and the events team will get back to you.</p>
+
+    <div class="contact-detail">
+      <span class="icon"><i class="bi bi-envelope"></i></span>
+      <div>
+        <div class="label">Email</div>
+        <div class="value">events@college.edu</div>
+      </div>
+    </div>
+
+    <div class="contact-detail">
+      <span class="icon"><i class="bi bi-telephone"></i></span>
+      <div>
+        <div class="label">Phone</div>
+        <div class="value">+91 98765 43210</div>
+      </div>
+    </div>
+
+    <div class="contact-detail">
+      <span class="icon"><i class="bi bi-geo-alt"></i></span>
+      <div>
+        <div class="label">Campus</div>
+        <div class="value">Student Activity Center, Main Block</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-form-panel">
+    <span class="form-eyebrow">Send a message</span>
+    <h3>We'd love to hear from you</h3>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn-send">Send Message</button>
+    </form>
+  </div>
+
+</div>
 
 {% endblock %}
