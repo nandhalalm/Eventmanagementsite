@@ -1,41 +1,182 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+  /* Page Background & Layout Base */
+  body {
+    background-color: #0f172a; /* Dark Navy Background */
+  }
 
-<div class="row justify-content-center">
+  /* Entrance Animations */
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 
-<div class="col-md-6">
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 
-<div class="card shadow">
+  /* Animated Neon Shimmer Text */
+  @keyframes textShimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-<div class="card-header bg-success text-white">
+  /* Floating Animation for Graphic */
+  @keyframes floatImage {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(1deg); }
+  }
 
-<h3>Create Account</h3>
+  .animated-heading {
+    background: linear-gradient(90deg, #22c55e, #10b981, #06b6d4, #22c55e);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShimmer 5s ease infinite;
+    font-weight: 800;
+  }
 
+  .floating-hero-img {
+    animation: floatImage 4s ease-in-out infinite;
+    max-height: 180px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(34, 197, 94, 0.25));
+  }
+
+  .left-hero-panel {
+    animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    background: rgba(15, 23, 42, 0.6) !important;
+  }
+
+  .right-form-panel {
+    animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Dark Glassmorphism Card */
+  .custom-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(30, 41, 59, 0.75); /* Dark Glass Backdrop */
+    backdrop-filter: blur(12px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Dark Form Inputs Styling */
+  .custom-card-body p {
+    margin-bottom: 0.75rem;
+  }
+
+  .custom-card-body p label {
+    font-weight: 600;
+    color: #cbd5e1; /* Off-white label text */
+    margin-bottom: 0.25rem;
+    display: block;
+    font-size: 0.85rem;
+  }
+
+  .custom-card-body p input,
+  .custom-card-body p select,
+  .custom-card-body p textarea {
+    width: 100%;
+    padding: 0.5rem 0.85rem;
+    border: 1.5px solid #334155;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.25s ease;
+    background-color: #0f172a; /* Dark input background */
+    color: #f8fafc; /* Crisp white input text */
+    font-size: 0.875rem;
+  }
+
+  .custom-card-body p input:focus,
+  .custom-card-body p select:focus,
+  .custom-card-body p textarea:focus {
+    border-color: #22c55e;
+    background-color: #1e293b;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+    transform: scale(1.01);
+  }
+
+  /* Dark Mode Help Text & Errors */
+  .custom-card-body p .helptext {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    display: block;
+    margin-top: 0.2rem;
+  }
+
+  /* Glowing Green Neon Button */
+  .btn-gradient {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.65rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+  }
+
+  .btn-gradient:hover {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.5);
+  }
+</style>
+
+<!-- Dark Mode Wide Container -->
+<div class="row justify-content-center align-items-center my-4">
+  <div class="col-md-10 col-lg-8">
+    <div class="card custom-card">
+      <div class="row g-0 align-items-center">
+        
+        <!-- Left Panel: Dark Glass Header with Neon Accent Text -->
+        <div class="col-md-5 left-hero-panel p-4 text-center border-end border-secondary border-opacity-25">
+          <img src="https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcT2ktT4U73Pd8PMf_ozn8xu7d0D5iO-ihYTKatIHxLzZcP69LzYXdDv5uCjW5f06_-16upHSPufrvEWx94" 
+               alt="Account Creation Illustration" 
+               class="img-fluid floating-hero-img mb-3" />
+          <h3 class="animated-heading mb-2">Create Account</h3>
+          <p class="text-secondary small mb-0">Join our community in seconds. Fill out your information to get started!</p>
+        </div>
+
+        <!-- Right Panel: Dark Inputs & Form -->
+        <div class="col-md-7 right-form-panel">
+          <div class="card-body custom-card-body p-4">
+            <form method="POST">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <div class="d-grid mt-3">
+                <button type="submit" class="btn btn-gradient">
+                  Register
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>
-
-<div class="card-body">
-
-<form method="POST">
-
-{% csrf_token %}
-
-{{ form.as_p }}
-
-<button class="btn btn-primary">
-
-Register
-
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 {% endblock %}

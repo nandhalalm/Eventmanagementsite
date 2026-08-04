@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +23,7 @@
   }
   body{ font-family:'Inter', sans-serif; color:var(--ink); background:var(--paper); }
 
-  .gallery-head{ display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin:2.5rem 0 2rem; }
+  .gallery-head{ display:flex; align-items:flex-end; justify-space-between:flex-wrap; flex-wrap:wrap; gap:1rem; margin:2.5rem 0 2rem; }
   .gallery-head .eyebrow{ font-family:'Space Grotesk', sans-serif; font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--coral); margin-bottom:.4rem; display:block; }
   .gallery-head h2{ font-family:'Space Grotesk', sans-serif; font-weight:700; color:var(--ink); font-size:2rem; margin:0; }
   .gallery-head p{ font-family:'Inter', sans-serif; color:var(--muted); margin:.4rem 0 0; max-width:42ch; }
@@ -51,7 +52,8 @@
   .masonry-item .tag{
     position:absolute; left:10px; bottom:10px;
     font-family:'Space Grotesk', sans-serif; font-size:.72rem; font-weight:600; letter-spacing:.03em;
-    color:#fff; background:rgba(10,8,26,0.7); padding:.3rem .7rem; border-radius:999px;
+    color:#fff; background:rgba(10,8,26,0.75); padding:.3rem .7rem; border-radius:999px;
+    backdrop-filter: blur(4px);
   }
   .masonry-item .zoom-hint{ position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%;
     background:rgba(10,8,26,0.6); color:#fff; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s ease; }
@@ -59,7 +61,7 @@
 
   .lightbox{ position:fixed; inset:0; background:rgba(5,4,14,0.96); display:none; align-items:center; justify-content:center; z-index:2000; padding:2rem; }
   .lightbox.open{ display:flex; }
-  .lightbox img{ max-width:90vw; max-height:85vh; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,0.7); }
+  .lightbox img{ max-width:90vw; max-height:85vh; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,0.7); object-fit:contain; }
   .lightbox-close, .lightbox-nav{ position:absolute; background:rgba(255,255,255,0.08); border:1px solid var(--line); color:#fff; width:44px; height:44px;
     border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; cursor:pointer; transition:background .18s ease; }
   .lightbox-close:hover, .lightbox-nav:hover{ background:var(--coral); border-color:var(--coral); }
@@ -157,7 +159,7 @@
     <div>
       <span class="eyebrow">Moments from campus — preview data</span>
       <h2>Gallery</h2>
-      <p>Dummy photos across Technical, Cultural, Sports and Workshop events, for previewing the layout.</p>
+      <p>Real event photos across Technical, Cultural, Sports, and Workshop events for previewing the gallery layout.</p>
     </div>
   </div>
 
@@ -179,57 +181,43 @@
 </div>
 
 <footer class="site-footer text-center mt-5 p-3">
-  © 2026 College Event Management System — dummy preview data
+  © 2026 College Event Management System — photo gallery preview
 </footer>
 
 <script>
-  // Dummy dataset: real event names/categories, rendered as labeled placeholder cards
-  // (swap for real photo URLs once actual event images are uploaded).
+  // High-quality photos curated from Unsplash matching campus event categories
   const events = [
-    { name: 'Sports Day', category: 'Sports' },
-    { name: 'Football Match', category: 'Sports' },
-    { name: 'Cricket Match', category: 'Sports' },
-    { name: 'Basketball Finals', category: 'Sports' },
-    { name: 'Technical Coding Contest', category: 'Technical' },
-    { name: 'Hackathon', category: 'Technical' },
-    { name: 'Robotics Workshop', category: 'Technical' },
-    { name: 'Tech Fest Exhibition', category: 'Technical' },
-    { name: 'Cultural Night', category: 'Cultural' },
-    { name: 'Dance Performance', category: 'Cultural' },
-    { name: 'Music Concert', category: 'Cultural' },
-    { name: 'Drama & Theatre', category: 'Cultural' },
-    { name: 'Annual Day Celebration', category: 'Festive' },
-    { name: 'Freshers Party', category: 'Festive' },
-    { name: 'Diwali Celebration', category: 'Festive' },
-    { name: 'Farewell Event', category: 'Festive' },
-    { name: 'Term Paper Presentation', category: 'Academic' },
-    { name: 'Guest Lecture', category: 'Academic' },
-    { name: 'Poster Presentation', category: 'Academic' },
-    { name: 'Project Expo', category: 'Academic' },
-    { name: 'Photography Workshop', category: 'Workshop' },
-    { name: 'Entrepreneurship Workshop', category: 'Workshop' },
-    { name: 'AI/ML Bootcamp', category: 'Workshop' },
-    { name: 'Public Speaking Workshop', category: 'Workshop' },
+    { name: 'Sports Day', category: 'Sports', img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&auto=format&fit=crop' },
+    { name: 'Football Match', category: 'Sports', img:'https://images.unsplash.com/photo-1434648957308-5e6a859697e8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Zm9vdGJhbGx8ZW58MHx8MHx8fDA%3D'},
+    { name: 'Cricket Match', category: 'Sports', img: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&auto=format&fit=crop' },
+    { name: 'Basketball Finals', category: 'Sports', img: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop' },
+    { name: 'Technical Coding Contest', category: 'Technical', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop' },
+    { name: 'Hackathon', category: 'Technical', img: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop' },
+    { name: 'Robotics Workshop', category: 'Technical', img: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&auto=format&fit=crop' },
+    { name: 'Tech Fest Exhibition', category: 'Technical', img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop' },
+    { name: 'Cultural Night', category: 'Cultural', img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&auto=format&fit=crop' },
+    { name: 'Dance Performance', category: 'Cultural', img: 'https://images.unsplash.com/photo-1547153760-18fc86324498?w=600&auto=format&fit=crop' },
+    { name: 'Music Concert', category: 'Cultural', img: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop' },
+    { name: 'Drama & Theatre', category: 'Cultural', img: 'https://images.unsplash.com/photo-1469488865564-c2de10f69f96?w=600&auto=format&fit=crop' },
+    { name: 'Annual Day Celebration', category: 'Festive', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop' },
+    { name: 'Freshers Party', category: 'Festive', img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop' },
+    { name: 'Diwali Celebration', category: 'Festive', img: 'https://images.unsplash.com/photo-1666352571312-db1557140bc4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGRlZXBhd2FsaXxlbnwwfHwwfHx8MA%3D%3D' },
+    { name: 'Farewell Event', category: 'Festive', img: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&auto=format&fit=crop' },
+    { name: 'Term Paper Presentation', category: 'Academic', img: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&auto=format&fit=crop' },
+    { name: 'Guest Lecture', category: 'Academic', img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop' },
+    { name: 'Poster Presentation', category: 'Academic', img: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600&auto=format&fit=crop' },
+    { name: 'Project Expo', category: 'Academic', img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&auto=format&fit=crop' },
+    { name: 'Photography Workshop', category: 'Workshop', img: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=600&auto=format&fit=crop' },
+    { name: 'Entrepreneurship Workshop', category: 'Workshop', img: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&auto=format&fit=crop' },
+    { name: 'AI/ML Bootcamp', category: 'Workshop', img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop' },
+    { name: 'Public Speaking Workshop', category: 'Workshop', img: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BlYWtlciUyMG9uJTIwc3RhZ2V8ZW58MHx8MHx8fDA%3D' },
   ];
 
-  // Rotate through the palette so cards feel varied but still on-brand.
-  const palette = [
-    ['2B2470','FBFAF7'], // indigo
-    ['FF5A45','FBFAF7'], // coral
-    ['1A1540','FFC24B'], // indigo-deep / gold
-    ['FFC24B','1A1540'], // gold / indigo-deep
-  ];
-
-  const photos = events.map((ev, i) => {
-    const [bg, fg] = palette[i % palette.length];
-    const height = 300 + (i % 4) * 45;
-    const label = encodeURIComponent(ev.name.replace(/ /g, '\n'));
-    return {
-      url: `https://placehold.co/480x${height}/${bg}/${fg}?text=${label}&font=roboto`,
-      strip: `https://placehold.co/220x150/${bg}/${fg}?text=${encodeURIComponent(ev.name)}&font=roboto`,
-      tag: ev.category
-    };
-  });
+  const photos = events.map(ev => ({
+    url: ev.img,
+    strip: ev.img,
+    tag: `${ev.category} • ${ev.name}`
+  }));
 
   const track = document.getElementById('filmstripTrack');
   const grid = document.getElementById('masonryGrid');
@@ -237,10 +225,11 @@
   function stripImg(p){
     const img = document.createElement('img');
     img.src = p.strip;
+    img.alt = p.tag;
     return img;
   }
 
-  // Filmstrip: render photos twice back-to-back for a seamless loop
+  // Filmstrip: render photos twice back-to-back for a seamless auto-scroll loop
   [...photos, ...photos].forEach(p => track.appendChild(stripImg(p)));
 
   // Masonry grid
@@ -249,7 +238,7 @@
     item.className = 'masonry-item';
     item.onclick = () => openLightbox(index);
     item.innerHTML = `
-      <img src="${p.url}" data-lightbox-src="${p.url}">
+      <img src="${p.url}" alt="${p.tag}">
       <span class="tag">${p.tag}</span>
       <span class="zoom-hint">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
