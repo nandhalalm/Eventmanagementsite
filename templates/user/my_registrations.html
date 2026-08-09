@@ -2,32 +2,347 @@
 <html>
 <head>
     <title>My Registrations</title>
+    <style>
+        :root {
+            --ink: #1c2024;
+            --muted: #6b7280;
+            --line: #e5e7eb;
+            --bg: #f7f7f5;
+            --card: #ffffff;
+            --pending: #b45309;
+            --pending-bg: #fef3e2;
+            --ready: #166534;
+            --ready-bg: #eafaf0;
+            --accent: #2563eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        .navbar {
+            background: var(--card);
+            border-bottom: 1px solid var(--line);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .navbar-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .navbar-brand {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-links a {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .navbar-links a:hover {
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        .navbar-links a.active {
+            color: var(--accent);
+            background: #eaf1fd;
+        }
+
+        .navbar-links a.logout {
+            color: var(--pending);
+        }
+
+        @media (max-width: 600px) {
+            .navbar-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .navbar-links {
+                flex-wrap: wrap;
+            }
+        }
+
+        .page-header {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 24px;
+        }
+
+        .page-header h2 {
+            margin: 0 0 6px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .page-header .user-line {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .page-header .user-line strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .columns {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 8px 24px 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .column {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 24px;
+            min-height: 160px;
+        }
+
+        .column-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--line);
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .column-title.pending { color: var(--pending); }
+        .column-title.ready { color: var(--ready); }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.pending { background: var(--pending); }
+        .dot.ready { background: var(--ready); }
+
+        .reg-card {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+        }
+
+        .reg-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .reg-field {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .reg-field .label {
+            display: inline-block;
+            min-width: 48px;
+            color: var(--muted);
+        }
+
+        .reg-field .value {
+            color: var(--ink);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 6px;
+            margin-bottom: 14px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.pending {
+            color: var(--pending);
+            background: var(--pending-bg);
+        }
+
+        .status-badge.ready {
+            color: var(--ready);
+            background: var(--ready-bg);
+        }
+
+        .action-link {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+        }
+
+        .action-link.pay {
+            color: #ffffff;
+            background: var(--pending);
+        }
+
+        .action-link.pay:hover {
+            background: #92400e;
+        }
+
+        .action-link.ticket {
+            color: #ffffff;
+            background: var(--ready);
+        }
+
+        .action-link.ticket:hover {
+            background: #14532d;
+        }
+
+        .action-link.cancel {
+            background: #ffffff;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            margin-left: 8px;
+        }
+
+        .action-link.cancel:hover {
+            background: #fef2f2;
+        }
+
+        .cancel-disabled {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 12px;
+            color: #9ca3af;
+            padding: 9px 4px;
+        }
+
+        .empty-note {
+            color: var(--muted);
+            font-size: 14px;
+            padding: 12px 0;
+        }
+
+        @media (max-width: 760px) {
+            .columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<h2>My Registrations</h2>
-Logged in user: {{ request.user }}
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a class="navbar-brand" href="{% url 'home' %}">EventHub</a>
+        <ul class="navbar-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a class="active" href="{% url 'my_registrations' %}">My Registrations</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a class="logout" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+</nav>
 
-{% for reg in registrations %}
+<div class="page-header">
+    <h2>My Registrations</h2>
+    <div class="user-line">Logged in as <strong>{{ request.user }}</strong></div>
+</div>
 
-<p>
-ID: {{ reg.id }} <br>
-PK: {{ reg.pk }} <br>
-Name: {{ reg.full_name }} <br>
-Status: {{ reg.payment_status }}
-</p>
+<div class="columns">
 
-{% if reg.payment_status == "Pending" %}
-<a href="{% url 'payment' reg.id %}">Pay Now</a>
-{% else %}
-<a href="{% url 'ticket' reg.id %}">View Ticket</a>
-{% endif %}
+    <!-- Pending payments -->
+    <div class="column">
+        <div class="column-title pending"><span class="dot pending"></span>Pay Now</div>
 
-<hr>
+        {% for reg in registrations %}
+            {% if reg.payment_status == "Pending" %}
+            <div class="reg-card">
+                <div class="reg-field"><span class="label">ID:</span> <span class="value">{{ reg.id }}</span></div>
+                <div class="reg-field"><span class="label">PK:</span> <span class="value">{{ reg.pk }}</span></div>
+                <div class="reg-field"><span class="label">Name:</span> <span class="value">{{ reg.full_name }}</span></div>
+                <div class="reg-field"><span class="label">Event:</span> <span class="value">{{ reg.event.title }}</span></div>
+                <div><span class="status-badge pending">{{ reg.payment_status }}</span></div>
+                <a class="action-link pay" href="{% url 'payment' reg.id %}">Pay Now</a>
+                {% if reg.can_cancel %}
+                <a class="action-link cancel" href="{% url 'cancel_registration' reg.id %}" onclick="return confirm('Cancel this registration?');">Cancel</a>
+                {% else %}
+                <span class="cancel-disabled">Cancellation closed</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% empty %}
+            <p class="empty-note">No registrations found.</p>
+        {% endfor %}
 
-{% empty %}
-<p>No registrations found.</p>
-{% endfor %}
+    </div>
+
+    <!-- Ready tickets -->
+    <div class="column">
+        <div class="column-title ready"><span class="dot ready"></span>Tickets</div>
+
+        {% for reg in registrations %}
+            {% if reg.payment_status != "Pending" %}
+            <div class="reg-card">
+                <div class="reg-field"><span class="label">ID:</span> <span class="value">{{ reg.id }}</span></div>
+                <div class="reg-field"><span class="label">PK:</span> <span class="value">{{ reg.pk }}</span></div>
+                <div class="reg-field"><span class="label">Name:</span> <span class="value">{{ reg.full_name }}</span></div>
+                <div class="reg-field"><span class="label">Event:</span> <span class="value">{{ reg.event.title }}</span></div>
+                <a class="action-link ticket" href="{% url 'ticket' reg.id %}">View Ticket</a>
+                {% if reg.can_cancel %}
+                <a class="action-link cancel" href="{% url 'cancel_registration' reg.id %}" onclick="return confirm('Cancel this registration?');">Cancel</a>
+                {% else %}
+                <span class="cancel-disabled">Cancellation closed</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% empty %}
+            <p class="empty-note">No registrations found.</p>
+        {% endfor %}
+
+    </div>
+
+</div>
 
 </body>
 </html>

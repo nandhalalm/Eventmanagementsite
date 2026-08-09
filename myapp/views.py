@@ -15,6 +15,9 @@ import string
 import stripe
 from django.conf import settings
 
+from datetime import timedelta
+from django.utils import timezone
+
 
 # HOME
 
@@ -268,8 +271,8 @@ def register_event(request, id):
 
 
 
+# MY REGISTRATIONS new
 # MY REGISTRATIONS
-
 
 @login_required(login_url='login')
 def my_registrations(request):
@@ -278,11 +281,38 @@ def my_registrations(request):
         user=request.user
     ).order_by('-registration_date')
 
+    for reg in registrations:
+        reg.can_cancel = (timezone.now() - reg.registration_date) <= timedelta(days=7)
+
     return render(request,
                   'user/my_registrations.html',
                   {
                       'registrations': registrations
                   })
+
+
+# CANCEL REGISTRATION
+
+@login_required(login_url='login')
+def cancel_registration(request, id):
+
+    registration = get_object_or_404(
+        Registration,
+        id=id,
+        user=request.user
+    )
+
+    if timezone.now() - registration.registration_date > timedelta(days=7):
+
+        messages.error(request, "Cancellation window has closed. Registrations can only be cancelled within 1 week.")
+
+        return redirect('my_registrations')
+
+    registration.delete()
+
+    messages.success(request, "Registration cancelled successfully.")
+
+    return redirect('my_registrations')
 
 
 
@@ -294,6 +324,27 @@ def profile(request):
 
     return render(request,
                   'user/profile.html')
+
+@login_required(login_url='login')
+def edit_profile(request):
+
+    user = request.user
+
+    if request.method == "POST":
+
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.email = request.POST.get('email')
+
+        user.save()
+
+        messages.success(request, "Profile Updated Successfully")
+
+        return redirect('profile')
+
+    return render(request, 'user/edit_profile.html', {
+        'user': user
+    })
 
 
 # ADMIN DASHBOARD

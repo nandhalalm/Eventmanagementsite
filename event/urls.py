@@ -29,6 +29,8 @@ urlpatterns = [
     path('payment/<int:id>/', views.payment, name='payment'),
     path('ticket/<int:id>/', views.ticket, name='ticket'),
     path('profile/', views.profile, name='profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('registration/cancel/<int:id>/', views.cancel_registration, name='cancel_registration'),
 
     # Custom Admin Panel
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),

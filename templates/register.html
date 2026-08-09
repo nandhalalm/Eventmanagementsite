@@ -122,6 +122,47 @@
     margin-top: 0.2rem;
   }
 
+  /* Field-level error text (Django's default .errorlist under each field) */
+  .custom-card-body p .errorlist,
+  .custom-card-body .errorlist {
+    list-style: none;
+    padding: 0.5rem 0.75rem;
+    margin: 0.35rem 0 0;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 6px;
+    color: #fca5a5;
+    font-size: 0.8rem;
+  }
+
+  .custom-card-body p .errorlist li {
+    margin: 0;
+  }
+
+  /* Field with an error gets a red outline */
+  .custom-card-body p input.is-invalid,
+  .custom-card-body p:has(.errorlist) input,
+  .custom-card-body p:has(.errorlist) select {
+    border-color: #ef4444;
+  }
+
+  /* Non-field errors (e.g. "passwords do not match") shown above the form */
+  .form-alert-error {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    color: #fca5a5;
+    font-size: 0.85rem;
+  }
+
+  .form-alert-error ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
   /* Glowing Green Neon Button */
   .btn-gradient {
     background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
@@ -150,11 +191,11 @@
   <div class="col-md-10 col-lg-8">
     <div class="card custom-card">
       <div class="row g-0 align-items-center">
-        
+
         <!-- Left Panel: Dark Glass Header with Neon Accent Text -->
         <div class="col-md-5 left-hero-panel p-4 text-center border-end border-secondary border-opacity-25">
-          <img src="https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcT2ktT4U73Pd8PMf_ozn8xu7d0D5iO-ihYTKatIHxLzZcP69LzYXdDv5uCjW5f06_-16upHSPufrvEWx94" 
-               alt="Account Creation Illustration" 
+          <img src="https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcT2ktT4U73Pd8PMf_ozn8xu7d0D5iO-ihYTKatIHxLzZcP69LzYXdDv5uCjW5f06_-16upHSPufrvEWx94"
+               alt="Account Creation Illustration"
                class="img-fluid floating-hero-img mb-3" />
           <h3 class="animated-heading mb-2">Create Account</h3>
           <p class="text-secondary small mb-0">Join our community in seconds. Fill out your information to get started!</p>
@@ -163,6 +204,17 @@
         <!-- Right Panel: Dark Inputs & Form -->
         <div class="col-md-7 right-form-panel">
           <div class="card-body custom-card-body p-4">
+
+            {% if form.non_field_errors %}
+            <div class="form-alert-error">
+              <ul>
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
             <form method="POST">
               {% csrf_token %}
               {{ form.as_p }}

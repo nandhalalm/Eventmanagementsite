@@ -1,0 +1,182 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+
+<style>
+    .profile-wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    .profile-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.10), 0 2px 8px rgba(16, 24, 40, 0.06);
+    }
+
+    .profile-header {
+        background: linear-gradient(160deg, #6366f1 0%, #8b5cf6 55%, #a78bfa 100%);
+        padding: 36px 32px;
+        color: #ffffff;
+        position: relative;
+    }
+
+    .profile-header::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.16), transparent 55%);
+    }
+
+    .profile-header h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-header .profile-sub {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+        margin-top: 4px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-main {
+        background: #ffffff;
+        padding: 36px 36px 32px;
+    }
+
+    .form-field {
+        margin-bottom: 20px;
+    }
+
+    .form-field label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #9ca3af;
+        margin-bottom: 6px;
+    }
+
+    .form-field input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1c2024;
+        background: #f8f8fb;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-field input:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        background: #ffffff;
+    }
+
+    .form-field-static {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #f1f1f5;
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b7280;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .form-actions .btn-save {
+        padding: 10px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border: none;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    }
+
+    .form-actions .btn-save:hover {
+        background: linear-gradient(135deg, #5457e5, #7c4de0);
+        color: #ffffff;
+    }
+
+    .form-actions .btn-cancel {
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        background: #f1f1f5;
+        border: none;
+        color: #4b5563;
+    }
+
+    .form-actions .btn-cancel:hover {
+        background: #e5e7eb;
+        color: #1c2024;
+    }
+</style>
+
+<div class="profile-wrap">
+
+<div class="card profile-card">
+
+    <div class="profile-header">
+        <h3>Edit Profile</h3>
+        <div class="profile-sub">Update your personal information</div>
+    </div>
+
+    <div class="profile-main">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-field">
+                <label for="username">Username</label>
+                <div class="form-field-static">{{ user.username }}</div>
+            </div>
+
+            <div class="form-field">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+            </div>
+
+            <div class="form-field">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+            </div>
+
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Save Changes</button>
+                <a href="{% url 'profile' %}" class="btn-cancel">Cancel</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}
