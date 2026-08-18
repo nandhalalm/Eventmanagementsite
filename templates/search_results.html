@@ -1,0 +1,481 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Events - College Event Management{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .search-page {
+        padding: 20px 0 50px;
+    }
+
+    .search-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .search-header h1 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        color: #161320;
+        margin-bottom: 10px;
+    }
+
+    .search-header p {
+        color: #666;
+    }
+
+    /* Search box */
+
+    .search-form {
+        max-width: 750px;
+        margin: 0 auto 40px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .search-form input {
+        flex: 1;
+        padding: 14px 18px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 16px;
+        outline: none;
+        background: white;
+    }
+
+    .search-form input:focus {
+        border-color: #FF5A45;
+        box-shadow: 0 0 0 3px rgba(255, 90, 69, 0.12);
+    }
+
+    .search-form button {
+        padding: 14px 25px;
+        background: #FF5A45;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .search-form button:hover {
+        background: #e94d3b;
+    }
+
+    /* Result heading */
+
+    .result-heading {
+        margin-bottom: 25px;
+    }
+
+    .result-heading h2 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        color: #161320;
+    }
+
+    .result-count {
+        color: #777;
+        font-size: 14px;
+    }
+
+    /* Event grid */
+
+    .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    /* Event card */
+
+    .event-card {
+        background: white;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .event-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .no-image {
+        width: 100%;
+        height: 200px;
+        background: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+    }
+
+    .event-content {
+        padding: 20px;
+    }
+
+    .event-content h3 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #161320;
+    }
+
+    .event-info {
+        margin-bottom: 8px;
+        color: #555;
+        font-size: 14px;
+    }
+
+    .event-info i {
+        color: #FF5A45;
+        margin-right: 7px;
+    }
+
+    .event-info strong {
+        color: #333;
+    }
+
+    /* Category */
+
+    .category-badge {
+        display: inline-block;
+        background: #eeeafa;
+        color: #2B2470;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    /* Button */
+
+    .view-btn {
+        display: inline-block;
+        width: 100%;
+        margin-top: 12px;
+        padding: 11px 15px;
+        background: #2B2470;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+
+    .view-btn:hover {
+        background: #1A1540;
+        color: white;
+    }
+
+    /* No results */
+
+    .no-results {
+        background: white;
+        padding: 60px 30px;
+        text-align: center;
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .no-results i {
+        font-size: 50px;
+        color: #FF5A45;
+        margin-bottom: 15px;
+    }
+
+    .no-results h3 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+    }
+
+    .no-results p {
+        color: #777;
+    }
+
+    /* Mobile */
+
+    @media(max-width:576px) {
+
+        .search-form {
+            flex-direction: column;
+        }
+
+        .search-form button {
+            width: 100%;
+        }
+
+        .event-grid {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+
+
+<div class="search-page">
+
+    <!-- Page Header -->
+
+    <div class="search-header">
+
+        <h1>
+            <i class="bi bi-search"></i>
+            Search Events
+        </h1>
+
+        <p>
+            Find workshops, seminars, competitions and other college events.
+        </p>
+
+    </div>
+
+
+    <!-- Search Form -->
+
+    <form
+        method="GET"
+        action="{% url 'search_events' %}"
+        class="search-form">
+
+        <input
+            type="text"
+            name="q"
+            placeholder="Search by event name, category, venue..."
+            value="{{ query }}"
+            autocomplete="off"
+        >
+
+        <button type="submit">
+
+            <i class="bi bi-search"></i>
+            Search
+
+        </button>
+
+    </form>
+
+
+    <!-- Search Results -->
+
+    {% if query %}
+
+        <div class="result-heading">
+
+            <h2>
+                Search Results
+            </h2>
+
+            <div class="result-count">
+
+                Results for:
+                <strong>"{{ query }}"</strong>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <div class="result-heading">
+
+            <h2>
+                All Active Events
+            </h2>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- Event Results -->
+
+    {% if events %}
+
+        <div class="event-grid">
+
+            {% for event in events %}
+
+                <div class="event-card">
+
+
+                    <!-- Event Image -->
+
+                    {% if event.image %}
+
+                        <img
+                            src="{{ event.image.url }}"
+                            alt="{{ event.title }}"
+                            class="event-image">
+
+                    {% else %}
+
+                        <div class="no-image">
+
+                            <i class="bi bi-calendar-event fs-1"></i>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Event Content -->
+
+                    <div class="event-content">
+
+
+                        <!-- Category -->
+
+                        <span class="category-badge">
+
+                            {{ event.category }}
+
+                        </span>
+
+
+                        <!-- Title -->
+
+                        <h3>
+                            {{ event.title }}
+                        </h3>
+
+
+                        <!-- Venue -->
+
+                        <div class="event-info">
+
+                            <i class="bi bi-geo-alt-fill"></i>
+
+                            <strong>Venue:</strong>
+
+                            {{ event.venue }}
+
+                        </div>
+
+
+                        <!-- Date -->
+
+                        <div class="event-info">
+
+                            <i class="bi bi-calendar-event"></i>
+
+                            <strong>Date:</strong>
+
+                            {{ event.event_date }}
+
+                        </div>
+
+
+                        <!-- Time -->
+
+                        <div class="event-info">
+
+                            <i class="bi bi-clock"></i>
+
+                            <strong>Time:</strong>
+
+                            {{ event.event_time }}
+
+                        </div>
+
+
+                        <!-- Registration Fee -->
+
+                        <div class="event-info">
+
+                            <i class="bi bi-currency-rupee"></i>
+
+                            <strong>Registration Fee:</strong>
+
+                            ₹{{ event.registration_fee }}
+
+                        </div>
+
+
+                        <!-- Available Seats -->
+
+                        <div class="event-info">
+
+                            <i class="bi bi-people-fill"></i>
+
+                            <strong>Available Seats:</strong>
+
+                            {{ event.available_seats }}
+
+                        </div>
+
+
+                        <!-- View Details -->
+
+                        <a
+                            href="{% url 'event_detail' event.id %}"
+                            class="view-btn">
+
+                            <i class="bi bi-eye"></i>
+
+                            View Details
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- No Results -->
+
+        <div class="no-results">
+
+            <i class="bi bi-calendar-x"></i>
+
+            <h3>
+                No Events Found
+            </h3>
+
+            {% if query %}
+
+                <p>
+                    We couldn't find any events matching
+                    <strong>"{{ query }}"</strong>.
+                </p>
+
+                <p>
+                    Try searching for a different event name,
+                    category or venue.
+                </p>
+
+            {% else %}
+
+                <p>
+                    There are currently no active events.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

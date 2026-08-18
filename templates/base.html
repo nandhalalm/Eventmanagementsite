@@ -18,12 +18,14 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <style>
+
         :root{
             --ink:#161320;
             --indigo:#2B2470;
@@ -40,13 +42,16 @@
             background:var(--paper);
         }
 
+
         /* ---------- Navbar ---------- */
+
         .site-nav{
             background:var(--indigo-deep) !important;
             box-shadow:0 2px 18px rgba(26,21,64,0.18);
             padding-top:.85rem;
             padding-bottom:.85rem;
         }
+
         .site-nav .navbar-brand{
             font-family:'Space Grotesk', sans-serif;
             font-weight:700;
@@ -56,13 +61,16 @@
             align-items:center;
             gap:.55rem;
         }
+
         .site-nav .navbar-brand::before{
             content:"";
-            width:9px;height:9px;
+            width:9px;
+            height:9px;
             border-radius:50%;
             background:var(--coral);
             box-shadow:0 0 0 4px rgba(255,90,69,0.22);
         }
+
         .site-nav .nav-link{
             font-family:'Inter', sans-serif;
             font-weight:500;
@@ -72,27 +80,35 @@
             margin:0 .15rem;
             padding:.5rem .1rem !important;
         }
+
         .site-nav .nav-item{
             margin:0 .75rem;
         }
+
         .site-nav .nav-link::after{
             content:"";
             position:absolute;
-            left:0; bottom:.15rem;
-            width:0; height:2px;
+            left:0;
+            bottom:.15rem;
+            width:0;
+            height:2px;
             background:var(--coral);
             transition:width .2s ease;
         }
+
         .site-nav .nav-link:hover{
             color:#fff !important;
         }
+
         .site-nav .nav-link:hover::after,
         .site-nav .nav-link.active::after{
             width:100%;
         }
+
         .site-nav .nav-link.active{
             color:#fff !important;
         }
+
         .site-nav .nav-link.nav-cta{
             background:var(--coral);
             color:#fff !important;
@@ -102,24 +118,76 @@
             box-shadow:0 6px 16px rgba(255,90,69,0.35);
             transition:transform .18s ease, box-shadow .18s ease;
         }
+
         .site-nav .nav-link.nav-cta:hover{
             transform:translateY(-1px);
             box-shadow:0 10px 22px rgba(255,90,69,0.45);
         }
+
         .site-nav .nav-link.nav-cta::after{
             display:none;
         }
+
         .site-nav .nav-link.nav-logout{
             color:var(--gold) !important;
         }
+
         .site-nav .navbar-toggler{
             border-color:rgba(255,255,255,0.35);
         }
+
         .site-nav .navbar-toggler-icon{
             background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
 
+
+        /* ---------- Search ---------- */
+
+        .navbar-search{
+            display:flex;
+            align-items:center;
+            margin:0 1rem;
+        }
+
+        .navbar-search input{
+            width:180px;
+            padding:.45rem .85rem;
+            border:1px solid rgba(255,255,255,0.25);
+            border-right:none;
+            border-radius:999px 0 0 999px;
+            background:rgba(255,255,255,0.08);
+            color:#fff;
+            outline:none;
+            font-family:'Inter', sans-serif;
+            font-size:.9rem;
+        }
+
+        .navbar-search input::placeholder{
+            color:rgba(255,255,255,0.65);
+        }
+
+        .navbar-search input:focus{
+            background:rgba(255,255,255,0.12);
+            border-color:var(--coral);
+        }
+
+        .navbar-search button{
+            padding:.45rem .8rem;
+            border:none;
+            border-radius:0 999px 999px 0;
+            background:var(--coral);
+            color:#fff;
+            cursor:pointer;
+            transition:background .2s ease;
+        }
+
+        .navbar-search button:hover{
+            background:#e94d3b;
+        }
+
+
         /* ---------- Messages ---------- */
+
         .alert-success{
             font-family:'Inter', sans-serif;
             background:#fff;
@@ -129,7 +197,9 @@
             border-radius:10px;
         }
 
+
         /* ---------- Footer ---------- */
+
         footer.site-footer{
             background:var(--indigo-deep) !important;
             font-family:'Inter', sans-serif;
@@ -137,91 +207,260 @@
             color:rgba(255,255,255,0.65);
             letter-spacing:.02em;
         }
+
+
+        /* ---------- Mobile ---------- */
+
+        @media(max-width:991px){
+
+            .navbar-search{
+                margin:1rem 0;
+                width:100%;
+            }
+
+            .navbar-search input{
+                width:100%;
+            }
+
+        }
+
     </style>
 
 </head>
 
+
 <body>
 
-<!-- Navbar -->
+
+<!-- ================= NAVBAR ================= -->
 
 <nav class="navbar navbar-expand-lg navbar-dark site-nav">
 
     <div class="container">
 
+        <!-- Logo -->
+
         <a class="navbar-brand" href="{% url 'home' %}">
             College Event
         </a>
 
-        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar">
+
+        <!-- Mobile Menu Button -->
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbar"
+            aria-controls="navbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+
             <span class="navbar-toggler-icon"></span>
+
         </button>
+
+
+        <!-- Navbar Content -->
 
         <div class="collapse navbar-collapse" id="navbar">
 
             <ul class="navbar-nav ms-auto align-items-lg-center">
 
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                </li>
+
+                <!-- Home -->
 
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                        href="{% url 'home' %}">
+
+                        Home
+
+                    </a>
+
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'event_list' %}active{% endif %}" href="{% url 'event_list' %}">Events</a>
-                </li>
+
+                <!-- About -->
 
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">Gallery</a>
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+                        href="{% url 'about' %}">
+
+                        About
+
+                    </a>
+
                 </li>
 
+
+                <!-- Events -->
+
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">Contact</a>
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'event_list' %}active{% endif %}"
+                        href="{% url 'event_list' %}">
+
+                        Events
+
+                    </a>
+
                 </li>
+
+
+                <!-- Gallery -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}"
+                        href="{% url 'gallery' %}">
+
+                        Gallery
+
+                    </a>
+
+                </li>
+
+
+                <!-- Contact -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
+                        href="{% url 'contact' %}">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+
+                <!-- ================= SEARCH ================= -->
+
+                <li class="nav-item">
+
+                    <form
+                        method="GET"
+                        action="{% url 'search_events' %}"
+                        class="navbar-search">
+
+                        <input
+                            type="text"
+                            name="q"
+                            placeholder="Search events..."
+                            value="{{ request.GET.q|default:'' }}"
+                            aria-label="Search events">
+
+                        <button type="submit" aria-label="Search">
+
+                            <i class="bi bi-search"></i>
+
+                        </button>
+
+                    </form>
+
+                </li>
+
+
+                <!-- ================= AUTHENTICATED USER ================= -->
 
                 {% if user.is_authenticated %}
 
-                {% if user.is_staff %}
 
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">
-                        Dashboard
-                    </a>
-                </li>
+                    <!-- STAFF -->
+
+                    {% if user.is_staff %}
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}"
+                                href="{% url 'admin_dashboard' %}">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+
+                    <!-- NORMAL USER -->
+
+                    {% else %}
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}"
+                                href="{% url 'user_dashboard' %}">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+
+                    <!-- Logout -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link nav-logout"
+                            href="{% url 'logout' %}">
+
+                            Logout
+
+                        </a>
+
+                    </li>
+
 
                 {% else %}
 
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}" href="{% url 'user_dashboard' %}">
-                        Dashboard
-                    </a>
-                </li>
+
+                    <!-- Login -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'login' %}">
+
+                            Login
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- Register -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link nav-cta"
+                            href="{% url 'register' %}">
+
+                            Register
+
+                        </a>
+
+                    </li>
+
 
                 {% endif %}
 
-                <li class="nav-item">
-                    <a class="nav-link nav-logout" href="{% url 'logout' %}">
-                        Logout
-                    </a>
-                </li>
-
-                {% else %}
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">
-                        Login
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link nav-cta" href="{% url 'register' %}">
-                        Register
-                    </a>
-                </li>
-
-                {% endif %}
 
             </ul>
 
@@ -232,26 +471,39 @@
 </nav>
 
 
+<!-- ================= MAIN CONTENT ================= -->
+
 <div class="container mt-4">
+
+
+    <!-- Django Messages -->
 
     {% if messages %}
 
         {% for message in messages %}
 
-        <div class="alert alert-success">
-            {{ message }}
-        </div>
+            <div class="alert alert-success">
+
+                {{ message }}
+
+            </div>
 
         {% endfor %}
 
     {% endif %}
 
+
+    <!-- Page Content -->
+
     {% block content %}
 
     {% endblock %}
 
+
 </div>
 
+
+<!-- ================= FOOTER ================= -->
 
 <footer class="site-footer text-center p-3 mt-5">
 
@@ -259,7 +511,11 @@
 
 </footer>
 
+
+<!-- Bootstrap JavaScript -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 

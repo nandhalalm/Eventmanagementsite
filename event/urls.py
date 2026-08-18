@@ -47,6 +47,7 @@ urlpatterns = [
     path('view-payments/', views.view_payments, name='view_payments'),
 
     path('manage-events/', views.manage_events, name='manage_events'),
+    path('search/', views.search_events, name='search_events'),
 
     path(
     'payment-success/<int:id>/',

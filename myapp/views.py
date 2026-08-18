@@ -4,6 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 
+from django.db.models import Q
+
+from .models import Event
+
 from .models import Event, Registration, Payment, Token, Contact, Gallery
 from .forms import RegisterForm, EventRegistrationForm, ContactForm
 
@@ -700,3 +704,24 @@ def ticket(request, id):
 
 #payment
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+#search
+def search_events(request):
+    query = request.GET.get('q', '').strip()
+
+    events = Event.objects.filter(status=True)
+
+    if query:
+        events = events.filter(
+            Q(title__icontains=query) |
+            Q(category__icontains=query) |
+            Q(venue__icontains=query) |
+            Q(description__icontains=query)
+        )
+
+    context = {
+        'events': events,
+        'query': query,
+    }
+
+    return render(request, 'search_results.html', context)

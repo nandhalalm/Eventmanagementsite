@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gallery — Preview</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --ink:#EDEBF5;
+    --ink:#161320;
     --indigo:#4A3FBF;
-    --indigo-deep:#12102A;
+    --indigo-deep:#1A1540;
     --coral:#FF6B54;
     --gold:#FFC24B;
-    --paper:#0E0C22;
-    --surface:#181530;
-    --line:#2C2850;
-    --muted:#9491AE;
+    --paper:#FFFFFF;
+    --surface:#FFFFFF;
+    --line:#e7e4dd;
+    --muted:#6b6880;
   }
   body{ font-family:'Inter', sans-serif; color:var(--ink); background:var(--paper); }
 
@@ -71,86 +71,393 @@
 
   footer.site-footer{ background:var(--indigo-deep); border-top:1px solid var(--line); font-family:'Inter', sans-serif; font-size:.85rem; color:var(--muted); letter-spacing:.02em; }
 
-  /* ---------- Navbar ---------- */
+  /* ---------- Navbar (from base.html) ---------- */
   .site-nav{
-    background:var(--indigo-deep);
-    border-bottom:1px solid var(--line);
-    position:sticky;
-    top:0;
-    z-index:1000;
+      background:var(--indigo-deep) !important;
+      box-shadow:0 2px 18px rgba(26,21,64,0.18);
+      padding-top:.85rem;
+      padding-bottom:.85rem;
   }
-  .site-nav .inner{
-    max-width:1200px; margin:0 auto; padding:0 1.5rem;
-    display:flex; align-items:center; justify-content:space-between; height:68px;
+
+  .site-nav .navbar-brand{
+      font-family:'Space Grotesk', sans-serif;
+      font-weight:700;
+      font-size:1.2rem;
+      letter-spacing:-.01em;
+      display:flex;
+      align-items:center;
+      gap:.55rem;
   }
-  .site-nav .brand{
-    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.15rem;
-    color:var(--ink); text-decoration:none; display:flex; align-items:center; gap:.55rem; letter-spacing:-.01em;
+
+  .site-nav .navbar-brand::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:var(--coral);
+      box-shadow:0 0 0 4px rgba(255,90,69,0.22);
   }
-  .site-nav .brand::before{
-    content:""; width:9px; height:9px; border-radius:50%;
-    background:var(--coral); box-shadow:0 0 0 4px rgba(255,107,84,0.18);
+
+  .site-nav .nav-link{
+      font-family:'Inter', sans-serif;
+      font-weight:500;
+      font-size:.93rem;
+      color:rgba(255,255,255,0.78) !important;
+      position:relative;
+      margin:0 .15rem;
+      padding:.5rem .1rem !important;
   }
-  .site-nav .nav-links{ display:flex; align-items:center; gap:2rem; list-style:none; margin:0; padding:0; }
-  .site-nav .nav-links a{
-    font-family:'Inter', sans-serif; font-size:.92rem; font-weight:500;
-    color:var(--muted); text-decoration:none; position:relative; padding:.3rem 0; transition:color .15s ease;
+
+  .site-nav .nav-item{
+      margin:0 .75rem;
   }
-  .site-nav .nav-links a:hover{ color:var(--ink); }
-  .site-nav .nav-links a::after{
-    content:""; position:absolute; left:0; bottom:-2px; width:0; height:2px;
-    background:var(--coral); transition:width .2s ease;
+
+  .site-nav .nav-link::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:.15rem;
+      width:0;
+      height:2px;
+      background:var(--coral);
+      transition:width .2s ease;
   }
-  .site-nav .nav-links a:hover::after, .site-nav .nav-links a.active::after{ width:100%; }
-  .site-nav .nav-links a.active{ color:var(--ink); }
-  .site-nav .nav-actions{ display:flex; align-items:center; gap:1.1rem; }
-  .site-nav .nav-actions .login-link{
-    font-family:'Inter', sans-serif; font-size:.9rem; font-weight:500;
-    color:var(--muted); text-decoration:none; transition:color .15s ease;
+
+  .site-nav .nav-link:hover{
+      color:#fff !important;
   }
-  .site-nav .nav-actions .login-link:hover{ color:var(--ink); }
-  .site-nav .nav-actions .btn-register{
-    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:.88rem;
-    color:#fff; background:var(--coral); padding:.55rem 1.3rem; border-radius:999px;
-    text-decoration:none; box-shadow:0 6px 16px rgba(255,107,84,0.3);
-    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+
+  .site-nav .nav-link:hover::after,
+  .site-nav .nav-link.active::after{
+      width:100%;
   }
-  .site-nav .nav-actions .btn-register:hover{
-    background:#ff8069; color:#fff; transform:translateY(-1px); box-shadow:0 10px 22px rgba(255,107,84,0.4);
+
+  .site-nav .nav-link.active{
+      color:#fff !important;
   }
-  .nav-toggle{ display:none; background:none; border:none; color:var(--ink); font-size:1.4rem; }
-  @media (max-width: 860px){
-    .site-nav .nav-links{
-      position:absolute; top:68px; left:0; right:0; background:var(--indigo-deep);
-      flex-direction:column; align-items:flex-start; gap:0; padding:.5rem 1.5rem 1rem;
-      display:none; border-bottom:1px solid var(--line);
-    }
-    .site-nav .nav-links.open{ display:flex; }
-    .site-nav .nav-links a{ padding:.7rem 0; width:100%; }
-    .nav-toggle{ display:block; }
+
+  .site-nav .nav-link.nav-cta{
+      background:var(--coral);
+      color:#fff !important;
+      border-radius:999px;
+      padding:.5rem 1.2rem !important;
+      font-weight:600;
+      box-shadow:0 6px 16px rgba(255,90,69,0.35);
+      transition:transform .18s ease, box-shadow .18s ease;
+  }
+
+  .site-nav .nav-link.nav-cta:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 22px rgba(255,90,69,0.45);
+  }
+
+  .site-nav .nav-link.nav-cta::after{
+      display:none;
+  }
+
+  .site-nav .nav-link.nav-logout{
+      color:var(--gold) !important;
+  }
+
+  .site-nav .navbar-toggler{
+      border-color:rgba(255,255,255,0.35);
+  }
+
+  .site-nav .navbar-toggler-icon{
+      background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+
+  .navbar-search{
+      display:flex;
+      align-items:center;
+      margin:0 1rem;
+  }
+
+  .navbar-search input{
+      width:180px;
+      padding:.45rem .85rem;
+      border:1px solid rgba(255,255,255,0.25);
+      border-right:none;
+      border-radius:999px 0 0 999px;
+      background:rgba(255,255,255,0.08);
+      color:#fff;
+      outline:none;
+      font-family:'Inter', sans-serif;
+      font-size:.9rem;
+  }
+
+  .navbar-search input::placeholder{
+      color:rgba(255,255,255,0.65);
+  }
+
+  .navbar-search input:focus{
+      background:rgba(255,255,255,0.12);
+      border-color:var(--coral);
+  }
+
+  .navbar-search button{
+      padding:.45rem .8rem;
+      border:none;
+      border-radius:0 999px 999px 0;
+      background:var(--coral);
+      color:#fff;
+      cursor:pointer;
+      transition:background .2s ease;
+  }
+
+  .navbar-search button:hover{
+      background:#e94d3b;
+  }
+
+  @media(max-width:991px){
+      .navbar-search{
+          margin:1rem 0;
+          width:100%;
+      }
+      .navbar-search input{
+          width:100%;
+      }
   }
 </style>
 </head>
 <body>
 
-<nav class="site-nav">
-  <div class="inner">
-    <a href="#" class="brand">EventHub</a>
+<!-- ================= NAVBAR (from base.html) ================= -->
 
-    <ul class="nav-links" id="navLinks">
-      <li><a href="{% url 'home' %}">Home</a></li>
-      <li><a href="{% url 'about' %}">About</a></li>
-      <li><a href="{% url 'event_list' %}">Events</a></li>
-      <li><a href="{% url 'gallery' %}" class="active">Gallery</a></li>
-      <li><a href="{% url 'contact' %}">Contact</a></li>
-    </ul>
+<nav class="navbar navbar-expand-lg navbar-dark site-nav">
 
-    <div class="nav-actions">
-      <a href="{% url 'login' %}" class="login-link">Login</a>
-      <a href="{% url 'logout' %}" class="btn-register">Register</a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">&#9776;</button>
+    <div class="container">
+
+        <!-- Logo -->
+
+        <a class="navbar-brand" href="{% url 'home' %}">
+            College Event
+        </a>
+
+
+        <!-- Mobile Menu Button -->
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbar"
+            aria-controls="navbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+
+        <!-- Navbar Content -->
+
+        <div class="collapse navbar-collapse" id="navbar">
+
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+
+                <!-- Home -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                        href="{% url 'home' %}">
+
+                        Home
+
+                    </a>
+
+                </li>
+
+
+                <!-- About -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+                        href="{% url 'about' %}">
+
+                        About
+
+                    </a>
+
+                </li>
+
+
+                <!-- Events -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'event_list' %}active{% endif %}"
+                        href="{% url 'event_list' %}">
+
+                        Events
+
+                    </a>
+
+                </li>
+
+
+                <!-- Gallery -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}"
+                        href="{% url 'gallery' %}">
+
+                        Gallery
+
+                    </a>
+
+                </li>
+
+
+                <!-- Contact -->
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
+                        href="{% url 'contact' %}">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+
+                <!-- ================= SEARCH ================= -->
+
+                <li class="nav-item">
+
+                    <form
+                        method="GET"
+                        action="{% url 'search_events' %}"
+                        class="navbar-search">
+
+                        <input
+                            type="text"
+                            name="q"
+                            placeholder="Search events..."
+                            value="{{ request.GET.q|default:'' }}"
+                            aria-label="Search events">
+
+                        <button type="submit" aria-label="Search">
+
+                            <i class="bi bi-search"></i>
+
+                        </button>
+
+                    </form>
+
+                </li>
+
+
+                <!-- ================= AUTHENTICATED USER ================= -->
+
+                {% if user.is_authenticated %}
+
+
+                    <!-- STAFF -->
+
+                    {% if user.is_staff %}
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}"
+                                href="{% url 'admin_dashboard' %}">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+
+                    <!-- NORMAL USER -->
+
+                    {% else %}
+
+                        <li class="nav-item">
+
+                            <a
+                                class="nav-link {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}"
+                                href="{% url 'user_dashboard' %}">
+
+                                Dashboard
+
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+
+                    <!-- Logout -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link nav-logout"
+                            href="{% url 'logout' %}">
+
+                            Logout
+
+                        </a>
+
+                    </li>
+
+
+                {% else %}
+
+
+                    <!-- Login -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'login' %}">
+
+                            Login
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- Register -->
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link nav-cta"
+                            href="{% url 'register' %}">
+
+                            Register
+
+                        </a>
+
+                    </li>
+
+
+                {% endif %}
+
+
+            </ul>
+
+        </div>
+
     </div>
-  </div>
+
 </nav>
 
 <div class="container">
@@ -183,6 +490,9 @@
 <footer class="site-footer text-center mt-5 p-3">
   © 2026 College Event Management System — photo gallery preview
 </footer>
+
+<!-- Bootstrap JavaScript (needed for navbar collapse toggle) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
   // High-quality photos curated from Unsplash matching campus event categories
@@ -269,10 +579,6 @@
   });
   document.getElementById('lightbox').addEventListener('click', function(e){
     if(e.target === this) closeLightbox();
-  });
-
-  document.getElementById('navToggle')?.addEventListener('click', function(){
-    document.getElementById('navLinks').classList.toggle('open');
   });
 </script>
 
