@@ -43,14 +43,15 @@
     50% { transform: translateY(-8px) rotate(1deg); }
   }
 
-  .animated-heading {
+.animated-heading {
     background: linear-gradient(90deg, #22c55e, #10b981, #06b6d4, #22c55e);
     background-size: 300% 300%;
     -webkit-background-clip: text;
+    background-clip: text; /* Added this line to fix the VS Code warning */
     -webkit-text-fill-color: transparent;
     animation: textShimmer 5s ease infinite;
     font-weight: 800;
-  }
+}
 
   .floating-hero-img {
     animation: floatImage 4s ease-in-out infinite;
