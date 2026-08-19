@@ -1,13 +1,243 @@
-<form method="POST">
+{% extends 'base.html' %}
 
-    {% csrf_token %}
+{% block title %}
+Register Event
+{% endblock %}
 
-    {{ form.as_p }}
+{% block content %}
 
-    <button type="submit" class="btn btn-success">
+<style>
+  :root{
+    --ink:#161320;
+    --indigo:#2B2470;
+    --indigo-deep:#1A1540;
+    --coral:#FF5A45;
+    --gold:#FFC24B;
+    --paper:#FBFAF7;
+    --line:#e7e4dd;
+  }
 
-        Register Event
+  .form-wrap{
+    min-height:60vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:3.5rem 1.5rem;
+  }
 
-    </button>
+  .form-card{
+    position:relative;
+    width:100%;
+    max-width:520px;
+    background:var(--paper);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(22,19,32,0.04), 0 24px 48px rgba(22,19,32,0.14);
+    animation:rise .5s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
 
-</form>
+  .form-header{
+    position:relative;
+    padding:2.4rem 2.2rem 2rem;
+    text-align:center;
+    color:#fff;
+    background:
+      radial-gradient(circle at 85% 10%, rgba(255,194,75,0.35), transparent 45%),
+      radial-gradient(circle at 10% 95%, rgba(255,90,69,0.35), transparent 40%),
+      linear-gradient(135deg, var(--indigo-deep), var(--indigo));
+    isolation:isolate;
+  }
+  .form-header::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 22px);
+    z-index:-1;
+  }
+  .form-eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:.9rem;
+  }
+  .form-eyebrow::before{
+    content:"";
+    width:7px;height:7px;border-radius:50%;
+    background:var(--coral);
+    display:inline-block;
+  }
+  .form-header h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:1.6rem;
+    line-height:1.15;
+    margin-bottom:.4rem;
+  }
+  .form-header p{
+    font-family:'Inter', sans-serif;
+    font-size:.9rem;
+    color:rgba(255,255,255,0.78);
+    max-width:38ch;
+    margin:0 auto;
+  }
+
+  .form-perf{
+    position:relative;
+    height:0;
+    border-top:2px dashed var(--line);
+    margin:0 1.6rem;
+  }
+  .form-perf::before,
+  .form-perf::after{
+    content:"";
+    position:absolute;
+    top:-11px;
+    width:22px;height:22px;
+    background:#fff;
+    border-radius:50%;
+  }
+  .form-perf::before{ left:-2.6rem; }
+  .form-perf::after{ right:-2.6rem; }
+
+  .form-body{
+    padding:2.2rem 2.4rem 2.6rem;
+  }
+
+  /* Style Django's default form.as_p output */
+  .form-body p{
+    margin-bottom:1.3rem;
+  }
+  .form-body label{
+    display:block;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:.82rem;
+    letter-spacing:.02em;
+    color:var(--ink);
+    margin-bottom:.45rem;
+  }
+  .form-body input,
+  .form-body select,
+  .form-body textarea{
+    width:100%;
+    font-family:'Inter', sans-serif;
+    font-size:.95rem;
+    color:var(--ink);
+    background:#fff;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:.7rem .9rem;
+    transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  .form-body textarea{
+    min-height:110px;
+    resize:vertical;
+  }
+  .form-body input:focus,
+  .form-body select:focus,
+  .form-body textarea:focus{
+    outline:none;
+    border-color:var(--indigo);
+    box-shadow:0 0 0 3px rgba(43,36,112,0.12);
+  }
+  .form-body input[type="checkbox"],
+  .form-body input[type="radio"]{
+    width:auto;
+    accent-color:var(--indigo);
+    margin-right:.5rem;
+  }
+
+  /* Django error list styling */
+  .form-body ul.errorlist{
+    list-style:none;
+    padding:0;
+    margin:.4rem 0 0;
+    font-family:'Inter', sans-serif;
+    font-size:.82rem;
+    color:var(--coral);
+  }
+  .form-body .helptext{
+    display:block;
+    font-family:'Inter', sans-serif;
+    font-size:.78rem;
+    color:#8b8794;
+    margin-top:.35rem;
+  }
+
+  .btn-success{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+    width:100%;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:.98rem;
+    letter-spacing:.02em;
+    padding:.9rem 2.4rem;
+    border-radius:999px;
+    border:none;
+    color:#fff;
+    background:linear-gradient(135deg, #22C55E, #16A34A);
+    box-shadow:0 8px 20px rgba(22,163,74,0.35);
+    cursor:pointer;
+    margin-top:.4rem;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-success:hover{
+    color:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 12px 26px rgba(22,163,74,0.45);
+  }
+  .btn-success:active{
+    transform:translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .form-card{ animation:none; }
+    .btn-success{ transition:none; transform:none; }
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<div class="form-wrap">
+  <div class="form-card">
+    <div class="form-header">
+      <span class="form-eyebrow">Event Registration</span>
+      <h1>{{ event.title|default:"Reserve your spot" }}</h1>
+      <p>Fill in your details below to confirm your registration.</p>
+    </div>
+
+    <div class="form-perf"></div>
+
+    <div class="form-body">
+      <form method="POST">
+
+          {% csrf_token %}
+
+          {{ form.as_p }}
+
+          <button type="submit" class="btn btn-success">
+
+              Register Event
+
+          </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
