@@ -49,17 +49,12 @@ urlpatterns = [
     path('manage-events/', views.manage_events, name='manage_events'),
     path('search/', views.search_events, name='search_events'),
 
-    path(
-    'payment-success/<int:id>/',
-    views.payment_success,
-    name='payment_success'
-),
+    path('attendance/',views.attendance,name='attendance'),
 
-path(
-    'payment-cancel/',
-    views.payment_cancel,
-    name='payment_cancel'
-),
+    path('payment-success/<int:id>/',views.payment_success,name='payment_success'),
+
+    path('payment-cancel/',views.payment_cancel, name='payment_cancel'),
+
 
 ]
 

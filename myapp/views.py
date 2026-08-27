@@ -482,22 +482,38 @@ def delete_event(request, id):
     return redirect('manage_events')
 
 
-# VIEW REGISTRATIONS
-
+# VIEW REGISTRATIONS + SEARCH
 
 @staff_member_required(login_url='login')
 def view_registrations(request):
+
+    query = request.GET.get('q', '').strip()
 
     registrations = Registration.objects.select_related(
         'user',
         'event'
     ).order_by('-registration_date')
 
-    return render(request,
-                  'admin/registrations.html',
-                  {
-                      'registrations': registrations
-                  })
+    if query:
+        registrations = registrations.filter(
+            Q(full_name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(college__icontains=query) |
+            Q(department__icontains=query) |
+            Q(semester__icontains=query) |
+            Q(event__title__icontains=query) |
+            Q(user__username__icontains=query)
+        )
+
+    return render(
+        request,
+        'admin/registrations.html',
+        {
+            'registrations': registrations,
+            'query': query,
+        }
+    )
 
 
 # VIEW PAYMENTS
@@ -519,21 +535,71 @@ def view_payments(request):
 
 # ATTENDANCE
 
-
-@staff_member_required(login_url='login')
+@login_required(login_url='login')
 def attendance(request):
 
-    registrations = Registration.objects.filter(
-        payment_status="Paid"
+    if not request.user.is_staff:
+        return redirect('home')
+
+    # MARK / UNMARK ATTENDANCE
+    if request.method == 'POST':
+
+        registration_id = request.POST.get('registration_id')
+
+        registration = get_object_or_404(
+            Registration,
+            id=registration_id
+        )
+
+        # Toggle attendance
+        registration.attendance = not registration.attendance
+        registration.save()
+
+        if registration.attendance:
+            messages.success(
+                request,
+                registration.full_name + " marked as Present"
+            )
+        else:
+            messages.warning(
+                request,
+                registration.full_name + " marked as Absent"
+            )
+
+        query = request.POST.get('q', '')
+
+        if query:
+            return redirect('/attendance/?q=' + query)
+
+        return redirect('attendance')
+
+    # SEARCH
+    query = request.GET.get('q', '').strip()
+
+    registrations = Registration.objects.select_related(
+        'user',
+        'event'
+    ).all().order_by('-registration_date')
+
+    if query:
+
+        registrations = registrations.filter(
+            Q(full_name__icontains=query) |
+            Q(user__username__icontains=query) |
+            Q(email__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(college__icontains=query) |
+            Q(event__title__icontains=query)
+        )
+
+    return render(
+        request,
+        'admin/attendance.html',
+        {
+            'registrations': registrations,
+            'query': query,
+        }
     )
-
-    return render(request,
-                  'admin/attendance.html',
-                  {
-                      'registrations': registrations
-                  })
-
-
 # REPORTS
 
 
@@ -705,7 +771,7 @@ def ticket(request, id):
 #payment
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-#search
+# user search
 def search_events(request):
     query = request.GET.get('q', '').strip()
 
@@ -725,3 +791,5 @@ def search_events(request):
     }
 
     return render(request, 'search_results.html', context)
+
+

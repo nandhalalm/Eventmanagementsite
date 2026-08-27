@@ -42,6 +42,12 @@ class Registration(models.Model):
     payment_status = models.CharField(max_length=20, choices=STATUS, default='Pending')
     registration_date = models.DateTimeField(auto_now_add=True)
 
+    
+    # NEW
+    attendance = models.BooleanField(default=False)
+
+    registration_date = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.full_name
 
@@ -96,3 +102,4 @@ class Gallery(models.Model):
 
     def __str__(self):
         return self.title
+
