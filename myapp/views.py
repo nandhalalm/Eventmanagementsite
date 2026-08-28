@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-from django.db.models import Q
+from django.db.models import Q, F
+from django.db import transaction
 
 from .models import Event
 
@@ -242,18 +243,48 @@ def register_event(request, id):
 
         return redirect('my_registrations')
 
+    # Block registration if the event is closed, sold out, or past its deadline
+    if not event.status:
+        messages.error(request, "Registration is closed for this event.")
+        return redirect('event_detail', id=event.id)
+
+    if event.last_date < timezone.now().date():
+        messages.error(request, "The registration deadline for this event has passed.")
+        return redirect('event_detail', id=event.id)
+
+    if event.available_seats <= 0:
+        messages.error(request, "Sorry, this event is sold out.")
+        return redirect('event_detail', id=event.id)
+
     if request.method == "POST":
 
         form = EventRegistrationForm(request.POST)
 
         if form.is_valid():
 
-            registration = form.save(commit=False)
+            with transaction.atomic():
 
-            registration.user = request.user
-            registration.event = event
+                # lock the row so two people can't grab the last seat at once
+                locked_event = Event.objects.select_for_update().get(id=event.id)
 
-            registration.save()
+                if (
+                    not locked_event.status
+                    or locked_event.available_seats <= 0
+                    or locked_event.last_date < timezone.now().date()
+                ):
+                    messages.error(request, "Sorry, registration just closed for this event.")
+                    return redirect('event_detail', id=event.id)
+
+                registration = form.save(commit=False)
+
+                registration.user = request.user
+                registration.event = locked_event
+
+                registration.save()
+
+                Event.objects.filter(id=locked_event.id).update(
+                    available_seats=F('available_seats') - 1
+                )
 
             messages.success(request, "Registration Successful.")
 
@@ -312,7 +343,15 @@ def cancel_registration(request, id):
 
         return redirect('my_registrations')
 
-    registration.delete()
+    with transaction.atomic():
+
+        # only give the seat back if the event's registration deadline hasn't passed
+        if registration.event.last_date >= timezone.now().date():
+            Event.objects.filter(id=registration.event_id).update(
+                available_seats=F('available_seats') + 1
+            )
+
+        registration.delete()
 
     messages.success(request, "Registration cancelled successfully.")
 
@@ -791,5 +830,3 @@ def search_events(request):
     }
 
     return render(request, 'search_results.html', context)
-
-
