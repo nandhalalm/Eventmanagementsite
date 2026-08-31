@@ -209,8 +209,6 @@ Home
   .ticket-meta svg{ flex:none; opacity:.6; }
 
   .btn-view{
-    margin-top:1.1rem;
-    align-self:flex-start;
     font-family:'Space Grotesk', sans-serif;
     font-weight:600;
     font-size:.88rem;
@@ -220,11 +218,41 @@ Home
     padding:.55rem 1.3rem;
     border-radius:999px;
     transition:background .18s ease, color .18s ease;
+    flex:1;
+    text-align:center;
   }
   .btn-view:hover{
     background:var(--indigo);
     color:#fff;
   }
+
+  .actions-row{
+    margin-top:1.1rem;
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+  }
+
+  .btn-brochure{
+    flex:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    color:var(--indigo);
+    background:#fff;
+    transition:background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+  }
+  .btn-brochure:hover{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--indigo-deep);
+    transform:translateY(-2px);
+  }
+  .btn-brochure svg{ width:18px; height:18px; }
 
   .countdown{
     margin-top:1rem;
@@ -560,7 +588,14 @@ Home
             <div class="countdown-item"><span class="cd-mins">--</span><small>Min</small></div>
             <div class="countdown-item"><span class="cd-secs">--</span><small>Sec</small></div>
           </div>
-          <a href="{% url 'event_detail' event.id %}" class="btn btn-view">View Details</a>
+          <div class="actions-row">
+            <a href="{% url 'event_detail' event.id %}" class="btn-view">View Details</a>
+            {% if event.brochure %}
+              <a href="{{ event.brochure.url }}" class="btn-brochure" target="_blank" rel="noopener noreferrer" title="Download brochure">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+              </a>
+            {% endif %}
+          </div>
         {% endif %}
       </div>
     </div>
