@@ -4,6 +4,63 @@
 
 {% block content %}
 
+<style>
+  .event-img-wrap{
+    position:relative;
+    overflow:hidden;
+  }
+
+  .status-badge{
+    position:absolute;
+    top:.5rem;
+    right:.5rem;
+    z-index:2;
+    font-size:.65rem;
+    font-weight:600;
+    letter-spacing:.03em;
+    padding:.2rem .55rem;
+    border-radius:999px;
+    color:#fff;
+  }
+
+  .status-badge.status-open{
+    background:rgba(43,36,112,0.9);
+  }
+
+  .status-badge.status-closed{
+    background:rgba(22,19,32,0.75);
+  }
+
+  .mini-countdown{
+    display:flex;
+    gap:.2rem;
+    margin-top:.5rem;
+  }
+  .mini-countdown-item{
+    flex:1;
+    text-align:center;
+    background:#f1efe9;
+    border:1px solid #e7e4dd;
+    border-radius:5px;
+    padding:.15rem .1rem;
+  }
+  .mini-countdown-item span{
+    display:block;
+    font-weight:700;
+    font-size:.68rem;
+    color:#2B2470;
+    line-height:1.1;
+  }
+  .mini-countdown-item small{
+    display:block;
+    font-size:.48rem;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    color:#8b8794;
+    margin-top:.05rem;
+  }
+</style>
+
 <div class="container">
 
     <h2 class="mb-4">Available Events</h2>
@@ -16,11 +73,21 @@
 
             <div class="card shadow">
 
-                {% if event.image %}
-                <img src="{{ event.image.url }}" class="card-img-top" height="220">
-                {% else %}
-                <img src="https://via.placeholder.com/400x220" class="card-img-top">
-                {% endif %}
+                <div class="event-img-wrap">
+
+                    {% if event.image %}
+                    <img src="{{ event.image.url }}" class="card-img-top" height="220">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400x220" class="card-img-top">
+                    {% endif %}
+
+                    {% if event.is_open %}
+                        <span class="status-badge status-open">{{ event.status_label }}</span>
+                    {% else %}
+                        <span class="status-badge status-closed">{{ event.status_label }}</span>
+                    {% endif %}
+
+                </div>
 
                 <div class="card-body">
 
@@ -32,7 +99,16 @@
 
                     <p><b>Fee:</b> ₹{{ event.registration_fee }}</p>
 
-                    <a href="{% url 'event_detail' event.id %}" class="btn btn-primary w-100">
+                    {% if event.is_open %}
+                        <div class="mini-countdown" data-event-date="{{ event.last_date|date:'c' }}">
+                            <div class="mini-countdown-item"><span class="cd-days">--</span><small>D</small></div>
+                            <div class="mini-countdown-item"><span class="cd-hours">--</span><small>H</small></div>
+                            <div class="mini-countdown-item"><span class="cd-mins">--</span><small>M</small></div>
+                            <div class="mini-countdown-item"><span class="cd-secs">--</span><small>S</small></div>
+                        </div>
+                    {% endif %}
+
+                    <a href="{% url 'event_detail' event.id %}" class="btn btn-primary w-100 mt-2">
                         View Details
                     </a>
 
@@ -55,5 +131,41 @@
     </div>
 
 </div>
+
+<script>
+  function updateCountdowns(){
+    document.querySelectorAll('.mini-countdown').forEach(function(el){
+      var target = new Date(el.getAttribute('data-event-date')).getTime();
+      var now = new Date().getTime();
+      var diff = target - now;
+
+      var daysEl = el.querySelector('.cd-days');
+      var hoursEl = el.querySelector('.cd-hours');
+      var minsEl = el.querySelector('.cd-mins');
+      var secsEl = el.querySelector('.cd-secs');
+
+      if(diff <= 0){
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minsEl.textContent = '00';
+        secsEl.textContent = '00';
+        return;
+      }
+
+      var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      var secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      daysEl.textContent = String(days).padStart(2, '0');
+      hoursEl.textContent = String(hours).padStart(2, '0');
+      minsEl.textContent = String(mins).padStart(2, '0');
+      secsEl.textContent = String(secs).padStart(2, '0');
+    });
+  }
+
+  updateCountdowns();
+  setInterval(updateCountdowns, 1000);
+</script>
 
 {% endblock %}

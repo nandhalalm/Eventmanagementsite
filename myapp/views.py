@@ -193,11 +193,28 @@ def user_dashboard(request):
 
 
 # EVENT LIST
-
+# EVENT LIST new
 
 def event_list(request):
 
     events = Event.objects.filter(status=True).order_by('event_date')
+
+    today = timezone.now().date()
+
+    for event in events:
+
+        if not event.status:
+            event.is_open = False
+            event.status_label = 'Closed'
+        elif event.available_seats <= 0:
+            event.is_open = False
+            event.status_label = 'Sold Out'
+        elif event.last_date < today:
+            event.is_open = False
+            event.status_label = 'Finished'
+        else:
+            event.is_open = True
+            event.status_label = 'Open'
 
     return render(request, 'user/events.html', {
         'events': events
@@ -573,6 +590,7 @@ def view_payments(request):
 
 
 # ATTENDANCE
+# ATTENDANCE new
 
 @login_required(login_url='login')
 def attendance(request):
@@ -606,19 +624,30 @@ def attendance(request):
             )
 
         query = request.POST.get('q', '')
+        event_id = request.POST.get('event_id', '')
+
+        redirect_url = '/attendance/?'
+        params = []
 
         if query:
-            return redirect('/attendance/?q=' + query)
+            params.append('q=' + query)
+
+        if event_id:
+            params.append('event_id=' + event_id)
+
+        if params:
+            return redirect(redirect_url + '&'.join(params))
 
         return redirect('attendance')
 
-    # SEARCH
+    # SEARCH + EVENT FILTER
     query = request.GET.get('q', '').strip()
+    selected_event_id = request.GET.get('event_id', '').strip()
 
     registrations = Registration.objects.select_related(
         'user',
         'event'
-    ).all().order_by('-registration_date')
+    ).all()
 
     if query:
 
@@ -631,12 +660,29 @@ def attendance(request):
             Q(event__title__icontains=query)
         )
 
+    if selected_event_id:
+        registrations = registrations.filter(event_id=selected_event_id)
+
+    # Ordering by event first is required for the {% regroup %} tag
+    # in the template to group rows correctly.
+    registrations = registrations.order_by('event__title', 'full_name')
+
+    selected_event_name = ''
+
+    if selected_event_id:
+        selected_event = Event.objects.filter(id=selected_event_id).first()
+        if selected_event:
+            selected_event_name = selected_event.title
+
     return render(
         request,
         'admin/attendance.html',
         {
             'registrations': registrations,
             'query': query,
+            'events': Event.objects.all().order_by('title'),
+            'selected_event_id': selected_event_id,
+            'selected_event_name': selected_event_name,
         }
     )
 # REPORTS

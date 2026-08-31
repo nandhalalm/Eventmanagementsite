@@ -1,75 +1,184 @@
 {% extends 'admin/base.html' %}
 
 {% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap');
 
-<h2>System Report</h2>
+  .console {
+    background: #FFFFFF;
+    border: 1px solid #E3E6EB;
+    border-radius: 10px;
+    padding: 34px 8px 8px;
+    margin: 10px 0 30px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    box-shadow: 0 4px 16px rgba(16, 24, 40, 0.06);
+  }
 
-<div class="row">
+  .console-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 26px 22px;
+    border-bottom: 1px solid #E3E6EB;
+    margin: 0 0 4px;
+  }
 
-<div class="col-md-3">
+  .console-heading h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #1B1F27;
+    margin: 0;
+    letter-spacing: 0.2px;
+  }
 
-<div class="card bg-primary text-white">
+  .console-heading span {
+    font-size: 0.8rem;
+    color: #8A93A3;
+  }
 
-<div class="card-body">
+  .ledger {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-<h3>{{ events }}</h3>
+  .metric {
+    flex: 1 1 200px;
+    position: relative;
+    padding: 30px 26px 30px;
+    border-right: 1px solid #E3E6EB;
+    overflow: hidden;
+  }
 
-<p>Total Events</p>
+  .metric:last-child {
+    border-right: none;
+  }
 
+  .metric:first-child {
+    border-radius: 0 0 0 10px;
+  }
+
+  .metric:nth-child(4) {
+    border-radius: 0 0 10px 0;
+  }
+
+  .metric::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+
+  .metric-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    font-size: 1.05rem;
+  }
+
+  .metric-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 2.6rem;
+    line-height: 1;
+    color: #1B1F27;
+    margin: 0 0 10px;
+  }
+
+  .metric-label {
+    font-size: 0.88rem;
+    color: #6B7280;
+    margin: 0;
+  }
+
+  .metric-bar {
+    position: absolute;
+    left: 26px;
+    bottom: 0;
+    height: 2px;
+    width: 46px;
+    animation: draw-in 0.9s ease-out forwards;
+    transform-origin: left;
+  }
+
+  @keyframes draw-in {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  .metric:nth-child(1) { background: #F4F8FF; }
+  .metric:nth-child(1)::before { background: #3B6FE0; }
+  .metric:nth-child(1) .metric-icon { background: #E4EBFC; color: #3B6FE0; }
+  .metric:nth-child(1) .metric-bar { background: #3B6FE0; }
+
+  .metric:nth-child(2) { background: #F2FAF6; }
+  .metric:nth-child(2)::before { background: #2E9E68; }
+  .metric:nth-child(2) .metric-icon { background: #E0F3EA; color: #2E9E68; }
+  .metric:nth-child(2) .metric-bar { background: #2E9E68; }
+
+  .metric:nth-child(3) { background: #FDF7EE; }
+  .metric:nth-child(3)::before { background: #C8862E; }
+  .metric:nth-child(3) .metric-icon { background: #F9EBD3; color: #C8862E; }
+  .metric:nth-child(3) .metric-bar { background: #C8862E; }
+
+  .metric:nth-child(4) { background: #FDF2F3; }
+  .metric:nth-child(4)::before { background: #C24555; }
+  .metric:nth-child(4) .metric-icon { background: #FAE0E3; color: #C24555; }
+  .metric:nth-child(4) .metric-bar { background: #C24555; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .metric-bar { animation: none; transform: scaleX(1); }
+  }
+
+  @media (max-width: 720px) {
+    .metric { flex: 1 1 50%; border-right: none; border-bottom: 1px solid #E3E6EB; border-radius: 0 !important; }
+    .metric:nth-child(2) { border-right: 1px solid #E3E6EB; }
+    .metric:nth-child(1) { border-right: 1px solid #E3E6EB; }
+  }
+</style>
+
+<div class="console">
+  <div class="console-heading">
+    <h2>System report</h2>
+    <span>Live totals</span>
+  </div>
+
+  <div class="ledger">
+
+    <div class="metric">
+      <div class="metric-icon">📅</div>
+      <p class="metric-value">{{ events }}</p>
+      <p class="metric-label">Total events</p>
+      <div class="metric-bar"></div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-icon">🎓</div>
+      <p class="metric-value">{{ students }}</p>
+      <p class="metric-label">Total students</p>
+      <div class="metric-bar"></div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-icon">📝</div>
+      <p class="metric-value">{{ registrations }}</p>
+      <p class="metric-label">Registrations</p>
+      <div class="metric-bar"></div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-icon">💳</div>
+      <p class="metric-value">{{ payments }}</p>
+      <p class="metric-label">Payments</p>
+      <div class="metric-bar"></div>
+    </div>
+
+  </div>
 </div>
-
-</div>
-
-</div>
-
-<div class="col-md-3">
-
-<div class="card bg-success text-white">
-
-<div class="card-body">
-
-<h3>{{ students }}</h3>
-
-<p>Total Students</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="col-md-3">
-
-<div class="card bg-warning">
-
-<div class="card-body">
-
-<h3>{{ registrations }}</h3>
-
-<p>Registrations</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="col-md-3">
-
-<div class="card bg-danger text-white">
-
-<div class="card-body">
-
-<h3>{{ payments }}</h3>
-
-<p>Payments</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 {% endblock %}

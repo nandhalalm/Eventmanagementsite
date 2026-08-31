@@ -13,7 +13,7 @@
             </h2>
 
             <p class="text-muted mb-0">
-                Search registered students and manage attendance.
+                Search registered students and manage attendance, grouped by event.
             </p>
         </div>
 
@@ -53,7 +53,7 @@
 
 
 
-    <!-- SEARCH BOX -->
+    <!-- SEARCH + EVENT FILTER -->
 
     <div class="card shadow-sm border-0 mb-4">
 
@@ -68,16 +68,44 @@
 
                     <!-- SEARCH -->
 
-                    <div class="col-md-10">
+                    <div class="col-md-6">
 
                         <input
                             type="text"
                             name="q"
                             value="{{ query }}"
                             class="form-control form-control-lg"
-                            placeholder="Search student name, username, email, phone, college or event..."
+                            placeholder="Search student name, username, email, phone, college..."
                             autocomplete="off"
                         >
+
+                    </div>
+
+
+                    <!-- EVENT FILTER -->
+
+                    <div class="col-md-4">
+
+                        <select
+                            name="event_id"
+                            class="form-select form-select-lg"
+                            onchange="this.form.submit()"
+                        >
+
+                            <option value="">All Events</option>
+
+                            {% for event in events %}
+
+                                <option
+                                    value="{{ event.id }}"
+                                    {% if selected_event_id == event.id|stringformat:"s" %}selected{% endif %}
+                                >
+                                    {{ event.title }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
 
                     </div>
 
@@ -109,17 +137,21 @@
 
     <!-- SEARCH INFORMATION -->
 
-    {% if query %}
+    {% if query or selected_event_id %}
 
         <div class="alert alert-info d-flex justify-content-between align-items-center">
 
             <div>
 
-                <strong>
-                    Search Result:
-                </strong>
+                {% if query %}
+                    <strong>Search Result:</strong> "{{ query }}"
+                {% endif %}
 
-                "{{ query }}"
+                {% if query and selected_event_id %} &middot; {% endif %}
+
+                {% if selected_event_id %}
+                    <strong>Event:</strong> {{ selected_event_name }}
+                {% endif %}
 
             </div>
 
@@ -128,7 +160,7 @@
                 class="btn btn-sm btn-secondary"
             >
 
-                Clear Search
+                Clear Filters
 
             </a>
 
@@ -138,358 +170,189 @@
 
 
 
-    <!-- ATTENDANCE TABLE -->
+    <!-- ATTENDANCE GROUPED BY EVENT -->
 
-    <div class="card shadow-sm border-0">
+    {% regroup registrations by event as event_groups %}
 
-        <div class="card-header bg-dark text-white">
+    {% for group in event_groups %}
 
-            <h5 class="mb-0">
-                Registered Students
-            </h5>
+        <div class="card shadow-sm border-0 mb-4">
 
-        </div>
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
 
+                <h5 class="mb-0">
+                    {{ group.grouper.title }}
+                </h5>
 
-        <div class="card-body p-0">
+                <span class="badge bg-light text-dark">
+                    {{ group.list|length }} registered
+                </span>
 
-            <div class="table-responsive">
+            </div>
 
-                <table
-                    class="table table-bordered table-hover align-middle mb-0"
-                >
 
-                    <!-- HEADER -->
+            <div class="card-body p-0">
 
-                    <thead class="table-dark">
+                <div class="table-responsive">
 
-                        <tr>
+                    <table
+                        class="table table-bordered table-hover align-middle mb-0"
+                    >
 
-                            <th style="width: 60px;">
-                                #
-                            </th>
+                        <thead class="table-dark">
 
-                            <th>
-                                Student Name
-                            </th>
+                            <tr>
 
-                            <th>
-                                Username
-                            </th>
+                                <th style="width: 60px;">#</th>
+                                <th>Student Name</th>
+                                <th>Username</th>
+                                <th>College</th>
+                                <th>Department</th>
+                                <th>Phone</th>
+                                <th>Payment</th>
 
-                            <th>
-                                Event
-                            </th>
+                                <th
+                                    class="text-center"
+                                    style="width: 160px;"
+                                >
+                                    Attendance
+                                </th>
 
-                            <th>
-                                College
-                            </th>
+                            </tr>
 
-                            <th>
-                                Department
-                            </th>
+                        </thead>
 
-                            <th>
-                                Phone
-                            </th>
 
-                            <th>
-                                Payment
-                            </th>
+                        <tbody>
 
-                            <th
-                                class="text-center"
-                                style="width: 160px;"
-                            >
-                                Attendance
-                            </th>
+                            {% for reg in group.list %}
 
-                        </tr>
-
-                    </thead>
-
-
-                    <!-- BODY -->
-
-                    <tbody>
-
-                        {% for reg in registrations %}
-
-                        <!-- GREEN ROW WHEN PRESENT -->
-
-                        <tr
-                            {% if reg.attendance %}
-                                class="table-success"
-                            {% endif %}
-                        >
-
-
-                            <!-- ID -->
-
-                            <td>
-
-                                {{ reg.id }}
-
-                            </td>
-
-
-
-                            <!-- STUDENT NAME -->
-
-                            <td>
-
-                                <strong>
-                                    {{ reg.full_name }}
-                                </strong>
-
-                            </td>
-
-
-
-                            <!-- USERNAME -->
-
-                            <td>
-
-                                {{ reg.user.username }}
-
-                            </td>
-
-
-
-                            <!-- EVENT -->
-
-                            <td>
-
-                                {{ reg.event.title }}
-
-                            </td>
-
-
-
-                            <!-- COLLEGE -->
-
-                            <td>
-
-                                {{ reg.college }}
-
-                            </td>
-
-
-
-                            <!-- DEPARTMENT -->
-
-                            <td>
-
-                                {{ reg.department }}
-
-                            </td>
-
-
-
-                            <!-- PHONE -->
-
-                            <td>
-
-                                {{ reg.phone }}
-
-                            </td>
-
-
-
-                            <!-- PAYMENT -->
-
-                            <td>
-
-                                {% if reg.payment_status == "Paid" %}
-
-                                    <span
-                                        class="badge bg-success"
-                                    >
-
-                                        Paid
-
-                                    </span>
-
-                                {% else %}
-
-                                    <span
-                                        class="badge bg-warning text-dark"
-                                    >
-
-                                        Pending
-
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-
-
-                            <!-- ATTENDANCE -->
-
-                            <td class="text-center">
-
-
+                            <tr
                                 {% if reg.attendance %}
-
-                                    <!-- PRESENT -->
-
-                                    <form
-                                        method="POST"
-                                        action="{% url 'attendance' %}"
-                                    >
-
-                                        {% csrf_token %}
-
-
-                                        <input
-                                            type="hidden"
-                                            name="registration_id"
-                                            value="{{ reg.id }}"
-                                        >
-
-
-                                        <!-- KEEP SEARCH -->
-
-                                        <input
-                                            type="hidden"
-                                            name="q"
-                                            value="{{ query }}"
-                                        >
-
-
-                                        <button
-                                            type="submit"
-                                            class="btn btn-success btn-sm px-3"
-                                            title="Click to mark absent"
-                                        >
-
-                                            ✓ Present
-
-                                        </button>
-
-                                    </form>
-
-
-                                {% else %}
-
-                                    <!-- ABSENT -->
-
-                                    <form
-                                        method="POST"
-                                        action="{% url 'attendance' %}"
-                                    >
-
-                                        {% csrf_token %}
-
-
-                                        <input
-                                            type="hidden"
-                                            name="registration_id"
-                                            value="{{ reg.id }}"
-                                        >
-
-
-                                        <!-- KEEP SEARCH -->
-
-                                        <input
-                                            type="hidden"
-                                            name="q"
-                                            value="{{ query }}"
-                                        >
-
-
-                                        <button
-                                            type="submit"
-                                            class="btn btn-danger btn-sm px-3"
-                                            title="Click to mark present"
-                                        >
-
-                                            Mark Present
-
-                                        </button>
-
-                                    </form>
-
+                                    class="table-success"
                                 {% endif %}
-
-
-                            </td>
-
-
-                        </tr>
-
-
-                        {% empty %}
-
-
-                        <!-- NO STUDENTS -->
-
-                        <tr>
-
-                            <td
-                                colspan="9"
-                                class="text-center py-5"
                             >
 
-                                {% if query %}
+                                <td>{{ reg.id }}</td>
 
-                                    <div>
+                                <td><strong>{{ reg.full_name }}</strong></td>
 
-                                        <h5 class="text-danger">
-                                            No Student Found
-                                        </h5>
+                                <td>{{ reg.user.username }}</td>
 
-                                        <p class="text-muted">
-                                            No registered student matches
-                                            "<strong>{{ query }}</strong>".
-                                        </p>
+                                <td>{{ reg.college }}</td>
 
-                                        <a
-                                            href="{% url 'attendance' %}"
-                                            class="btn btn-secondary"
-                                        >
+                                <td>{{ reg.department }}</td>
 
-                                            Clear Search
+                                <td>{{ reg.phone }}</td>
 
-                                        </a>
+                                <td>
 
-                                    </div>
+                                    {% if reg.payment_status == "Paid" %}
 
-                                {% else %}
+                                        <span class="badge bg-success">Paid</span>
 
-                                    <div>
+                                    {% else %}
 
-                                        <h5 class="text-muted">
-                                            No Registrations Found
-                                        </h5>
+                                        <span class="badge bg-warning text-dark">Pending</span>
 
-                                        <p class="text-muted">
-                                            No students have registered
-                                            for any event yet.
-                                        </p>
+                                    {% endif %}
 
-                                    </div>
-
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
+                                </td>
 
 
-                        {% endfor %}
+                                <td class="text-center">
 
-                    </tbody>
+                                    {% if reg.attendance %}
 
-                </table>
+                                        <form method="POST" action="{% url 'attendance' %}">
+
+                                            {% csrf_token %}
+
+                                            <input type="hidden" name="registration_id" value="{{ reg.id }}">
+                                            <input type="hidden" name="q" value="{{ query }}">
+                                            <input type="hidden" name="event_id" value="{{ selected_event_id }}">
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-success btn-sm px-3"
+                                                title="Click to mark absent"
+                                            >
+                                                ✓ Present
+                                            </button>
+
+                                        </form>
+
+                                    {% else %}
+
+                                        <form method="POST" action="{% url 'attendance' %}">
+
+                                            {% csrf_token %}
+
+                                            <input type="hidden" name="registration_id" value="{{ reg.id }}">
+                                            <input type="hidden" name="q" value="{{ query }}">
+                                            <input type="hidden" name="event_id" value="{{ selected_event_id }}">
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-danger btn-sm px-3"
+                                                title="Click to mark present"
+                                            >
+                                                Mark Present
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+    {% empty %}
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center py-5">
+
+                {% if query or selected_event_id %}
+
+                    <h5 class="text-danger">No Student Found</h5>
+
+                    <p class="text-muted">
+                        No registered student matches your search or filter.
+                    </p>
+
+                    <a href="{% url 'attendance' %}" class="btn btn-secondary">
+                        Clear Filters
+                    </a>
+
+                {% else %}
+
+                    <h5 class="text-muted">No Registrations Found</h5>
+
+                    <p class="text-muted">
+                        No students have registered for any event yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    {% endfor %}
 
 
 
@@ -499,17 +362,11 @@
 
         <div class="d-flex gap-3 align-items-center">
 
-            <span>
-                Attendance:
-            </span>
+            <span>Attendance:</span>
 
-            <span class="badge bg-danger">
-                Mark Present
-            </span>
+            <span class="badge bg-danger">Mark Present</span>
 
-            <span class="badge bg-success">
-                ✓ Present
-            </span>
+            <span class="badge bg-success">✓ Present</span>
 
         </div>
 
