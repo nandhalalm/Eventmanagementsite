@@ -2,108 +2,437 @@
 
 {% block content %}
 
-<h2>Admin Dashboard</h2>
+<!-- Google Fonts & Bootstrap Icons for premium styling -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-<hr>
+<style>
+  :root {
+    --bg-page: #f8fafc;
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+  }
 
-<div class="row">
+  body, .dashboard-wrapper {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-primary);
+  }
 
-<div class="col-md-3">
+  /* Header Section */
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+  }
 
-<div class="card bg-primary text-white">
+  .dashboard-header h2 {
+    font-weight: 800;
+    font-size: 1.85rem;
+    letter-spacing: -0.03em;
+    color: #0f172a;
+    margin: 0;
+  }
 
-<div class="card-body">
+  .dashboard-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
 
-<h3>{{ total_events }}</h3>
+  /* 3D Stat Cards */
+  .stat-card {
+    border: none;
+    border-radius: 20px;
+    padding: 1.5rem 1.35rem;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  }
 
-<p>Total Events</p>
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+    pointer-events: none;
+  }
 
+  .stat-card:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+
+  /* Specific Card Gradients & Glows */
+  .stat-card.card-events {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    box-shadow: 0 14px 28px -4px rgba(79, 70, 229, 0.35);
+  }
+
+  .stat-card.card-students {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    box-shadow: 0 14px 28px -4px rgba(16, 185, 129, 0.35);
+  }
+
+  .stat-card.card-registrations {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    box-shadow: 0 14px 28px -4px rgba(245, 158, 11, 0.35);
+  }
+
+  .stat-card.card-payments {
+    background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+    box-shadow: 0 14px 28px -4px rgba(244, 63, 94, 0.35);
+  }
+
+  .stat-card-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .stat-value {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  /* Registrations Panel / Glassmorphic Surface */
+  .table-panel {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 1.75rem;
+    margin-top: 2rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.06);
+  }
+
+  .table-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .table-panel-header h4 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .table-panel-header h4 i {
+    color: #4f46e5;
+  }
+
+  /* Custom Modern Table */
+  .custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+  }
+
+  .custom-table th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    padding: 0 1.25rem 0.5rem 1.25rem;
+    border: none;
+  }
+
+  .custom-table td {
+    padding: 1rem 1.25rem;
+    background: #ffffff;
+    border: none;
+    font-size: 0.92rem;
+    vertical-align: middle;
+    transition: all 0.2s ease;
+  }
+
+  .custom-table tbody tr {
+    transition: all 0.2s ease;
+  }
+
+  .custom-table tbody tr td:first-child {
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+    border-left: 1px solid #f1f5f9;
+    border-top: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .custom-table tbody tr td:last-child {
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+    border-right: 1px solid #f1f5f9;
+    border-top: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .custom-table tbody tr td:not(:first-child):not(:last-child) {
+    border-top: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .custom-table tbody tr:hover td {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    transform: translateY(-2px);
+  }
+
+  /* User Avatar & Name Presentation */
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #4338ca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .user-name {
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  /* Event Pill Tag */
+  .event-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: #334155;
+    background: #f1f5f9;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  /* Modern Pill Status Badges */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  /* Dynamic color matching based on text */
+  .status-badge[data-status*="paid" i],
+  .status-badge[data-status*="completed" i],
+  .status-badge[data-status*="success" i] {
+    background: #ecfdf5;
+    color: #059669;
+  }
+  .status-badge[data-status*="paid" i]::before,
+  .status-badge[data-status*="completed" i]::before,
+  .status-badge[data-status*="success" i]::before {
+    background: #10b981;
+  }
+
+  .status-badge[data-status*="pending" i] {
+    background: #fffbeb;
+    color: #d97706;
+  }
+  .status-badge[data-status*="pending" i]::before {
+    background: #f59e0b;
+  }
+
+  .status-badge[data-status*="failed" i],
+  .status-badge[data-status*="unpaid" i] {
+    background: #fef2f2;
+    color: #e11d48;
+  }
+  .status-badge[data-status*="failed" i]::before,
+  .status-badge[data-status*="unpaid" i]::before {
+    background: #f43f5e;
+  }
+</style>
+
+<div class="dashboard-wrapper">
+  <!-- Top Navigation / Header -->
+  <div class="dashboard-header">
+    <div>
+      <h2>Admin Overview</h2>
+      <p class="dashboard-subtitle">Monitor live metrics, attendee registrations, and revenue flow.</p>
+    </div>
+  </div>
+
+  <!-- Key Metrics Row -->
+  <div class="row g-4">
+    <!-- Events -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="stat-card card-events">
+        <div class="stat-card-content">
+          <div>
+            <div class="stat-value">{{ total_events }}</div>
+            <p class="stat-label">Total Events</p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="bi bi-calendar4-event"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Students -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="stat-card card-students">
+        <div class="stat-card-content">
+          <div>
+            <div class="stat-value">{{ total_students }}</div>
+            <p class="stat-label">Total Students</p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="bi bi-people-fill"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registrations -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="stat-card card-registrations">
+        <div class="stat-card-content">
+          <div>
+            <div class="stat-value">{{ total_registrations }}</div>
+            <p class="stat-label">Registrations</p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="bi bi-journal-check"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payments -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="stat-card card-payments">
+        <div class="stat-card-content">
+          <div>
+            <div class="stat-value">{{ total_payments }}</div>
+            <p class="stat-label">Revenue / Payments</p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="bi bi-credit-card-2-front"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Registrations Section -->
+  <div class="table-panel">
+    <div class="table-panel-header">
+      <h4>
+        <i class="bi bi-clock-history"></i>
+        Recent Registrations
+      </h4>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Enrolled Event</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reg in recent_registrations %}
+          <tr>
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar">
+                  {{ reg.full_name|slice:":1"|upper }}
+                </div>
+                <div class="user-name">{{ reg.full_name }}</div>
+              </div>
+            </td>
+            <td>
+              <span class="event-tag">
+                <i class="bi bi-bookmark text-primary"></i>
+                {{ reg.event.title }}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" data-status="{{ reg.payment_status }}">
+                {{ reg.payment_status }}
+              </span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="text-center text-muted py-4">
+              No recent registrations found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-</div>
-
-</div>
-
-<div class="col-md-3">
-
-<div class="card bg-success text-white">
-
-<div class="card-body">
-
-<h3>{{ total_students }}</h3>
-
-<p>Students</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="col-md-3">
-
-<div class="card bg-warning">
-
-<div class="card-body">
-
-<h3>{{ total_registrations }}</h3>
-
-<p>Registrations</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="col-md-3">
-
-<div class="card bg-danger text-white">
-
-<div class="card-body">
-
-<h3>{{ total_payments }}</h3>
-
-<p>Payments</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<br>
-
-<h4>Recent Registrations</h4>
-
-<table class="table table-bordered">
-
-<tr>
-
-<th>Name</th>
-
-<th>Event</th>
-
-<th>Status</th>
-
-</tr>
-
-{% for reg in recent_registrations %}
-
-<tr>
-
-<td>{{ reg.full_name }}</td>
-
-<td>{{ reg.event.title }}</td>
-
-<td>{{ reg.payment_status }}</td>
-
-</tr>
-
-{% endfor %}
-
-</table>
 
 {% endblock %}

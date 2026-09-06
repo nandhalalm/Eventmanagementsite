@@ -1,184 +1,334 @@
 {% extends 'admin/base.html' %}
 
 {% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap');
-
-  .console {
-    background: #FFFFFF;
-    border: 1px solid #E3E6EB;
-    border-radius: 10px;
-    padding: 34px 8px 8px;
-    margin: 10px 0 30px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    box-shadow: 0 4px 16px rgba(16, 24, 40, 0.06);
+  :root {
+    --ink-primary: #090D14;
+    --ink-secondary: #525866;
+    --ink-tertiary: #99A0AE;
+    --surface-card: #FFFFFF;
+    --border-subtle: #EBECEF;
+    --border-strong: #DCDFE4;
+    --radius-outer: 24px;
+    --radius-inner: 18px;
+    --indigo-glow: rgba(99, 102, 241, 0.12);
   }
 
-  .console-heading {
+  .insight-workspace {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: var(--ink-primary);
+    max-width: 1280px;
+    margin: 1.5rem auto 3rem;
+  }
+
+  /* Command Bar Header */
+  .insight-header {
     display: flex;
-    align-items: baseline;
     justify-content: space-between;
-    padding: 0 26px 22px;
-    border-bottom: 1px solid #E3E6EB;
-    margin: 0 0 4px;
-  }
-
-  .console-heading h2 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: #1B1F27;
-    margin: 0;
-    letter-spacing: 0.2px;
-  }
-
-  .console-heading span {
-    font-size: 0.8rem;
-    color: #8A93A3;
-  }
-
-  .ledger {
-    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
     flex-wrap: wrap;
   }
 
-  .metric {
-    flex: 1 1 200px;
+  .insight-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: #F4F5F7;
+    border: 1px solid var(--border-subtle);
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #10B981;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: live-pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+  }
+
+  @keyframes live-pulse {
+    to { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  }
+
+  .insight-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0;
+    line-height: 1.2;
+    color: var(--ink-primary);
+  }
+
+  .insight-subtitle {
+    font-size: 0.92rem;
+    color: var(--ink-secondary);
+    margin: 6px 0 0;
+  }
+
+  .meta-timestamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    border: 1px solid var(--border-subtle);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink-secondary);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  /* Interactive Metric Grid */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  .insight-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-inner);
+    padding: 1.5rem;
     position: relative;
-    padding: 30px 26px 30px;
-    border-right: 1px solid #E3E6EB;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 230px;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px -2px rgba(9, 13, 20, 0.03);
     overflow: hidden;
   }
 
-  .metric:last-child {
-    border-right: none;
+  .insight-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--border-strong);
+    box-shadow: 0 20px 30px -10px rgba(9, 13, 20, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02);
   }
 
-  .metric:first-child {
-    border-radius: 0 0 0 10px;
+  /* Card Top Decorator */
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
   }
 
-  .metric:nth-child(4) {
-    border-radius: 0 0 10px 0;
-  }
-
-  .metric::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-  }
-
-  .metric-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
+  .icon-bubble {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 18px;
-    font-size: 1.05rem;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
   }
 
-  .metric-value {
-    font-family: 'Space Grotesk', sans-serif;
+  .insight-card:hover .icon-bubble {
+    transform: scale(1.1) rotate(4deg);
+  }
+
+  .spark-vector {
+    width: 70px;
+    height: 28px;
+    opacity: 0.85;
+  }
+
+  .card-metric-label {
+    font-size: 0.82rem;
     font-weight: 700;
-    font-size: 2.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-secondary);
+    margin-bottom: 0.35rem;
+  }
+
+  .card-metric-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.35rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--ink-primary);
     line-height: 1;
-    color: #1B1F27;
-    margin: 0 0 10px;
+    margin: 0 0 1.25rem;
   }
 
-  .metric-label {
-    font-size: 0.88rem;
-    color: #6B7280;
-    margin: 0;
+  /* Dynamic Telemetry Footer */
+  .card-footer-telemetry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border-subtle);
+    font-size: 0.78rem;
+    color: var(--ink-secondary);
   }
 
-  .metric-bar {
-    position: absolute;
-    left: 26px;
-    bottom: 0;
-    height: 2px;
-    width: 46px;
-    animation: draw-in 0.9s ease-out forwards;
-    transform-origin: left;
+  .trend-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    font-size: 0.74rem;
+    padding: 3px 8px;
+    border-radius: 6px;
   }
 
-  @keyframes draw-in {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
+  .trend-pill.positive {
+    background: #ECFDF5;
+    color: #059669;
   }
 
-  .metric:nth-child(1) { background: #F4F8FF; }
-  .metric:nth-child(1)::before { background: #3B6FE0; }
-  .metric:nth-child(1) .metric-icon { background: #E4EBFC; color: #3B6FE0; }
-  .metric:nth-child(1) .metric-bar { background: #3B6FE0; }
-
-  .metric:nth-child(2) { background: #F2FAF6; }
-  .metric:nth-child(2)::before { background: #2E9E68; }
-  .metric:nth-child(2) .metric-icon { background: #E0F3EA; color: #2E9E68; }
-  .metric:nth-child(2) .metric-bar { background: #2E9E68; }
-
-  .metric:nth-child(3) { background: #FDF7EE; }
-  .metric:nth-child(3)::before { background: #C8862E; }
-  .metric:nth-child(3) .metric-icon { background: #F9EBD3; color: #C8862E; }
-  .metric:nth-child(3) .metric-bar { background: #C8862E; }
-
-  .metric:nth-child(4) { background: #FDF2F3; }
-  .metric:nth-child(4)::before { background: #C24555; }
-  .metric:nth-child(4) .metric-icon { background: #FAE0E3; color: #C24555; }
-  .metric:nth-child(4) .metric-bar { background: #C24555; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .metric-bar { animation: none; transform: scaleX(1); }
+  .trend-pill.neutral {
+    background: #EEF2FF;
+    color: #4F46E5;
   }
 
-  @media (max-width: 720px) {
-    .metric { flex: 1 1 50%; border-right: none; border-bottom: 1px solid #E3E6EB; border-radius: 0 !important; }
-    .metric:nth-child(2) { border-right: 1px solid #E3E6EB; }
-    .metric:nth-child(1) { border-right: 1px solid #E3E6EB; }
+  .trend-pill.warning {
+    background: #FFFBEB;
+    color: #D97706;
+  }
+
+  /* Palette Variants */
+  .card-events .icon-bubble { background: #EEF2FF; color: #4F46E5; }
+  .card-events:hover { border-color: #C7D2FE; }
+
+  .card-students .icon-bubble { background: #ECFDF5; color: #059669; }
+  .card-students:hover { border-color: #A7F3D0; }
+
+  .card-registrations .icon-bubble { background: #FFFBEB; color: #D97706; }
+  .card-registrations:hover { border-color: #FDE68A; }
+
+  .card-payments .icon-bubble { background: #FEF2F2; color: #E11D48; }
+  .card-payments:hover { border-color: #FECDD3; }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 1100px) {
+    .insight-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .insight-grid { grid-template-columns: 1fr; }
+    .insight-header { flex-direction: column; align-items: flex-start; }
+    .meta-timestamp { width: 100%; justify-content: center; }
   }
 </style>
 
-<div class="console">
-  <div class="console-heading">
-    <h2>System report</h2>
-    <span>Live totals</span>
+<div class="insight-workspace">
+  <!-- Interactive Dashboard Header -->
+  <div class="insight-header">
+    <div>
+      <div class="insight-badge">
+        <span class="pulse-dot"></span>
+        Telemetry Stream Active
+      </div>
+      <h2 class="insight-title">Platform Intelligence</h2>
+      <p class="insight-subtitle">Real-time throughput metrics and live engagement diagnostics.</p>
+    </div>
+    
+    <div class="meta-timestamp">
+      <i class="bi bi-broadcast"></i>
+      Auto-refreshing live ledger
+    </div>
   </div>
 
-  <div class="ledger">
-
-    <div class="metric">
-      <div class="metric-icon">📅</div>
-      <p class="metric-value">{{ events }}</p>
-      <p class="metric-label">Total events</p>
-      <div class="metric-bar"></div>
+  <!-- Metric Insight Grid -->
+  <div class="insight-grid">
+    <!-- Events Metric -->
+    <div class="insight-card card-events">
+      <div class="card-top">
+        <div class="icon-bubble">
+          <i class="bi bi-calendar4-week"></i>
+        </div>
+        <!-- Dynamic trend line illustration -->
+        <svg class="spark-vector" viewBox="0 0 70 28" fill="none">
+          <path d="M2 22 L20 18 L38 24 L52 8 L68 12" stroke="#4F46E5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="card-metric-label">Active Events</div>
+        <div class="card-metric-value">{{ events }}</div>
+      </div>
+      <div class="card-footer-telemetry">
+        <span class="trend-pill positive"><i class="bi bi-arrow-up-right"></i> Stable</span>
+        <span>Scheduled</span>
+      </div>
     </div>
 
-    <div class="metric">
-      <div class="metric-icon">🎓</div>
-      <p class="metric-value">{{ students }}</p>
-      <p class="metric-label">Total students</p>
-      <div class="metric-bar"></div>
+    <!-- Students Metric -->
+    <div class="insight-card card-students">
+      <div class="card-top">
+        <div class="icon-bubble">
+          <i class="bi bi-mortarboard"></i>
+        </div>
+        <svg class="spark-vector" viewBox="0 0 70 28" fill="none">
+          <path d="M2 24 L18 19 L34 16 L50 9 L68 4" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="card-metric-label">Enrolled Students</div>
+        <div class="card-metric-value">{{ students }}</div>
+      </div>
+      <div class="card-footer-telemetry">
+        <span class="trend-pill positive"><i class="bi bi-arrow-up-right"></i> High</span>
+        <span>Verified profiles</span>
+      </div>
     </div>
 
-    <div class="metric">
-      <div class="metric-icon">📝</div>
-      <p class="metric-value">{{ registrations }}</p>
-      <p class="metric-label">Registrations</p>
-      <div class="metric-bar"></div>
+    <!-- Registrations Metric -->
+    <div class="insight-card card-registrations">
+      <div class="card-top">
+        <div class="icon-bubble">
+          <i class="bi bi-fingerprint"></i>
+        </div>
+        <svg class="spark-vector" viewBox="0 0 70 28" fill="none">
+          <path d="M2 18 L18 10 L36 20 L50 6 L68 14" stroke="#D97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="card-metric-label">Registrations</div>
+        <div class="card-metric-value">{{ registrations }}</div>
+      </div>
+      <div class="card-footer-telemetry">
+        <span class="trend-pill neutral"><i class="bi bi-activity"></i> Inflow</span>
+        <span>Conversion funnel</span>
+      </div>
     </div>
 
-    <div class="metric">
-      <div class="metric-icon">💳</div>
-      <p class="metric-value">{{ payments }}</p>
-      <p class="metric-label">Payments</p>
-      <div class="metric-bar"></div>
+    <!-- Payments Metric -->
+    <div class="insight-card card-payments">
+      <div class="card-top">
+        <div class="icon-bubble">
+          <i class="bi bi-shield-check"></i>
+        </div>
+        <svg class="spark-vector" viewBox="0 0 70 28" fill="none">
+          <path d="M2 20 L20 15 L36 18 L52 8 L68 3" stroke="#E11D48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="card-metric-label">Payments</div>
+        <div class="card-metric-value">{{ payments }}</div>
+      </div>
+      <div class="card-footer-telemetry">
+        <span class="trend-pill positive"><i class="bi bi-lock-fill"></i> Verified</span>
+        <span>Gateway settled</span>
+      </div>
     </div>
-
   </div>
 </div>
 {% endblock %}

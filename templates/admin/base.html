@@ -1,142 +1,230 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Admin Panel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Workspace</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <style>
-        body {
-            font-family: 'IBM Plex Sans', sans-serif;
-            background: #F7F8FA;
+        :root {
+            --bg-body: #f8fafc;
+            --nav-surface: rgba(15, 23, 42, 0.95);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --brand-primary: #4f46e5;
+            --brand-glow: rgba(79, 70, 229, 0.35);
+            --text-inactive: #94a3b8;
+            --text-active: #ffffff;
         }
 
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: #0f172a;
+            min-height: 100vh;
+        }
+
+        /* Modern Glass Navbar */
         .topbar {
-            background: #14171C;
-            border-bottom: 1px solid #14171C;
-            box-shadow: 0 2px 10px rgba(16, 24, 40, 0.12);
+            background: var(--nav-surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
         }
 
         .topbar .container {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 14px;
-            padding-bottom: 14px;
-            flex-wrap: wrap;
-            gap: 12px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            gap: 16px;
         }
 
+        /* Brand Styling */
         .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: #F3F5F8;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: #ffffff;
             text-decoration: none;
+            letter-spacing: -0.02em;
+            transition: opacity 0.2s ease;
         }
 
         .brand:hover {
-            color: #FFFFFF;
+            color: #ffffff;
+            opacity: 0.9;
         }
 
         .brand-mark {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: #5B8DEF;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            box-shadow: 0 4px 12px var(--brand-glow);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 0.95rem;
+            color: #ffffff;
+            font-size: 1.05rem;
             flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Navigation Links Tray */
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 2px;
-            flex-wrap: wrap;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border-glass);
         }
 
         .nav-links a {
-            font-size: 0.92rem;
-            font-weight: 500;
-            color: #AEB6C4;
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: var(--text-inactive);
             text-decoration: none;
-            padding: 8px 14px;
-            border-radius: 7px;
-            transition: background 0.15s ease, color 0.15s ease;
+            padding: 7px 14px;
+            border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .nav-links a:hover {
-            background: #1F2430;
-            color: #FFFFFF;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
         }
 
+        /* Active Navigation Highlight */
+        .nav-links a.active {
+            background: var(--brand-primary);
+            color: var(--text-active);
+            box-shadow: 0 2px 10px var(--brand-glow);
+        }
+
+        /* Logout Action Link */
         .nav-links a.logout {
-            color: #E38A94;
-            margin-left: 8px;
+            color: #f87171;
+            margin-left: 6px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
         .nav-links a.logout:hover {
-            background: #2A1B1D;
-            color: #F2A3AC;
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.3);
         }
 
+        /* Alerts Custom Design */
         .page-alerts {
-            margin-top: 24px;
+            margin-bottom: 2rem;
         }
 
-        .alert-success {
-            border: 1px solid #CDEBDC;
-            background: #F2FAF6;
-            color: #1E7A4D;
-            border-radius: 8px;
+        .alert-custom {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--brand-primary);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: #1e293b;
+            font-size: 0.92rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        @media (max-width: 991px) {
+            .topbar .container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .nav-links {
+                overflow-x: auto;
+                padding-bottom: 6px;
+                white-space: nowrap;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="topbar">
+<header class="topbar">
     <div class="container">
+        <!-- Brand Link -->
         <a class="brand" href="{% url 'admin_dashboard' %}">
-            <span class="brand-mark">E</span>
+            <span class="brand-mark">
+                <i class="bi bi-stack"></i>
+            </span>
             Event Admin
         </a>
 
-        <div class="nav-links">
-            <a href="{% url 'admin_dashboard' %}">Dashboard</a>
-            <a href="{% url 'manage_events' %}">Events</a>
-            <a href="{% url 'view_registrations' %}">Registrations</a>
-            <a href="{% url 'view_payments' %}">Payments</a>
-            <a href="{% url 'attendance' %}">Attendance</a>
-            <a href="{% url 'reports' %}">Reports</a>
-            <a href="{% url 'messages' %}">Messages</a>
-            <a class="logout" href="{% url 'logout' %}">Logout</a>
-        </div>
+        <!-- Dynamic Navigation with Active URL Checks -->
+        <nav class="nav-links">
+            <a href="{% url 'admin_dashboard' %}" class="{% if request.path == '/' or 'dashboard' in request.path %}active{% endif %}">
+                <i class="bi bi-grid-1x2"></i> Dashboard
+            </a>
+            <a href="{% url 'manage_events' %}" class="{% if 'event' in request.path %}active{% endif %}">
+                <i class="bi bi-calendar-event"></i> Events
+            </a>
+            <a href="{% url 'view_registrations' %}" class="{% if 'registration' in request.path %}active{% endif %}">
+                <i class="bi bi-people"></i> Registrations
+            </a>
+            <a href="{% url 'view_payments' %}" class="{% if 'payment' in request.path %}active{% endif %}">
+                <i class="bi bi-credit-card"></i> Payments
+            </a>
+            <a href="{% url 'attendance' %}" class="{% if 'attendance' in request.path %}active{% endif %}">
+                <i class="bi bi-person-check"></i> Attendance
+            </a>
+            <a href="{% url 'reports' %}" class="{% if 'report' in request.path %}active{% endif %}">
+                <i class="bi bi-bar-chart-line"></i> Reports
+            </a>
+            <a href="{% url 'messages' %}" class="{% if 'message' in request.path %}active{% endif %}">
+                <i class="bi bi-chat-left-text"></i> Messages
+            </a>
+            <a class="logout" href="{% url 'logout' %}">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </nav>
     </div>
-</div>
+</header>
 
-<div class="container mt-4">
-
+<main class="container mt-4">
+    <!-- Messages Notification Tray -->
     {% if messages %}
         <div class="page-alerts">
             {% for message in messages %}
-                <div class="alert alert-success">{{ message }}</div>
+                <div class="alert-custom">
+                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                    <div>{{ message }}</div>
+                </div>
             {% endfor %}
         </div>
     {% endif %}
 
+    <!-- Page Content Injection Block -->
     {% block content %}
     {% endblock %}
+</main>
 
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

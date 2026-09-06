@@ -69,9 +69,7 @@
   .lightbox-nav.prev{ left:1.5rem; top:50%; transform:translateY(-50%); }
   .lightbox-nav.next{ right:1.5rem; top:50%; transform:translateY(-50%); }
 
-  footer.site-footer{ background:var(--indigo-deep); border-top:1px solid var(--line); font-family:'Inter', sans-serif; font-size:.85rem; color:var(--muted); letter-spacing:.02em; }
-
-  /* ---------- Navbar (from base.html) ---------- */
+  /* ---------- Navbar ---------- */
   .site-nav{
       background:var(--indigo-deep) !important;
       box-shadow:0 2px 18px rgba(26,21,64,0.18);
@@ -218,25 +216,222 @@
           width:100%;
       }
   }
+
+  /* ---------- Full-Width Footer ---------- */
+  .site-footer{
+    position:relative;
+    width:100%;
+    margin-top:5rem;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255,194,75,0.25), transparent 45%),
+      radial-gradient(circle at 90% 85%, rgba(255,90,69,0.25), transparent 40%),
+      linear-gradient(135deg, var(--indigo-deep), var(--indigo));
+    color:rgba(255,255,255,0.85);
+    isolation:isolate;
+  }
+
+  .site-footer::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 22px);
+    z-index:-1;
+  }
+
+  .footer-inner{
+    max-width:1320px;
+    margin:0 auto;
+    padding:0 2.5rem;
+  }
+
+  .footer-top{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    gap:2.5rem;
+    padding:3.5rem 0 2.25rem;
+  }
+
+  .footer-brand h5{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:1.3rem;
+    color:#fff;
+    margin-bottom:.6rem;
+  }
+  .footer-brand p{
+    font-family:'Inter', sans-serif;
+    font-size:.92rem;
+    color:rgba(255,255,255,0.68);
+    max-width:32ch;
+    line-height:1.55;
+  }
+
+  .footer-links h6,
+  .footer-social h6{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:1rem;
+  }
+  .footer-links ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    gap:.6rem;
+  }
+  .footer-links a{
+    font-family:'Inter', sans-serif;
+    font-size:.9rem;
+    color:rgba(255,255,255,0.75);
+    text-decoration:none;
+    position:relative;
+    width:fit-content;
+    transition:color .18s ease;
+  }
+  .footer-links a::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:-2px;
+    width:0%;
+    height:1px;
+    background:var(--coral);
+    transition:width .25s ease;
+  }
+  .footer-links a:hover{
+    color:#fff;
+  }
+  .footer-links a:hover::after{
+    width:100%;
+  }
+
+  .footer-social{
+    text-align:center;
+    margin-right:8rem;
+  }
+  .footer-social-icons{
+    display:flex;
+    justify-content:center;
+    gap:.7rem;
+  }
+  .footer-social-icons a{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.25);
+    color:#fff;
+    background:rgba(255,255,255,0.04);
+    overflow:hidden;
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1), border-color .3s ease, box-shadow .3s ease;
+  }
+  .footer-social-icons a svg{
+    position:relative;
+    z-index:1;
+    width:18px;
+    height:18px;
+    transition:transform .3s ease;
+  }
+  .footer-social-icons a::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:var(--coral);
+    transform:translateY(100%);
+    transition:transform .3s ease;
+    z-index:0;
+  }
+  .footer-social-icons a:hover{
+    transform:translateY(-5px) rotate(-6deg);
+    border-color:var(--coral);
+    box-shadow:0 10px 22px rgba(255,90,69,0.35);
+  }
+  .footer-social-icons a:hover::before{
+    transform:translateY(0%);
+  }
+  .footer-social-icons a:hover svg{
+    transform:scale(1.1);
+  }
+
+  .footer-social-icons a[data-brand="instagram"]:hover{ border-color:#E1306C; box-shadow:0 10px 22px rgba(225,48,108,0.35);}
+  .footer-social-icons a[data-brand="instagram"]:hover::before{ background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); }
+  .footer-social-icons a[data-brand="twitter"]:hover{ border-color:#1DA1F2; box-shadow:0 10px 22px rgba(29,161,242,0.35);}
+  .footer-social-icons a[data-brand="twitter"]:hover::before{ background:#1DA1F2; }
+  .footer-social-icons a[data-brand="linkedin"]:hover{ border-color:#0A66C2; box-shadow:0 10px 22px rgba(10,102,194,0.35);}
+  .footer-social-icons a[data-brand="linkedin"]:hover::before{ background:#0A66C2; }
+  .footer-social-icons a[data-brand="youtube"]:hover{ border-color:#FF0000; box-shadow:0 10px 22px rgba(255,0,0,0.35);}
+  .footer-social-icons a[data-brand="youtube"]:hover::before{ background:#FF0000; }
+
+  /* Full-width copyright bar */
+  .footer-bottom-wrap{
+    width:100%;
+    border-top:1px solid rgba(255,255,255,0.12);
+  }
+  .footer-bottom{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    padding-top:1.25rem;
+    padding-bottom:1.5rem;
+    font-family:'Inter', sans-serif;
+    font-size:.82rem;
+    color:rgba(255,255,255,0.6);
+  }
+  .footer-bottom .heart{
+    display:inline-block;
+    font-size:1.6rem;
+    vertical-align:middle;
+    color:var(--coral);
+    animation:beat 1.4s ease-in-out infinite;
+  }
+  @keyframes beat{
+    0%, 100%{ transform:scale(1); }
+    25%{ transform:scale(1.25); }
+    40%{ transform:scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .footer-social-icons a,
+    .footer-social-icons a::before,
+    .footer-social-icons a svg,
+    .footer-links a::after,
+    .footer-bottom .heart{
+      transition:none;
+      animation:none;
+      transform:none;
+    }
+  }
+
+  @media (max-width: 767px){
+    .footer-inner{ padding:0 1.5rem; }
+    .footer-top{ gap:2rem; }
+    .footer-social{ margin-right:0; }
+    .footer-bottom{ justify-content:center; text-align:center; }
+  }
 </style>
 </head>
 <body>
 
-<!-- ================= NAVBAR (from base.html) ================= -->
-
+<!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg navbar-dark site-nav">
-
     <div class="container">
-
         <!-- Logo -->
-
         <a class="navbar-brand" href="{% url 'home' %}">
             College Event
         </a>
 
-
         <!-- Mobile Menu Button -->
-
         <button
             class="navbar-toggler"
             type="button"
@@ -245,223 +440,101 @@
             aria-controls="navbar"
             aria-expanded="false"
             aria-label="Toggle navigation">
-
             <span class="navbar-toggler-icon"></span>
-
         </button>
 
-
         <!-- Navbar Content -->
-
         <div class="collapse navbar-collapse" id="navbar">
-
             <ul class="navbar-nav ms-auto align-items-lg-center">
-
-
                 <!-- Home -->
-
                 <li class="nav-item">
-
-                    <a
-                        class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                        href="{% url 'home' %}">
-
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
                         Home
-
                     </a>
-
                 </li>
-
 
                 <!-- About -->
-
                 <li class="nav-item">
-
-                    <a
-                        class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
-                        href="{% url 'about' %}">
-
+                    <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">
                         About
-
                     </a>
-
                 </li>
-
 
                 <!-- Events -->
-
                 <li class="nav-item">
-
-                    <a
-                        class="nav-link {% if request.resolver_match.url_name == 'event_list' %}active{% endif %}"
-                        href="{% url 'event_list' %}">
-
+                    <a class="nav-link {% if request.resolver_match.url_name == 'event_list' %}active{% endif %}" href="{% url 'event_list' %}">
                         Events
-
                     </a>
-
                 </li>
-
 
                 <!-- Gallery -->
-
                 <li class="nav-item">
-
-                    <a
-                        class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}"
-                        href="{% url 'gallery' %}">
-
+                    <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">
                         Gallery
-
                     </a>
-
                 </li>
-
 
                 <!-- Contact -->
-
                 <li class="nav-item">
-
-                    <a
-                        class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
-                        href="{% url 'contact' %}">
-
+                    <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">
                         Contact
-
                     </a>
-
                 </li>
 
-
-                <!-- ================= SEARCH ================= -->
-
+                <!-- Search -->
                 <li class="nav-item">
-
-                    <form
-                        method="GET"
-                        action="{% url 'search_events' %}"
-                        class="navbar-search">
-
+                    <form method="GET" action="{% url 'search_events' %}" class="navbar-search">
                         <input
                             type="text"
                             name="q"
                             placeholder="Search events..."
                             value="{{ request.GET.q|default:'' }}"
                             aria-label="Search events">
-
                         <button type="submit" aria-label="Search">
-
                             <i class="bi bi-search"></i>
-
                         </button>
-
                     </form>
-
                 </li>
 
-
-                <!-- ================= AUTHENTICATED USER ================= -->
-
+                <!-- Authentication -->
                 {% if user.is_authenticated %}
-
-
-                    <!-- STAFF -->
-
                     {% if user.is_staff %}
-
                         <li class="nav-item">
-
-                            <a
-                                class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}"
-                                href="{% url 'admin_dashboard' %}">
-
+                            <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">
                                 Dashboard
-
                             </a>
-
                         </li>
-
-
-                    <!-- NORMAL USER -->
-
                     {% else %}
-
                         <li class="nav-item">
-
-                            <a
-                                class="nav-link {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}"
-                                href="{% url 'user_dashboard' %}">
-
+                            <a class="nav-link {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}" href="{% url 'user_dashboard' %}">
                                 Dashboard
-
                             </a>
-
                         </li>
-
                     {% endif %}
-
-
-                    <!-- Logout -->
-
                     <li class="nav-item">
-
-                        <a
-                            class="nav-link nav-logout"
-                            href="{% url 'logout' %}">
-
+                        <a class="nav-link nav-logout" href="{% url 'logout' %}">
                             Logout
-
                         </a>
-
                     </li>
-
-
                 {% else %}
-
-
-                    <!-- Login -->
-
                     <li class="nav-item">
-
-                        <a
-                            class="nav-link"
-                            href="{% url 'login' %}">
-
+                        <a class="nav-link" href="{% url 'login' %}">
                             Login
-
                         </a>
-
                     </li>
-
-
-                    <!-- Register -->
-
                     <li class="nav-item">
-
-                        <a
-                            class="nav-link nav-cta"
-                            href="{% url 'register' %}">
-
+                        <a class="nav-link nav-cta" href="{% url 'register' %}">
                             Register
-
                         </a>
-
                     </li>
-
-
                 {% endif %}
-
-
             </ul>
-
         </div>
-
     </div>
-
 </nav>
 
+<!-- ================= MAIN GALLERY CONTENT ================= -->
 <div class="container">
-
   <div class="gallery-head">
     <div>
       <span class="eyebrow">Moments from campus — preview data</span>
@@ -484,18 +557,59 @@
     <img id="lightbox-img" src="" alt="">
     <button class="lightbox-nav next" onclick="stepLightbox(1)">&#8250;</button>
   </div>
-
 </div>
 
-<footer class="site-footer text-center mt-5 p-3">
-  © 2026 College Event Management System — photo gallery preview
+<!-- ================= BRAND FOOTER ================= -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h5>CEMS</h5>
+        <p>Your one-stop hub for Technical, Cultural, Sports and Workshop events happening on campus.</p>
+      </div>
+
+      <div class="footer-social">
+        <h6>Follow Us</h6>
+        <div class="footer-social-icons">
+          <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-brand="instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X" data-brand="twitter">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22 5.9c-.7.3-1.5.5-2.3.6.8-.5 1.5-1.3 1.8-2.3-.8.5-1.7.8-2.6 1a4.1 4.1 0 0 0-7 3.7A11.6 11.6 0 0 1 3.4 4.6a4.1 4.1 0 0 0 1.3 5.5c-.7 0-1.3-.2-1.9-.5v.1c0 2 1.4 3.7 3.3 4.1-.6.2-1.2.2-1.8.1.5 1.6 2 2.8 3.8 2.9A8.3 8.3 0 0 1 2 18.6a11.6 11.6 0 0 0 6.3 1.8c7.5 0 11.6-6.2 11.6-11.6v-.5c.8-.6 1.5-1.3 2.1-2.2z"/></svg>
+          </a>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-brand="linkedin">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-.9 1.8-1.9 3.7-1.9 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9z"/></svg>
+          </a>
+          <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube" data-brand="youtube">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M23 12s0-3.4-.4-5a3 3 0 0 0-2.1-2.1C18.9 4.5 12 4.5 12 4.5s-6.9 0-8.5.4A3 3 0 0 0 1.4 7C1 8.6 1 12 1 12s0 3.4.4 5a3 3 0 0 0 2.1 2.1c1.6.4 8.5.4 8.5.4s6.9 0 8.5-.4A3 3 0 0 0 22.6 17c.4-1.6.4-5 .4-5z"/><path d="M9.8 15.5V8.5l6 3.5z" fill="var(--indigo-deep)"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h6>Quick Links</h6>
+        <ul>
+          <li><a href="{% url 'event_list' %}">All Events</a></li>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom-wrap">
+    <div class="footer-inner footer-bottom">
+      <span>&copy; {% now "Y" %} College Event Management System. All rights reserved.</span>
+      <span>Built with <span class="heart">♥</span> by the CEMS team</span>
+    </div>
+  </div>
 </footer>
 
-<!-- Bootstrap JavaScript (needed for navbar collapse toggle) -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // High-quality photos curated from Unsplash matching campus event categories
   const events = [
     { name: 'Sports Day', category: 'Sports', img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&auto=format&fit=crop' },
     { name: 'Football Match', category: 'Sports', img:'https://images.unsplash.com/photo-1434648957308-5e6a859697e8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Zm9vdGJhbGx8ZW58MHx8MHx8fDA%3D'},

@@ -5,212 +5,356 @@ Dashboard
 {% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-    .dash-wrap {
-        padding-top: 8px;
-    }
+  :root {
+    --ink-primary: #0f172a;
+    --ink-muted: #64748b;
+    --border-subtle: #e2e8f0;
+    --surface-card: #ffffff;
+    --primary-indigo: #4f46e5;
+    --primary-indigo-dark: #4338ca;
+  }
 
-    .dash-greeting {
-        font-size: 26px;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        color: #1c2024;
-        margin-bottom: 28px !important;
-    }
+  .dash-workspace {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: var(--ink-primary);
+    max-width: 1200px;
+    margin: 1.5rem auto 3.5rem;
+    padding: 0 0.5rem;
+  }
 
-    .dash-card {
-        border: 1px solid #eceef1;
-        border-radius: 14px;
-        box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
-        transition: transform 0.18s ease, box-shadow 0.18s ease;
-        height: 100%;
-    }
+  /* Welcome Banner */
+  .dash-welcome-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
 
-    .dash-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(16, 24, 40, 0.1);
-    }
+  .dash-user-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #eef2ff;
+    color: var(--primary-indigo);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+  }
 
-    .dash-card .card-body {
-        padding: 36px 24px;
-    }
+  .dash-greeting {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink-primary);
+    margin: 0;
+  }
 
-    .dash-icon-circle {
-        width: 68px;
-        height: 68px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-    }
+  .dash-greeting span {
+    color: var(--primary-indigo);
+  }
 
-    .dash-icon-circle.icon-primary { background: #e8f0fe; }
-    .dash-icon-circle.icon-success { background: #e6f6ec; }
-    .dash-icon-circle.icon-danger { background: #fdeced; }
+  .dash-subtitle {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    margin: 4px 0 0;
+  }
 
-    .dash-icon-circle i {
-        font-size: 30px;
-        line-height: 1;
-    }
+  /* Dashboard Cards */
+  .premium-dash-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+    box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
 
-    .dash-card h4 {
-        font-size: 14px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: #6b7280;
-        margin-top: 20px !important;
-        margin-bottom: 4px;
-    }
+  .premium-dash-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 35px -8px rgba(15, 23, 42, 0.1);
+    border-color: #cbd5e1;
+  }
 
-    .dash-count {
-        font-size: 38px;
-        font-weight: 700;
-        color: #1c2024;
-        margin: 6px 0 0;
-    }
+  /* Distinct Top Card Aura Accent */
+  .premium-dash-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
 
-    .dash-event-list {
-        list-style: none;
-        margin: 14px 0 0;
-        padding: 0;
-        text-align: left;
-    }
+  .card-registrations::before { background: linear-gradient(90deg, #4f46e5, #818cf8); }
+  .card-profile::before { background: linear-gradient(90deg, #10b981, #34d399); }
+  .card-browse::before { background: linear-gradient(90deg, #f97316, #fb923c); }
 
-    .dash-event-list li {
-        font-size: 13px;
-        color: #4b5563;
-        padding: 6px 10px;
-        border-radius: 6px;
-        background: #f7f7f5;
-        margin-bottom: 6px;
-    }
+  /* Card Headings & Icon Bubbles */
+  .card-header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
 
-    .dash-event-list li:last-child {
-        margin-bottom: 0;
-    }
+  .dash-icon-bubble {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    transition: transform 0.3s ease;
+  }
 
-    .dash-event-more {
-        font-size: 12px;
-        color: #9ca3af;
-        margin-top: 6px;
-    }
+  .premium-dash-card:hover .dash-icon-bubble {
+    transform: scale(1.1) rotate(4deg);
+  }
 
-    .dash-card .btn {
-        margin-top: 18px !important;
-        padding: 8px 22px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 14px;
-    }
+  .dash-icon-bubble.icon-indigo { background: #eef2ff; color: #4f46e5; }
+  .dash-icon-bubble.icon-emerald { background: #ecfdf5; color: #059669; }
+  .dash-icon-bubble.icon-coral { background: #fff7ed; color: #f97316; }
+
+  .dash-card-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  /* Metric Figure */
+  .dash-metric-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--ink-primary);
+    margin: 0 0 1rem;
+    letter-spacing: -0.04em;
+  }
+
+  /* Registrations Mini List */
+  .dash-event-tray {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+  }
+
+  .dash-event-tray li {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #334155;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dash-event-tray li i {
+    color: var(--primary-indigo);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .dash-more-pill {
+    align-self: flex-start;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--ink-muted);
+    background: #f1f5f9;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-top: 4px;
+  }
+
+  /* Profile & Action Card Copy */
+  .card-description-text {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+  }
+
+  /* Buttons */
+  .dash-btn {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 14px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
+  }
+
+  .btn-primary-indigo {
+    background: var(--primary-indigo);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+  }
+
+  .btn-primary-indigo:hover {
+    background: var(--primary-indigo-dark);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+  }
+
+  .btn-emerald {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  }
+
+  .btn-emerald:hover {
+    background: #059669;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+  }
+
+  .btn-coral {
+    background: #f97316;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+  }
+
+  .btn-coral:hover {
+    background: #ea580c;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+  }
 </style>
 
-<div class="dash-wrap">
+<div class="dash-workspace">
 
-<h2 class="mb-4 dash-greeting">
-    Welcome {{ request.user.first_name }}
-</h2>
+  <!-- Header -->
+  <div class="dash-welcome-strip">
+    <div>
+      <div class="dash-user-badge">
+        <i class="bi bi-shield-check"></i> Student Portal
+      </div>
+      <h2 class="dash-greeting">
+        Welcome, <span>{{ request.user.first_name|default:request.user.username }}</span>
+      </h2>
+      <p class="dash-subtitle">Track your event enrollments, profile data, and available campus activities.</p>
+    </div>
+  </div>
 
-<div class="row g-4">
+  <!-- Cards Grid -->
+  <div class="row g-4">
 
-    <div class="col-md-4">
-
-        <div class="card text-center shadow-sm dash-card">
-
-            <div class="card-body">
-
-                <div class="dash-icon-circle icon-primary">
-                    <i class="bi bi-calendar-event text-primary"></i>
-                </div>
-
-                <h4 class="mt-3">
-
-                    My Registrations
-
-                </h4>
-
-                <h2 class="dash-count">
-
-                    {{ registrations.count }}
-
-                </h2>
-
-                <ul class="dash-event-list">
-                    {% for reg in registrations|slice:":3" %}
-                    <li>{{ reg.event.title }}</li>
-                    {% endfor %}
-                </ul>
-
-                {% if registrations.count > 3 %}
-                <div class="dash-event-more">+{{ registrations.count|add:"-3" }} more</div>
-                {% endif %}
-
-            </div>
-
+    <!-- Card 1: Registrations -->
+    <div class="col-12 col-md-4">
+      <div class="premium-dash-card card-registrations">
+        <div class="card-header-flex">
+          <p class="dash-card-label">My Registrations</p>
+          <div class="dash-icon-bubble icon-indigo">
+            <i class="bi bi-ticket-perforated"></i>
+          </div>
         </div>
 
+        <div class="dash-metric-number">{{ registrations.count }}</div>
+
+        <ul class="dash-event-tray">
+          {% for reg in registrations|slice:":3" %}
+            <li title="{{ reg.event.title }}">
+              <i class="bi bi-bookmark-check-fill"></i>
+              <span>{{ reg.event.title }}</span>
+            </li>
+          {% empty %}
+            <li class="text-muted border-0 bg-transparent ps-0">
+              No active event registrations yet.
+            </li>
+          {% endfor %}
+        </ul>
+
+        {% if registrations.count > 3 %}
+          <span class="dash-more-pill">+{{ registrations.count|add:"-3" }} more enrolled</span>
+        {% endif %}
+      </div>
     </div>
 
-    <div class="col-md-4">
-
-        <div class="card text-center shadow-sm dash-card">
-
-            <div class="card-body">
-
-                <div class="dash-icon-circle icon-success">
-                    <i class="bi bi-person-circle text-success"></i>
-                </div>
-
-                <h4 class="mt-3">
-
-                    My Profile
-
-                </h4>
-
-                <a href="{% url 'profile' %}" class="btn btn-success mt-3">
-
-                    View Profile
-
-                </a>
-
-            </div>
-
+    <!-- Card 2: Profile -->
+    <div class="col-12 col-md-4">
+      <div class="premium-dash-card card-profile">
+        <div class="card-header-flex">
+          <p class="dash-card-label">Account & Details</p>
+          <div class="dash-icon-bubble icon-emerald">
+            <i class="bi bi-person-badge"></i>
+          </div>
         </div>
 
+        <h4 class="fw-bold mb-2">My Profile</h4>
+        <p class="card-description-text">
+          Review and update your department, semester, contact information, and personal credentials.
+        </p>
+
+        <a href="{% url 'profile' %}" class="dash-btn btn-emerald">
+          <span>View Profile</span>
+          <i class="bi bi-arrow-right-short fs-5"></i>
+        </a>
+      </div>
     </div>
 
-    <div class="col-md-4">
-
-        <div class="card text-center shadow-sm dash-card">
-
-            <div class="card-body">
-
-                <div class="dash-icon-circle icon-danger">
-                    <i class="bi bi-ticket-perforated text-danger"></i>
-                </div>
-
-                <h4 class="mt-3">
-
-                    Browse Events
-
-                </h4>
-
-                <a href="{% url 'event_list' %}" class="btn btn-primary mt-3">
-
-                    View Events
-
-                </a>
-
-            </div>
-
+    <!-- Card 3: Browse Events -->
+    <div class="col-12 col-md-4">
+      <div class="premium-dash-card card-browse">
+        <div class="card-header-flex">
+          <p class="dash-card-label">Discover Campus</p>
+          <div class="dash-icon-bubble icon-coral">
+            <i class="bi bi-compass"></i>
+          </div>
         </div>
 
+        <h4 class="fw-bold mb-2">Browse Events</h4>
+        <p class="card-description-text">
+          Explore upcoming technical contests, cultural fests, sports tourneys, and hands-on workshops.
+        </p>
+
+        <a href="{% url 'event_list' %}" class="dash-btn btn-coral">
+          <span>View Events</span>
+          <i class="bi bi-arrow-right-short fs-5"></i>
+        </a>
+      </div>
     </div>
+
+  </div>
 
 </div>
-
-</div>
-
 {% endblock %}

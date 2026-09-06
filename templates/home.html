@@ -6,546 +6,853 @@ Home
 
 {% block content %}
 
+<!-- Typography & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <style>
-  :root{
-    --ink:#161320;
-    --indigo:#2B2470;
-    --indigo-deep:#1A1540;
-    --coral:#FF5A45;
-    --gold:#FFC24B;
-    --paper:#FBFAF7;
-    --line:#e7e4dd;
-    --closed:#9a95a6;
+  :root {
+    --ink: #0d1117;
+    --ink-muted: #57606a;
+    --paper-card: #ffffff;
+    --border-light: #e5e7eb;
+    --indigo: #2B2470;
+    --indigo-deep: #16123f;
+    --coral: #FF5A45;
+    --coral-hover: #fa412a;
+    --gold: #FFC24B;
+    --emerald: #10B981;
+    --closed: #94a3b8;
   }
 
-  .hero-poster{
-    position:relative;
-    overflow:hidden;
-    padding:4.5rem 2.5rem;
-    margin-bottom:3.5rem;
-    border-radius:22px;
-    background:
-      radial-gradient(circle at 85% 15%, rgba(255,194,75,0.35), transparent 45%),
-      radial-gradient(circle at 10% 90%, rgba(255,90,69,0.35), transparent 40%),
-      linear-gradient(135deg, var(--indigo-deep), var(--indigo));
-    color:#fff;
-    isolation:isolate;
-  }
-  .hero-poster::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background-image:
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 22px);
-    z-index:-1;
-  }
-  .hero-eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:.5rem;
-    font-family:'Space Grotesk', sans-serif;
-    font-size:.75rem;
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    color:var(--gold);
-    margin-bottom:1rem;
-  }
-  .hero-eyebrow::before{
-    content:"";
-    width:8px;height:8px;border-radius:50%;
-    background:var(--coral);
-    display:inline-block;
-  }
-  .hero-poster h1{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:clamp(2.1rem, 4vw, 3.2rem);
-    line-height:1.05;
-    letter-spacing:-.01em;
-    margin-bottom:1rem;
-    max-width:16ch;
-  }
-  .hero-poster p{
-    font-family:'Inter', sans-serif;
-    font-size:1.05rem;
-    color:rgba(255,255,255,0.82);
-    max-width:44ch;
-    margin-bottom:2rem;
-  }
-  .btn-explore{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:600;
-    letter-spacing:.02em;
-    background:var(--coral);
-    color:#fff;
-    border:none;
-    padding:.85rem 1.9rem;
-    border-radius:999px;
-    box-shadow:0 8px 22px rgba(255,90,69,0.35);
-    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
-  }
-  .btn-explore:hover{
-    background:#ff6f5c;
-    color:#fff;
-    transform:translateY(-2px);
-    box-shadow:0 12px 28px rgba(255,90,69,0.45);
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
   }
 
-  .section-label{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:.78rem;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--indigo);
-    margin-bottom:1.6rem;
-    display:flex;
-    align-items:center;
-    gap:.75rem;
-  }
-  .section-label::after{
-    content:"";
-    flex:1;
-    height:1px;
-    background:var(--line);
-  }
-
-  .ticket-card{
-    position:relative;
-    background:var(--paper);
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 1px 2px rgba(22,19,32,0.04), 0 10px 24px rgba(22,19,32,0.06);
-    transition:transform .22s ease, box-shadow .22s ease;
-    height:100%;
-    display:flex;
-    flex-direction:column;
-  }
-  .ticket-card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 18px 34px rgba(22,19,32,0.14);
-  }
-  .ticket-card.is-closed{
-    filter:grayscale(.25);
-  }
-  .ticket-img-wrap{
-    position:relative;
-    height:200px;
-    overflow:hidden;
-  }
-  .ticket-img-wrap img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-    transition:transform .35s ease;
-  }
-  .ticket-card:hover .ticket-img-wrap img{
-    transform:scale(1.06);
+  /* ================= ULTRA PREMIUM HERO ================= */
+  .hero-premium-wrapper {
+    position: relative;
+    border-radius: 32px;
+    background: 
+      radial-gradient(circle at 100% 0%, rgba(255, 107, 84, 0.28) 0%, transparent 45%),
+      radial-gradient(circle at 0% 100%, rgba(79, 70, 229, 0.35) 0%, transparent 40%),
+      linear-gradient(135deg, #09081a 0%, #131032 50%, #0d0a21 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 30px 60px -15px rgba(10, 8, 30, 0.5),
+      inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    padding: 4.5rem 3.5rem;
+    margin: 1.5rem 0 4rem;
+    overflow: hidden;
+    color: #ffffff;
   }
 
-  .status-pill{
-    position:absolute;
-    top:.85rem;
-    right:.85rem;
-    z-index:2;
-    font-family:'Space Grotesk', sans-serif;
-    font-size:.68rem;
-    font-weight:700;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    padding:.35rem .75rem;
-    border-radius:999px;
-    backdrop-filter:blur(4px);
-  }
-  .status-pill.status-open{
-    background:rgba(43,36,112,0.85);
-    color:#fff;
-  }
-  .status-pill.status-closed{
-    background:rgba(22,19,32,0.72);
-    color:#fff;
+  .hero-premium-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 85%);
   }
 
-  .ticket-perf{
-    position:relative;
-    height:0;
-    border-top:2px dashed var(--line);
-    margin:0 1.4rem;
+  .hero-grid-2col {
+    display: grid;
+    grid-template-columns: 1.25fr 0.85fr;
+    gap: 3.5rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
   }
+
+  .hero-eyebrow-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #FFC24B;
+    margin-bottom: 1.5rem;
+  }
+
+  .pulsing-live-dot {
+    width: 8px;
+    height: 8px;
+    background: #FF5A45;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #FF5A45;
+    animation: livePulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+  }
+
+  @keyframes livePulse {
+    to { box-shadow: 0 0 0 10px rgba(255, 90, 69, 0); }
+  }
+
+  .hero-premium-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.4rem, 4.2vw, 3.8rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-gradient-text {
+    background: linear-gradient(120deg, #FFFFFF 30%, #FFC24B 70%, #FF6B54 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-sub-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 2.25rem;
+    max-width: 500px;
+  }
+
+  .hero-cta-deck {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-premium-cta {
+    background: linear-gradient(135deg, #FF6B54 0%, #E63923 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 14px 30px;
+    border-radius: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 28px rgba(230, 57, 35, 0.45);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-premium-cta:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(230, 57, 35, 0.6);
+  }
+
+  .hero-stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+  }
+
+  .hero-stat-badge i {
+    color: #10B981;
+    font-size: 1.1rem;
+  }
+
+  /* Right Column: Floating Visual Cards */
+  .hero-floating-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+  }
+
+  .glass-stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    padding: 1.4rem 1.6rem;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .glass-stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 194, 75, 0.4);
+  }
+
+  .stat-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+  }
+
+  .stat-card-icon.event-spark {
+    background: rgba(79, 70, 229, 0.25);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+  }
+
+  .stat-card-icon.ticket-spark {
+    background: rgba(255, 107, 84, 0.25);
+    color: #ff9b8c;
+    border: 1px solid rgba(255, 107, 84, 0.3);
+  }
+
+  .stat-card-details h5 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-card-details p {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 2px 0 0;
+  }
+
+  .mini-tag-badge {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  /* ================= SECTION LABEL ================= */
+  .section-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .88rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--indigo);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #e5e7eb, transparent);
+  }
+
+  /* ================= TICKET CARD ================= */
+  .ticket-card {
+    position: relative;
+    background: var(--paper-card);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    overflow: visible;
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+    transition: all .28s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ticket-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 35px -8px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(43, 36, 112, 0.2);
+    border-color: rgba(43, 36, 112, 0.3);
+  }
+
+  .ticket-card.is-closed {
+    opacity: 0.88;
+  }
+
+  .ticket-img-wrap {
+    position: relative;
+    height: 215px;
+    overflow: hidden;
+    border-top-left-radius: 19px;
+    border-top-right-radius: 19px;
+    background: #0f172a;
+  }
+
+  .ticket-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ticket-card:hover .ticket-img-wrap img {
+    transform: scale(1.06);
+  }
+
+  .ticket-img-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.7) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .status-pill {
+    position: absolute;
+    top: .9rem;
+    right: .9rem;
+    z-index: 2;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: .35rem .85rem;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+  }
+
+  .status-pill.status-open {
+    background: rgba(16, 185, 129, 0.9);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  }
+
+  .status-pill.status-open::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  .status-pill.status-closed {
+    background: rgba(15, 23, 42, 0.85);
+    color: #e2e8f0;
+  }
+
+  /* Perforation Edge Notches */
+  .ticket-perf {
+    position: relative;
+    height: 0;
+    border-top: 2px dashed #cbd5e1;
+    margin: 0;
+    z-index: 3;
+  }
+
   .ticket-perf::before,
-  .ticket-perf::after{
-    content:"";
-    position:absolute;
-    top:-11px;
-    width:22px;height:22px;
-    background:#fff;
-    border-radius:50%;
-  }
-  .ticket-perf::before{ left:-2.4rem; }
-  .ticket-perf::after{ right:-2.4rem; }
-
-  .ticket-body{
-    padding:1.4rem 1.4rem 1.6rem;
-    flex:1;
-    display:flex;
-    flex-direction:column;
-  }
-  .ticket-body h4{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    color:var(--ink);
-    font-size:1.15rem;
-    margin-bottom:.6rem;
-  }
-  .ticket-meta{
-    font-family:'Inter', sans-serif;
-    font-size:.88rem;
-    color:#5c586a;
-    display:flex;
-    align-items:center;
-    gap:.4rem;
-    margin-bottom:.25rem;
-  }
-  .ticket-meta svg{ flex:none; opacity:.6; }
-
-  .btn-view{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:600;
-    font-size:.88rem;
-    color:var(--indigo);
-    background:transparent;
-    border:1.5px solid var(--indigo);
-    padding:.55rem 1.3rem;
-    border-radius:999px;
-    transition:background .18s ease, color .18s ease;
-    flex:1;
-    text-align:center;
-  }
-  .btn-view:hover{
-    background:var(--indigo);
-    color:#fff;
+  .ticket-perf::after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    width: 24px;
+    height: 24px;
+    background: var(--bs-body-bg, #f8fafc);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px var(--border-light);
   }
 
-  .actions-row{
-    margin-top:1.1rem;
-    display:flex;
-    align-items:center;
-    gap:.6rem;
+  .ticket-perf::before { 
+    left: -12px; 
+    clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%);
   }
 
-  .btn-brochure{
-    flex:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    border:1.5px solid var(--line);
-    color:var(--indigo);
-    background:#fff;
-    transition:background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
-  }
-  .btn-brochure:hover{
-    background:var(--gold);
-    border-color:var(--gold);
-    color:var(--indigo-deep);
-    transform:translateY(-2px);
-  }
-  .btn-brochure svg{ width:18px; height:18px; }
-
-  .countdown{
-    margin-top:1rem;
-    display:flex;
-    gap:.5rem;
-  }
-  .countdown-item{
-    flex:1;
-    text-align:center;
-    background:#f1efe9;
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:.5rem .3rem .4rem;
-  }
-  .countdown-item span{
-    display:block;
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:1.05rem;
-    color:var(--indigo);
-    line-height:1.1;
-  }
-  .countdown-item small{
-    display:block;
-    font-family:'Inter', sans-serif;
-    font-size:.62rem;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    color:#8b8794;
-    margin-top:.15rem;
+  .ticket-perf::after { 
+    right: -12px; 
+    clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%);
   }
 
-  .btn-view-disabled{
-    margin-top:1.1rem;
-    align-self:flex-start;
-    display:inline-flex;
-    align-items:center;
-    gap:.4rem;
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:600;
-    font-size:.88rem;
-    color:var(--closed);
-    background:#f1efe9;
-    border:1.5px solid var(--line);
-    padding:.55rem 1.3rem;
-    border-radius:999px;
-    cursor:not-allowed;
+  .ticket-body {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-bottom-left-radius: 19px;
+    border-bottom-right-radius: 19px;
+    background: #ffffff;
   }
 
-  .empty-state{
-    text-align:center;
-    padding:4rem 1rem;
-    font-family:'Inter', sans-serif;
-    color:#8b8794;
-  }
-  .empty-state .glyph{
-    font-size:2.2rem;
-    margin-bottom:.75rem;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .ticket-card, .ticket-card:hover, .ticket-img-wrap img, .btn-explore{
-      transition:none;
-      transform:none;
-    }
+  .ticket-body h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 1.22rem;
+    line-height: 1.35;
+    margin-bottom: .85rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.6rem;
   }
 
-  /* ---------- Footer (full viewport width) ---------- */
-  .site-footer{
-    position:relative;
-    left:50%;
-    right:50%;
-    width:100vw;
-    margin-left:-50vw;
-    margin-right:-50vw;
-    margin-top:4rem;
-    overflow:hidden;
+  .ticket-meta {
+    font-size: .88rem;
+    color: var(--ink-muted);
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    margin-bottom: .4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ticket-meta svg {
+    flex: none;
+    color: var(--indigo);
+    opacity: .85;
+  }
+
+  .countdown {
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .45rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border-light);
+  }
+
+  .countdown-item {
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: .5rem .2rem .4rem;
+  }
+
+  .countdown-item span {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--indigo);
+    line-height: 1;
+  }
+
+  .countdown-item small {
+    display: block;
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-top: .25rem;
+  }
+
+  .actions-row {
+    margin-top: 1.35rem;
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+  }
+
+  .btn-view {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: .9rem;
+    color: #fff;
+    background: var(--indigo);
+    border: 1px solid var(--indigo);
+    padding: .65rem 1.4rem;
+    border-radius: 12px;
+    transition: all .2s ease;
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(43, 36, 112, 0.25);
+  }
+
+  .btn-view:hover {
+    background: var(--indigo-deep);
+    border-color: var(--indigo-deep);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(43, 36, 112, 0.35);
+  }
+
+  .btn-brochure {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-light);
+    color: var(--indigo);
+    background: #f8fafc;
+    transition: all .2s ease;
+    text-decoration: none;
+  }
+
+  .btn-brochure:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--indigo-deep);
+    transform: translateY(-2px);
+  }
+
+  .btn-brochure svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-view-disabled {
+    margin-top: 1.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: .88rem;
+    color: var(--closed);
+    background: #f1f5f9;
+    border: 1px solid var(--border-light);
+    padding: .65rem 1.3rem;
+    border-radius: 12px;
+    cursor: not-allowed;
+    width: 100%;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 5rem 1rem;
+    color: var(--ink-muted);
+    background: #ffffff;
+    border: 1px dashed var(--border-light);
+    border-radius: 20px;
+  }
+
+  .empty-state .glyph {
+    font-size: 2.8rem;
+    margin-bottom: .85rem;
+  }
+
+  /* ================= FULL-WIDTH FOOTER ================= */
+  .site-footer {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    margin-top: 5rem;
+    overflow: hidden;
     background:
-      radial-gradient(circle at 15% 10%, rgba(255,194,75,0.25), transparent 45%),
-      radial-gradient(circle at 90% 85%, rgba(255,90,69,0.25), transparent 40%),
+      radial-gradient(circle at 15% 10%, rgba(255, 194, 75, 0.22), transparent 45%),
+      radial-gradient(circle at 90% 85%, rgba(255, 90, 69, 0.22), transparent 40%),
       linear-gradient(135deg, var(--indigo-deep), var(--indigo));
-    color:rgba(255,255,255,0.85);
-    isolation:isolate;
+    color: rgba(255, 255, 255, 0.85);
+    isolation: isolate;
   }
-  .site-footer::before{
-    content:"";
-    position:absolute;
-    inset:0;
+
+  .site-footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
     background-image:
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 22px);
-    z-index:-1;
+      repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 22px);
+    z-index: -1;
   }
 
-  .footer-inner{
-    max-width:1320px;
-    margin:0 auto;
-    padding:0 2.5rem;
+  .footer-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
   }
 
-  .footer-top{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:space-between;
-    gap:2.5rem;
-    padding:3.5rem 0 2.25rem;
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding: 4rem 0 2.5rem;
   }
 
-  .footer-brand h5{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:1.3rem;
-    color:#fff;
-    margin-bottom:.6rem;
+  .footer-brand h5 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #fff;
+    margin-bottom: .7rem;
   }
-  .footer-brand p{
-    font-family:'Inter', sans-serif;
-    font-size:.92rem;
-    color:rgba(255,255,255,0.68);
-    max-width:32ch;
-    line-height:1.55;
+
+  .footer-brand p {
+    font-size: .92rem;
+    color: rgba(255, 255, 255, 0.68);
+    max-width: 32ch;
+    line-height: 1.6;
   }
 
   .footer-links h6,
-  .footer-social h6{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:.72rem;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--gold);
-    margin-bottom:1rem;
-  }
-  .footer-links ul{
-    list-style:none;
-    padding:0;
-    margin:0;
-    display:flex;
-    flex-direction:column;
-    gap:.6rem;
-  }
-  .footer-links a{
-    font-family:'Inter', sans-serif;
-    font-size:.9rem;
-    color:rgba(255,255,255,0.75);
-    text-decoration:none;
-    position:relative;
-    width:fit-content;
-    transition:color .18s ease;
-  }
-  .footer-links a::after{
-    content:"";
-    position:absolute;
-    left:0; bottom:-2px;
-    width:0%;
-    height:1px;
-    background:var(--coral);
-    transition:width .25s ease;
-  }
-  .footer-links a:hover{
-    color:#fff;
-  }
-  .footer-links a:hover::after{
-    width:100%;
+  .footer-social h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .75rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.1rem;
   }
 
-  .footer-social{
-    text-align:center;
-    margin-right:8rem;
-  }
-  .footer-social-icons{
-    display:flex;
-    justify-content:center;
-    gap:.7rem;
-  }
-  .footer-social-icons a{
-    position:relative;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    border:1.5px solid rgba(255,255,255,0.25);
-    color:#fff;
-    background:rgba(255,255,255,0.04);
-    overflow:hidden;
-    transition:transform .3s cubic-bezier(.34,1.56,.64,1), border-color .3s ease, box-shadow .3s ease;
-  }
-  .footer-social-icons a svg{
-    position:relative;
-    z-index:1;
-    width:18px;
-    height:18px;
-    transition:transform .3s ease;
-  }
-  .footer-social-icons a::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:var(--coral);
-    transform:translateY(100%);
-    transition:transform .3s ease;
-    z-index:0;
-  }
-  .footer-social-icons a:hover{
-    transform:translateY(-5px) rotate(-6deg);
-    border-color:var(--coral);
-    box-shadow:0 10px 22px rgba(255,90,69,0.35);
-  }
-  .footer-social-icons a:hover::before{
-    transform:translateY(0%);
-  }
-  .footer-social-icons a:hover svg{
-    transform:scale(1.1);
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
   }
 
-  .footer-social-icons a[data-brand="instagram"]:hover{ border-color:#E1306C; box-shadow:0 10px 22px rgba(225,48,108,0.35);}
-  .footer-social-icons a[data-brand="instagram"]:hover::before{ background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); }
-  .footer-social-icons a[data-brand="twitter"]:hover{ border-color:#1DA1F2; box-shadow:0 10px 22px rgba(29,161,242,0.35);}
-  .footer-social-icons a[data-brand="twitter"]:hover::before{ background:#1DA1F2; }
-  .footer-social-icons a[data-brand="linkedin"]:hover{ border-color:#0A66C2; box-shadow:0 10px 22px rgba(10,102,194,0.35);}
-  .footer-social-icons a[data-brand="linkedin"]:hover::before{ background:#0A66C2; }
-  .footer-social-icons a[data-brand="youtube"]:hover{ border-color:#FF0000; box-shadow:0 10px 22px rgba(255,0,0,0.35);}
-  .footer-social-icons a[data-brand="youtube"]:hover::before{ background:#FF0000; }
-
-  /* Full-width copyright bar */
-  .footer-bottom-wrap{
-    width:100%;
-    border-top:1px solid rgba(255,255,255,0.12);
-  }
-  .footer-bottom{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:space-between;
-    gap:1rem;
-    padding-top:1.25rem;
-    padding-bottom:1.5rem;
-    font-family:'Inter', sans-serif;
-    font-size:.82rem;
-    color:rgba(255,255,255,0.6);
-  }
-  .footer-bottom .heart{
-    display:inline-block;
-    font-size:1.6rem;
-    vertical-align:middle;
-    color:var(--coral);
-    animation:beat 1.4s ease-in-out infinite;
-  }
-  @keyframes beat{
-    0%, 100%{ transform:scale(1); }
-    25%{ transform:scale(1.25); }
-    40%{ transform:scale(1); }
+  .footer-links a {
+    font-size: .92rem;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    position: relative;
+    width: fit-content;
+    transition: color .18s ease;
   }
 
-  @media (prefers-reduced-motion: reduce){
-    .footer-social-icons a,
-    .footer-social-icons a::before,
-    .footer-social-icons a svg,
-    .footer-links a::after,
-    .footer-bottom .heart{
-      transition:none;
-      animation:none;
-      transform:none;
+  .footer-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; 
+    bottom: -2px;
+    width: 0%;
+    height: 1px;
+    background: var(--coral);
+    transition: width .25s ease;
+  }
+
+  .footer-links a:hover {
+    color: #fff;
+  }
+
+  .footer-links a:hover::after {
+    width: 100%;
+  }
+
+  .footer-social {
+    text-align: center;
+    margin-right: 6rem;
+  }
+
+  .footer-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: .75rem;
+  }
+
+  .footer-social-icons a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), border-color .3s ease, box-shadow .3s ease;
+  }
+
+  .footer-social-icons a svg {
+    position: relative;
+    z-index: 1;
+    width: 18px;
+    height: 18px;
+    transition: transform .3s ease;
+  }
+
+  .footer-social-icons a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--coral);
+    transform: translateY(100%);
+    transition: transform .3s ease;
+    z-index: 0;
+  }
+
+  .footer-social-icons a:hover {
+    transform: translateY(-5px) rotate(-6deg);
+    border-color: var(--coral);
+    box-shadow: 0 10px 22px rgba(255, 90, 69, 0.35);
+  }
+
+  .footer-social-icons a:hover::before {
+    transform: translateY(0%);
+  }
+
+  .footer-social-icons a:hover svg {
+    transform: scale(1.1);
+  }
+
+  .footer-social-icons a[data-brand="instagram"]:hover { border-color: #E1306C; box-shadow: 0 10px 22px rgba(225, 48, 108, 0.35); }
+  .footer-social-icons a[data-brand="instagram"]:hover::before { background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); }
+  .footer-social-icons a[data-brand="twitter"]:hover { border-color: #1DA1F2; box-shadow: 0 10px 22px rgba(29, 161, 242, 0.35); }
+  .footer-social-icons a[data-brand="twitter"]:hover::before { background: #1DA1F2; }
+  .footer-social-icons a[data-brand="linkedin"]:hover { border-color: #0A66C2; box-shadow: 0 10px 22px rgba(10, 102, 194, 0.35); }
+  .footer-social-icons a[data-brand="linkedin"]:hover::before { background: #0A66C2; }
+  .footer-social-icons a[data-brand="youtube"]:hover { border-color: #FF0000; box-shadow: 0 10px 22px rgba(255, 0, 0, 0.35); }
+  .footer-social-icons a[data-brand="youtube"]:hover::before { background: #FF0000; }
+
+  .footer-bottom-wrap {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.4rem;
+    padding-bottom: 1.6rem;
+    font-size: .84rem;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .footer-bottom .heart {
+    display: inline-block;
+    font-size: 1.4rem;
+    vertical-align: middle;
+    color: var(--coral);
+    animation: beat 1.4s ease-in-out infinite;
+  }
+
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.25); }
+    40% { transform: scale(1); }
+  }
+
+  @media (max-width: 991px) {
+    .hero-grid-2col {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .hero-premium-wrapper {
+      padding: 3rem 1.75rem;
     }
   }
 
-  @media (max-width: 767px){
-    .footer-inner{ padding:0 1.5rem; }
-    .footer-top{ gap:2rem; }
-    .footer-bottom{ justify-content:center; text-align:center; }
+  @media (max-width: 767px) {
+    .hero-premium-wrapper { padding: 3rem 1.5rem; }
+    .footer-inner { padding: 0 1.5rem; }
+    .footer-top { gap: 2rem; }
+    .footer-social { margin-right: 0; text-align: left; }
+    .footer-social-icons { justify-content: flex-start; }
+    .footer-bottom { justify-content: center; text-align: center; }
   }
 </style>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- ================= HERO ================= -->
+<div class="hero-premium-wrapper">
+  <div class="hero-grid-2col">
+    <!-- Left Column: Content & CTA -->
+    <div>
+      <div class="hero-eyebrow-pill">
+        <span class="pulsing-live-dot"></span>
+        Registration Portal Live
+      </div>
 
-<div class="hero-poster">
-  <span class="hero-eyebrow">Now open for registration</span>
-  <h1>College Event Management System</h1>
-  <p>Register for Technical, Cultural, Sports and Workshop events — all in one place, all one click away.</p>
-  <a href="{% url 'event_list' %}" class="btn btn-explore">Explore Events</a>
+      <h1 class="hero-premium-title">
+        College Event <br>
+        <span class="hero-gradient-text">Management System</span>
+      </h1>
+
+      <p class="hero-sub-text">
+        Discover, register, and check in for campus Hackathons, Cultural fests, Sports leagues, and Tech workshops — seamlessly in one place.
+      </p>
+
+      <div class="hero-cta-deck">
+        <a href="{% url 'event_list' %}" class="btn-premium-cta">
+          Explore Events
+          <i class="bi bi-arrow-right"></i>
+        </a>
+        <div class="hero-stat-badge">
+          <i class="bi bi-shield-check"></i>
+          Instant Pass &amp; Token Issued
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Live Glass Badges -->
+    <div class="hero-floating-stack">
+      <!-- Live Status Card 1 -->
+      <div class="glass-stat-card">
+        <div class="d-flex align-items-center gap-3">
+          <div class="stat-card-icon event-spark">
+            <i class="bi bi-calendar4-event"></i>
+          </div>
+          <div class="stat-card-details">
+            <h5>All Categories</h5>
+            <p>Tech &bull; Cultural &bull; Sports</p>
+          </div>
+        </div>
+        <span class="mini-tag-badge">Verified</span>
+      </div>
+
+      <!-- Live Status Card 2 -->
+      <div class="glass-stat-card">
+        <div class="d-flex align-items-center gap-3">
+          <div class="stat-card-icon ticket-spark">
+            <i class="bi bi-qr-code-scan"></i>
+          </div>
+          <div class="stat-card-details">
+            <h5>Direct E-Ticket</h5>
+            <p>Digital Token &amp; Attendance</p>
+          </div>
+        </div>
+        <span class="mini-tag-badge">Fast Track</span>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- ================= SECTION LABEL ================= -->
 <div class="section-label">Upcoming events</div>
 
 {% now "Y-m-d" as today %}
 
+<!-- ================= EVENTS TICKETS GRID ================= -->
 <div class="row g-4 mb-5">
   {% for event in events %}
-  <div class="col-md-4">
+  <div class="col-12 col-md-6 col-lg-4">
     <div class="ticket-card{% if not event.status or event.available_seats <= 0 or event.last_date|date:'Y-m-d' < today %} is-closed{% endif %}">
+      
+      <!-- Event Cover Thumbnail -->
       <div class="ticket-img-wrap">
-        <img src="{{ event.image.url }}" alt="{{ event.title }}">
+        <img src="{{ event.image.url }}" alt="{{ event.title }}" loading="lazy">
+
         {% if not event.status %}
           <span class="status-pill status-closed">Registration Closed</span>
         {% elif event.available_seats <= 0 %}
@@ -556,38 +863,56 @@ Home
           <span class="status-pill status-open">Open</span>
         {% endif %}
       </div>
+
+      <!-- Ticket Notch Divider -->
       <div class="ticket-perf"></div>
+
+      <!-- Card Information -->
       <div class="ticket-body">
         <h4>{{ event.title }}</h4>
+
         <div class="ticket-meta">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
           {{ event.venue }}
         </div>
+
         <div class="ticket-meta">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
           {{ event.event_date }}
         </div>
+
         <div class="ticket-meta">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
           Register by {{ event.last_date }}
         </div>
+
         <div class="ticket-meta">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           {{ event.available_seats }} / {{ event.total_seats }} seats left
         </div>
+
         {% if not event.status %}
-          <span class="btn-view-disabled">Registration Closed</span>
+          <span class="btn-view-disabled">
+            <i class="bi bi-lock-fill me-1"></i> Registration Closed
+          </span>
         {% elif event.available_seats <= 0 %}
-          <span class="btn-view-disabled">Sold Out</span>
+          <span class="btn-view-disabled">
+            <i class="bi bi-x-circle-fill me-1"></i> Sold Out
+          </span>
         {% elif event.last_date|date:'Y-m-d' < today %}
-          <span class="btn-view-disabled">Registration Finished</span>
+          <span class="btn-view-disabled">
+            <i class="bi bi-calendar-x me-1"></i> Registration Finished
+          </span>
         {% else %}
+          <!-- Countdown Timer -->
           <div class="countdown" data-event-date="{{ event.last_date|date:'c' }}">
             <div class="countdown-item"><span class="cd-days">--</span><small>Days</small></div>
             <div class="countdown-item"><span class="cd-hours">--</span><small>Hrs</small></div>
             <div class="countdown-item"><span class="cd-mins">--</span><small>Min</small></div>
             <div class="countdown-item"><span class="cd-secs">--</span><small>Sec</small></div>
           </div>
+
+          <!-- Buttons Action Deck -->
           <div class="actions-row">
             <a href="{% url 'event_detail' event.id %}" class="btn-view">View Details</a>
             {% if event.brochure %}
@@ -597,6 +922,7 @@ Home
             {% endif %}
           </div>
         {% endif %}
+
       </div>
     </div>
   </div>
@@ -604,12 +930,14 @@ Home
   <div class="col-12">
     <div class="empty-state">
       <div class="glyph">🎟️</div>
-      No events are live right now — check back soon.
+      <h5 class="fw-bold text-dark">No Events Live Right Now</h5>
+      <p class="mb-0 text-muted">Check back soon! New registrations and schedules will be published here.</p>
     </div>
   </div>
   {% endfor %}
 </div>
 
+<!-- ================= FULL-WIDTH FOOTER ================= -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-top">
@@ -640,9 +968,9 @@ Home
         <h6>Quick Links</h6>
         <ul>
           <li><a href="{% url 'event_list' %}">All Events</a></li>
-          <li><a href="/">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -656,10 +984,14 @@ Home
   </div>
 </footer>
 
+<!-- ================= COUNTDOWN SCRIPT ================= -->
 <script>
   function updateCountdowns(){
     document.querySelectorAll('.countdown').forEach(function(el){
-      var target = new Date(el.getAttribute('data-event-date')).getTime();
+      var dateStr = el.getAttribute('data-event-date');
+      if(!dateStr) return;
+
+      var target = new Date(dateStr).getTime();
       var now = new Date().getTime();
       var diff = target - now;
 
@@ -667,6 +999,8 @@ Home
       var hoursEl = el.querySelector('.cd-hours');
       var minsEl = el.querySelector('.cd-mins');
       var secsEl = el.querySelector('.cd-secs');
+
+      if(!daysEl || !hoursEl || !minsEl || !secsEl) return;
 
       if(diff <= 0){
         daysEl.textContent = '00';

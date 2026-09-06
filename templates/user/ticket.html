@@ -1,94 +1,459 @@
 {% extends 'user/base.html' %}
 
 {% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Libre+Barcode+39&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<div class="container mt-5">
+<style>
+  :root {
+    --ink-primary: #0f172a;
+    --ink-muted: #64748b;
+    --ticket-bg: #ffffff;
+    --ticket-edge: #0f172a;
+    --ticket-brand: #4f46e5;
+    --perforate-color: #f1f5f9;
+  }
 
-<div class="card shadow">
+  .ticket-wrapper {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    max-width: 900px;
+    margin: 2.5rem auto 4rem;
+    padding: 0 1rem;
+  }
 
-<div class="card-header bg-primary text-white">
+  /* Main Pass Container */
+  .event-pass {
+    background: var(--ticket-bg);
+    border-radius: 24px;
+    display: flex;
+    position: relative;
+    box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+  }
 
-<h2>EVENT TICKET</h2>
+  /* Left Main Ticket Body */
+  .pass-main {
+    flex: 1 1 68%;
+    padding: 2.25rem 2.5rem;
+    position: relative;
+  }
+
+  /* Header banner with badge */
+  .pass-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .pass-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eef2ff;
+    color: var(--ticket-brand);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+
+  .pass-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink-primary);
+    line-height: 1.25;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Quick schedule ribbon */
+  .event-highlight-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .strip-item .label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+    margin-bottom: 2px;
+  }
+
+  .strip-item .val {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* 2-Column Info Grid */
+  .pass-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.75rem;
+  }
+
+  .info-unit .unit-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+    margin-bottom: 2px;
+  }
+
+  .info-unit .unit-value {
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: var(--ink-primary);
+    word-break: break-word;
+  }
+
+  /* Perforation divider */
+  .pass-perforation {
+    position: relative;
+    width: 2px;
+    background: repeating-linear-gradient(
+      to bottom,
+      #cbd5e1,
+      #cbd5e1 6px,
+      transparent 6px,
+      transparent 12px
+    );
+    margin: 0;
+  }
+
+  /* Round ticket cutouts (top and bottom notch) */
+  .pass-perforation::before,
+  .pass-perforation::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: #f7f8fa; /* matches page background */
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+
+  .pass-perforation::before {
+    top: -14px;
+  }
+
+  .pass-perforation::after {
+    bottom: -14px;
+  }
+
+  /* Right Ticket Stub */
+  .pass-stub {
+    flex: 1 1 32%;
+    background: #f8fafc;
+    border-left: 1px dashed #e2e8f0;
+    padding: 2.25rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stub-headline {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  .stub-badge-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.25rem 1rem;
+    width: 100%;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+  }
+
+  .seat-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+  }
+
+  .seat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--ticket-brand);
+    line-height: 1.1;
+    margin: 4px 0 8px;
+  }
+
+  .token-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-primary);
+  }
+
+  /* Status tag */
+  .badge-payment {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .badge-payment.paid {
+    background: #ecfdf5;
+    color: #059669;
+  }
+
+  .badge-payment.pending {
+    background: #fffbeb;
+    color: #d97706;
+  }
+
+  /* Barcode graphic simulation */
+  .stub-barcode {
+    font-family: 'Libre Barcode 39', cursive;
+    font-size: 3rem;
+    line-height: 1;
+    color: #1e293b;
+    margin: 0.5rem 0;
+    user-select: none;
+    letter-spacing: 2px;
+  }
+
+  .barcode-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: #94a3b8;
+  }
+
+  /* Download Action Bar */
+  .action-deck {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 2rem;
+  }
+
+  .btn-print-ticket {
+    background: var(--ticket-brand);
+    border: none;
+    color: #ffffff;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-print-ticket:hover {
+    background: #4338ca;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(79, 70, 229, 0.45);
+    color: #ffffff;
+  }
+
+  /* Responsive breakdown */
+  @media (max-width: 768px) {
+    .event-pass {
+      flex-direction: column;
+    }
+    .pass-perforation {
+      width: 100%;
+      height: 2px;
+      background: repeating-linear-gradient(
+        to right,
+        #cbd5e1,
+        #cbd5e1 6px,
+        transparent 6px,
+        transparent 12px
+      );
+    }
+    .pass-perforation::before {
+      top: -14px;
+      left: -14px;
+      transform: none;
+    }
+    .pass-perforation::after {
+      bottom: -14px;
+      left: auto;
+      right: -14px;
+      transform: none;
+    }
+    .event-highlight-strip {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Clean Print Template Override */
+  @media print {
+    body {
+      background: #ffffff !important;
+    }
+    .topbar, .action-deck, footer {
+      display: none !important;
+    }
+    .ticket-wrapper {
+      margin: 0 !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+    .event-pass {
+      box-shadow: none !important;
+      border: 2px solid #000000 !important;
+    }
+  }
+</style>
+
+<div class="ticket-wrapper">
+
+  <!-- Main Printable Event Pass -->
+  <div class="event-pass">
+
+    <!-- Primary Pass Information -->
+    <div class="pass-main">
+      <div class="pass-header">
+        <div class="pass-chip">
+          <i class="bi bi-ticket-perforated-fill"></i> Verified Pass
+        </div>
+        <div class="text-muted small fw-semibold">
+          REF #{{ registration.id }}
+        </div>
+      </div>
+
+      <h1 class="pass-title">{{ registration.event.title }}</h1>
+
+      <!-- Date, Time & Venue Highlight Ribbon -->
+      <div class="event-highlight-strip">
+        <div class="strip-item">
+          <div class="label">Date</div>
+          <div class="val">
+            <i class="bi bi-calendar3 text-primary"></i>
+            {{ registration.event.event_date|default:"TBA" }}
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="label">Time</div>
+          <div class="val">
+            <i class="bi bi-clock text-primary"></i>
+            {{ registration.event.event_time|default:"TBA" }}
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="label">Venue</div>
+          <div class="val">
+            <i class="bi bi-geo-alt-fill text-danger"></i>
+            {{ registration.event.venue }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Attendee Information Grid -->
+      <div class="pass-info-grid">
+        <div class="info-unit">
+          <div class="unit-label">Attendee Name</div>
+          <div class="unit-value">{{ registration.full_name }}</div>
+        </div>
+
+        <div class="info-unit">
+          <div class="unit-label">College</div>
+          <div class="unit-value">{{ registration.college }}</div>
+        </div>
+
+        <div class="info-unit">
+          <div class="unit-label">Department & Semester</div>
+          <div class="unit-value">{{ registration.department }} &bull; Sem {{ registration.semester }}</div>
+        </div>
+
+        <div class="info-unit">
+          <div class="unit-label">Phone Contact</div>
+          <div class="unit-value">{{ registration.phone }}</div>
+        </div>
+
+        <div class="info-unit" style="grid-column: 1 / -1;">
+          <div class="unit-label">Registered Email</div>
+          <div class="unit-value">{{ registration.email }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Perforated Notch Divider -->
+    <div class="pass-perforation"></div>
+
+    <!-- Right Ticket Tear-Off Stub -->
+    <div class="pass-stub">
+      <div class="w-100">
+        <div class="stub-headline">Admit Stub</div>
+
+        <div class="stub-badge-box">
+          {% if token %}
+            <div class="seat-label">Seat Number</div>
+            <div class="seat-value">{{ token.seat_number|default:"GA" }}</div>
+            <div class="seat-label">Token Code</div>
+            <div class="token-mono">#{{ token.token_number }}</div>
+          {% else %}
+            <div class="seat-label">Admission</div>
+            <div class="seat-value">GEN</div>
+            <div class="token-mono text-muted small">Standard Entry</div>
+          {% endif %}
+        </div>
+
+        {% if payment %}
+          <div class="mb-3">
+            <span class="badge-payment {% if payment.payment_status|lower == 'paid' or payment.payment_status|lower == 'success' %}paid{% else %}pending{% endif %}">
+              <i class="bi bi-shield-check"></i>
+              Payment: {{ payment.payment_status }}
+            </span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Machine-Readable Barcode Display -->
+      <div class="w-100">
+        <div class="stub-barcode">*PASS{{ registration.id }}*</div>
+        <div class="barcode-number">SEC-{{ registration.id }}-PASS</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Print / Download Button -->
+  <div class="action-deck">
+    <button onclick="window.print()" class="btn-print-ticket">
+      <i class="bi bi-printer-fill"></i>
+      Download / Print Pass
+    </button>
+  </div>
 
 </div>
-
-<div class="card-body">
-
-<h3>{{ registration.event.title }}</h3>
-
-<hr>
-
-<p><b>Name :</b> {{ registration.full_name }}</p>
-
-<p><b>College :</b> {{ registration.college }}</p>
-
-<p><b>Department :</b> {{ registration.department }}</p>
-
-<p><b>Semester :</b> {{ registration.semester }}</p>
-
-<p><b>Email :</b> {{ registration.email }}</p>
-
-<p><b>Phone :</b> {{ registration.phone }}</p>
-
-<hr>
-
-<h5>Event Details</h5>
-
-<p><b>Date :</b> {{ registration.event.event_date }}</p>
-
-<p><b>Time :</b> {{ registration.event.event_time }}</p>
-
-<p><b>Venue :</b> {{ registration.event.venue }}</p>
-
-<hr>
-
-{% if token %}
-
-<p>
-
-<b>Token Number :</b>
-
-{{ token.token_number }}
-
-</p>
-
-<p>
-
-<b>Seat Number :</b>
-
-{{ token.seat_number }}
-
-</p>
-
-{% endif %}
-
-{% if payment %}
-
-<p>
-
-<b>Payment Status :</b>
-
-<span class="badge bg-success">
-
-{{ payment.payment_status }}
-
-</span>
-
-</p>
-
-{% endif %}
-
-<button onclick="window.print()"
-class="btn btn-primary">
-
-Download Ticket
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
 {% endblock %}

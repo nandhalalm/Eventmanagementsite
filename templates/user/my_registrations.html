@@ -1,19 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Registrations</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Registrations — Campus EventHub</title>
+    
+    <!-- Modern Typography & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
         :root {
-            --ink: #1c2024;
-            --muted: #6b7280;
-            --line: #e5e7eb;
-            --bg: #f7f7f5;
-            --card: #ffffff;
-            --pending: #b45309;
-            --pending-bg: #fef3e2;
-            --ready: #166534;
-            --ready-bg: #eafaf0;
-            --accent: #2563eb;
+            --ink-primary: #0f172a;
+            --ink-secondary: #475569;
+            --ink-muted: #94a3b8;
+            --surface: #ffffff;
+            --surface-subtle: #f8fafc;
+            --border-subtle: #e2e8f0;
+            --brand-primary: #4f46e5;
+            --brand-primary-hover: #4338ca;
+            --amber: #f59e0b;
+            --amber-bg: #fffbeb;
+            --amber-border: #fde68a;
+            --emerald: #10b981;
+            --emerald-bg: #ecfdf5;
+            --emerald-border: #a7f3d0;
+            --rose: #e11d48;
+            --rose-bg: #fff1f2;
         }
 
         * { box-sizing: border-box; }
@@ -21,23 +36,27 @@
         body {
             margin: 0;
             padding: 0;
-            background: var(--bg);
-            color: var(--ink);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f8fafc;
+            color: var(--ink-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
         }
 
+        /* ================= NAVIGATION ================= */
         .navbar {
-            background: var(--card);
-            border-bottom: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 50;
         }
 
         .navbar-inner {
-            max-width: 1100px;
+            max-width: 1180px;
             margin: 0 auto;
-            padding: 14px 24px;
+            padding: 12px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -45,226 +64,333 @@
         }
 
         .navbar-brand {
-            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
             font-weight: 700;
-            letter-spacing: -0.01em;
-            color: var(--ink);
+            color: var(--ink-primary);
             text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #ffffff;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
         }
 
         .navbar-links {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             list-style: none;
             margin: 0;
             padding: 0;
         }
 
         .navbar-links a {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--muted);
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--ink-secondary);
             text-decoration: none;
+            transition: all 0.2s ease;
         }
 
         .navbar-links a:hover {
-            background: var(--bg);
-            color: var(--ink);
+            background: var(--surface-subtle);
+            color: var(--ink-primary);
         }
 
         .navbar-links a.active {
-            color: var(--accent);
-            background: #eaf1fd;
+            color: var(--brand-primary);
+            background: #eef2ff;
         }
 
         .navbar-links a.logout {
-            color: var(--pending);
+            color: #ef4444;
         }
 
-        @media (max-width: 600px) {
-            .navbar-inner {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .navbar-links {
-                flex-wrap: wrap;
-            }
-        }
-
-        .page-header {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 40px 24px 24px;
-        }
-
-        .page-header h2 {
-            margin: 0 0 6px;
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .page-header .user-line {
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .page-header .user-line strong {
-            color: var(--ink);
-            font-weight: 600;
-        }
-
-        .columns {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 8px 24px 60px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
-            align-items: start;
-        }
-
-        .column {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 24px;
-            min-height: 160px;
-        }
-
-        .column-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 0 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--line);
-            font-size: 15px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-
-        .column-title.pending { color: var(--pending); }
-        .column-title.ready { color: var(--ready); }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .dot.pending { background: var(--pending); }
-        .dot.ready { background: var(--ready); }
-
-        .reg-card {
-            border: 1px solid var(--line);
-            border-radius: 10px;
-            padding: 16px 18px;
-            margin-bottom: 16px;
-        }
-
-        .reg-card:last-child {
-            margin-bottom: 0;
-        }
-
-        .reg-field {
-            font-size: 13px;
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        .reg-field .label {
-            display: inline-block;
-            min-width: 48px;
-            color: var(--muted);
-        }
-
-        .reg-field .value {
-            color: var(--ink);
-            font-weight: 500;
-        }
-
-        .status-badge {
-            display: inline-block;
-            margin-top: 6px;
-            margin-bottom: 14px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-badge.pending {
-            color: var(--pending);
-            background: var(--pending-bg);
-        }
-
-        .status-badge.ready {
-            color: var(--ready);
-            background: var(--ready-bg);
-        }
-
-        .action-link {
-            display: inline-block;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            padding: 9px 16px;
-            border-radius: 8px;
-        }
-
-        .action-link.pay {
-            color: #ffffff;
-            background: var(--pending);
-        }
-
-        .action-link.pay:hover {
-            background: #92400e;
-        }
-
-        .action-link.ticket {
-            color: #ffffff;
-            background: var(--ready);
-        }
-
-        .action-link.ticket:hover {
-            background: #14532d;
-        }
-
-        .action-link.cancel {
-            background: #ffffff;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-            margin-left: 8px;
-        }
-
-        .action-link.cancel:hover {
+        .navbar-links a.logout:hover {
             background: #fef2f2;
         }
 
-        .cancel-disabled {
-            display: inline-block;
-            margin-left: 8px;
-            font-size: 12px;
-            color: #9ca3af;
-            padding: 9px 4px;
+        /* ================= PAGE HEADER ================= */
+        .page-header-wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 2.5rem 24px 1.5rem;
         }
 
-        .empty-note {
-            color: var(--muted);
-            font-size: 14px;
-            padding: 12px 0;
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--ink-primary);
+            margin: 0 0 6px;
         }
 
-        @media (max-width: 760px) {
-            .columns {
+        .user-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.84rem;
+            color: var(--ink-secondary);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .user-status-pill strong {
+            color: var(--ink-primary);
+        }
+
+        /* ================= KANBAN SPLIT COLUMNS ================= */
+        .workspace-grid {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 24px 5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .panel-column {
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 22px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.04);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 0;
+        }
+
+        .panel-title.pending { color: #d97706; }
+        .panel-title.ready { color: #059669; }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .indicator-dot.pending {
+            background: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+
+        .indicator-dot.ready {
+            background: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        /* ================= REGISTRATION CARDS ================= */
+        .registration-item-card {
+            background: var(--surface-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.25rem 1.35rem;
+            margin-bottom: 1rem;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .registration-item-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .registration-item-card:hover {
+            transform: translateY(-3px);
+            background: #ffffff;
+            border-color: #cbd5e1;
+            box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08);
+        }
+
+        .reg-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .reg-id-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--ink-secondary);
+            background: #e2e8f0;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .event-title-h4 {
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: var(--ink-primary);
+            line-height: 1.3;
+            margin: 0 0 0.65rem;
+            letter-spacing: -0.01em;
+        }
+
+        .attendee-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.86rem;
+            color: var(--ink-secondary);
+            margin-bottom: 0.9rem;
+        }
+
+        .attendee-row i {
+            color: var(--brand-primary);
+        }
+
+        /* Status Badge */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 1rem;
+        }
+
+        .status-pill.pending {
+            background: var(--amber-bg);
+            color: #d97706;
+            border: 1px solid var(--amber-border);
+        }
+
+        .status-pill.ready {
+            background: var(--emerald-bg);
+            color: #059669;
+            border: 1px solid var(--emerald-border);
+        }
+
+        /* Action Buttons */
+        .action-tray {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 0.9rem;
+            border-top: 1px dashed var(--border-subtle);
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 9px 18px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-btn.pay {
+            background: #f59e0b;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .action-btn.pay:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.ticket {
+            background: #10b981;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .action-btn.ticket:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.cancel {
+            background: transparent;
+            color: #e11d48;
+            border: 1px solid #fecdd3;
+            margin-left: auto;
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 8px 14px;
+        }
+
+        .action-btn.cancel:hover {
+            background: #fff1f2;
+            border-color: #fda4af;
+        }
+
+        .cancel-lock-tag {
+            margin-left: auto;
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--ink-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Empty Card Notice */
+        .empty-column-box {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--ink-muted);
+        }
+
+        .empty-column-box i {
+            font-size: 2.2rem;
+            color: #cbd5e1;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 860px) {
+            .workspace-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -272,74 +398,141 @@
 </head>
 <body>
 
+<!-- Navigation Bar -->
 <nav class="navbar">
     <div class="navbar-inner">
-        <a class="navbar-brand" href="{% url 'home' %}">EventHub</a>
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <div class="brand-icon">
+                <i class="bi bi-stack"></i>
+            </div>
+            EventHub
+        </a>
         <ul class="navbar-links">
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a class="active" href="{% url 'my_registrations' %}">My Registrations</a></li>
-            <li><a href="{% url 'profile' %}">Profile</a></li>
-            <li><a class="logout" href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'home' %}"><i class="bi bi-house"></i> Home</a></li>
+            <li><a class="active" href="{% url 'my_registrations' %}"><i class="bi bi-journal-bookmark"></i> My Registrations</a></li>
+            <li><a href="{% url 'profile' %}"><i class="bi bi-person"></i> Profile</a></li>
+            <li><a class="logout" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
         </ul>
     </div>
 </nav>
 
-<div class="page-header">
-    <h2>My Registrations</h2>
-    <div class="user-line">Logged in as <strong>{{ request.user }}</strong></div>
+<!-- Page Header -->
+<div class="page-header-wrap">
+    <h1 class="page-title">Registration Desk</h1>
+    <div class="user-status-pill">
+        <i class="bi bi-person-circle text-primary"></i>
+        <span>Signed in as <strong>{{ request.user }}</strong></span>
+    </div>
 </div>
 
-<div class="columns">
+<!-- 2-Column Responsive Board -->
+<div class="workspace-grid">
 
-    <!-- Pending payments -->
-    <div class="column">
-        <div class="column-title pending"><span class="dot pending"></span>Pay Now</div>
+    <!-- Column 1: Pending Registrations -->
+    <div class="panel-column">
+        <div class="panel-header">
+            <h3 class="panel-title pending">
+                <span class="indicator-dot pending"></span>
+                Payment Pending
+            </h3>
+            <span class="reg-id-badge" style="background: var(--amber-bg); color: #d97706;">Action Required</span>
+        </div>
 
         {% for reg in registrations %}
             {% if reg.payment_status == "Pending" %}
-            <div class="reg-card">
-                <div class="reg-field"><span class="label">ID:</span> <span class="value">{{ reg.id }}</span></div>
-                <div class="reg-field"><span class="label">PK:</span> <span class="value">{{ reg.pk }}</span></div>
-                <div class="reg-field"><span class="label">Name:</span> <span class="value">{{ reg.full_name }}</span></div>
-                <div class="reg-field"><span class="label">Event:</span> <span class="value">{{ reg.event.title }}</span></div>
-                <div><span class="status-badge pending">{{ reg.payment_status }}</span></div>
-                <a class="action-link pay" href="{% url 'payment' reg.id %}">Pay Now</a>
-                {% if reg.can_cancel %}
-                <a class="action-link cancel" href="{% url 'cancel_registration' reg.id %}" onclick="return confirm('Cancel this registration?');">Cancel</a>
-                {% else %}
-                <span class="cancel-disabled">Cancellation closed</span>
-                {% endif %}
+            <div class="registration-item-card">
+                <div class="reg-top-bar">
+                    <span class="reg-id-badge">ID: #{{ reg.id }} &bull; PK: {{ reg.pk }}</span>
+                </div>
+                
+                <h4 class="event-title-h4">{{ reg.event.title }}</h4>
+                
+                <div class="attendee-row">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Attendee: <strong>{{ reg.full_name }}</strong></span>
+                </div>
+
+                <div>
+                    <span class="status-pill pending">
+                        <i class="bi bi-clock-history"></i> {{ reg.payment_status }}
+                    </span>
+                </div>
+
+                <div class="action-tray">
+                    <a class="action-btn pay" href="{% url 'payment' reg.id %}">
+                        <i class="bi bi-credit-card-2-front"></i> Complete Payment
+                    </a>
+
+                    {% if reg.can_cancel %}
+                    <a class="action-btn cancel" href="{% url 'cancel_registration' reg.id %}" onclick="return confirm('Cancel this registration?');">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                    {% else %}
+                    <span class="cancel-lock-tag">
+                        <i class="bi bi-lock-fill"></i> Cancellation Closed
+                    </span>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
         {% empty %}
-            <p class="empty-note">No registrations found.</p>
+            <div class="empty-column-box">
+                <i class="bi bi-check2-circle text-success"></i>
+                <p>No pending payments. You're all caught up!</p>
+            </div>
         {% endfor %}
-
     </div>
 
-    <!-- Ready tickets -->
-    <div class="column">
-        <div class="column-title ready"><span class="dot ready"></span>Tickets</div>
+    <!-- Column 2: Confirmed Passes / Tickets -->
+    <div class="panel-column">
+        <div class="panel-header">
+            <h3 class="panel-title ready">
+                <span class="indicator-dot ready"></span>
+                Confirmed &amp; Passes
+            </h3>
+            <span class="reg-id-badge" style="background: var(--emerald-bg); color: #059669;">Ready to Attend</span>
+        </div>
 
         {% for reg in registrations %}
             {% if reg.payment_status != "Pending" %}
-            <div class="reg-card">
-                <div class="reg-field"><span class="label">ID:</span> <span class="value">{{ reg.id }}</span></div>
-                <div class="reg-field"><span class="label">PK:</span> <span class="value">{{ reg.pk }}</span></div>
-                <div class="reg-field"><span class="label">Name:</span> <span class="value">{{ reg.full_name }}</span></div>
-                <div class="reg-field"><span class="label">Event:</span> <span class="value">{{ reg.event.title }}</span></div>
-                <a class="action-link ticket" href="{% url 'ticket' reg.id %}">View Ticket</a>
-                {% if reg.can_cancel %}
-                <a class="action-link cancel" href="{% url 'cancel_registration' reg.id %}" onclick="return confirm('Cancel this registration?');">Cancel</a>
-                {% else %}
-                <span class="cancel-disabled">Cancellation closed</span>
-                {% endif %}
+            <div class="registration-item-card">
+                <div class="reg-top-bar">
+                    <span class="reg-id-badge">ID: #{{ reg.id }} &bull; PK: {{ reg.pk }}</span>
+                    <span class="status-pill ready" style="margin-bottom: 0;">
+                        <i class="bi bi-check-circle-fill"></i> Confirmed
+                    </span>
+                </div>
+
+                <h4 class="event-title-h4">{{ reg.event.title }}</h4>
+
+                <div class="attendee-row">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Attendee: <strong>{{ reg.full_name }}</strong></span>
+                </div>
+
+                <div class="action-tray">
+                    <a class="action-btn ticket" href="{% url 'ticket' reg.id %}">
+                        <i class="bi bi-ticket-perforated-fill"></i> View Ticket Pass
+                    </a>
+
+                    {% if reg.can_cancel %}
+                    <a class="action-btn cancel" href="{% url 'cancel_registration' reg.id %}" onclick="return confirm('Cancel this registration?');">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                    {% else %}
+                    <span class="cancel-lock-tag">
+                        <i class="bi bi-lock-fill"></i> Cancellation Closed
+                    </span>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
         {% empty %}
-            <p class="empty-note">No registrations found.</p>
+            <div class="empty-column-box">
+                <i class="bi bi-ticket-perforated"></i>
+                <p>No confirmed event passes yet.</p>
+            </div>
         {% endfor %}
-
     </div>
 
 </div>

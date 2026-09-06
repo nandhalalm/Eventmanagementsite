@@ -1,181 +1,744 @@
 {% extends 'base.html' %}
 
-{% block title %}Events{% endblock %}
+{% block title %}Events Catalog{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-  .event-img-wrap{
-    position:relative;
-    overflow:hidden;
+  :root {
+    --ink-primary: #0f172a;
+    --ink-secondary: #475569;
+    --ink-muted: #94a3b8;
+    --brand-indigo: #4f46e5;
+    --brand-indigo-dark: #4338ca;
+    --border-subtle: #e2e8f0;
+    --surface-card: #ffffff;
+    --bg-page: #f8fafc;
+    /* Footer theme colors */
+    --indigo: #2B2470;
+    --indigo-deep: #1A1540;
+    --coral: #FF5A45;
+    --gold: #FFC24B;
   }
 
-  .status-badge{
-    position:absolute;
-    top:.5rem;
-    right:.5rem;
-    z-index:2;
-    font-size:.65rem;
-    font-weight:600;
-    letter-spacing:.03em;
-    padding:.2rem .55rem;
-    border-radius:999px;
-    color:#fff;
+  .events-catalog {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: var(--ink-primary);
+    padding: 2rem 0 4rem;
   }
 
-  .status-badge.status-open{
-    background:rgba(43,36,112,0.9);
+  /* Section Header */
+  .catalog-header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
   }
 
-  .status-badge.status-closed{
-    background:rgba(22,19,32,0.75);
+  .catalog-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: var(--brand-indigo);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
   }
 
-  .mini-countdown{
-    display:flex;
-    gap:.2rem;
-    margin-top:.5rem;
-  }
-  .mini-countdown-item{
-    flex:1;
-    text-align:center;
-    background:#f1efe9;
-    border:1px solid #e7e4dd;
-    border-radius:5px;
-    padding:.15rem .1rem;
-  }
-  .mini-countdown-item span{
-    display:block;
-    font-weight:700;
-    font-size:.68rem;
-    color:#2B2470;
-    line-height:1.1;
-  }
-  .mini-countdown-item small{
-    display:block;
-    font-size:.48rem;
-    letter-spacing:.03em;
-    text-transform:uppercase;
-    color:#8b8794;
-    margin-top:.05rem;
+  .catalog-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink-primary);
+    margin: 0;
   }
 
-  .actions-row{
-    margin-top:.6rem;
-    display:flex;
-    align-items:center;
-    gap:.5rem;
+  .catalog-subtitle {
+    font-size: 0.95rem;
+    color: var(--ink-secondary);
+    margin: 6px 0 0;
   }
 
-  .actions-row .btn-primary{
-    flex:1;
+  /* Event Card Structure */
+  .event-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px -4px rgba(15, 23, 42, 0.05);
   }
 
-  .btn-brochure{
-    flex:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    border:1.5px solid #e7e4dd;
-    color:#2B2470;
-    background:#fff;
-    transition:background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+  .event-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(79, 70, 229, 0.15);
   }
-  .btn-brochure:hover{
-    background:#FFC24B;
-    border-color:#FFC24B;
-    color:#1A1540;
-    transform:translateY(-2px);
+
+  /* Image Banner */
+  .event-media-wrapper {
+    position: relative;
+    height: 220px;
+    width: 100%;
+    overflow: hidden;
+    background: #0f172a;
   }
-  .btn-brochure svg{ width:16px; height:16px; }
+
+  .event-media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .event-card:hover .event-media-img {
+    transform: scale(1.05);
+  }
+
+  .media-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.6) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Status Badge */
+  .event-status-pill {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 5px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .event-status-pill.status-open {
+    background: rgba(16, 185, 129, 0.9);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  }
+
+  .event-status-pill.status-closed {
+    background: rgba(15, 23, 42, 0.85);
+    color: #e2e8f0;
+  }
+
+  /* Price Ribbon on Image */
+  .event-fee-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink-primary);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .event-fee-tag.free {
+    color: #059669;
+  }
+
+  /* Card Body */
+  .event-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .event-name {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-primary);
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.6rem;
+  }
+
+  /* Key Info Grid */
+  .event-spec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .spec-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: var(--ink-secondary);
+  }
+
+  .spec-icon {
+    font-size: 0.95rem;
+    color: var(--brand-indigo);
+    width: 18px;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .spec-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Modern Segmented Countdown */
+  .countdown-module {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border-subtle);
+  }
+
+  .countdown-caption {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mini-countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .countdown-cell {
+    background: #f8fafc;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    text-align: center;
+    padding: 5px 2px;
+  }
+
+  .countdown-digit {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--ink-primary);
+    line-height: 1.1;
+  }
+
+  .countdown-unit {
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Card Action Deck */
+  .event-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1.25rem;
+  }
+
+  .btn-details {
+    flex: 1;
+    background: var(--brand-indigo);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-details:hover {
+    background: var(--brand-indigo-dark);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .btn-brochure-round {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid var(--border-subtle);
+    color: var(--ink-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .btn-brochure-round:hover {
+    background: #ffffff;
+    border-color: var(--brand-indigo);
+    color: var(--brand-indigo);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+  }
+
+  /* Empty State */
+  .empty-catalog {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  /* ---------- Footer (full viewport width) ---------- */
+  .site-footer {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    margin-top: 4rem;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255,194,75,0.25), transparent 45%),
+      radial-gradient(circle at 90% 85%, rgba(255,90,69,0.25), transparent 40%),
+      linear-gradient(135deg, var(--indigo-deep), var(--indigo));
+    color: rgba(255,255,255,0.85);
+    isolation: isolate;
+  }
+
+  .site-footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 22px);
+    z-index: -1;
+  }
+
+  .footer-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding: 3.5rem 0 2.25rem;
+  }
+
+  .footer-brand h5 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: .6rem;
+  }
+
+  .footer-brand p {
+    font-family: 'Inter', sans-serif;
+    font-size: .92rem;
+    color: rgba(255,255,255,0.68);
+    max-width: 32ch;
+    line-height: 1.55;
+  }
+
+  .footer-links h6,
+  .footer-social h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+  }
+
+  .footer-links a {
+    font-family: 'Inter', sans-serif;
+    font-size: .9rem;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    position: relative;
+    width: fit-content;
+    transition: color .18s ease;
+  }
+
+  .footer-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 1px;
+    background: var(--coral);
+    transition: width .25s ease;
+  }
+
+  .footer-links a:hover {
+    color: #fff;
+  }
+
+  .footer-links a:hover::after {
+    width: 100%;
+  }
+
+  .footer-social {
+    text-align: center;
+    margin-right: 8rem;
+  }
+
+  .footer-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: .7rem;
+  }
+
+  .footer-social-icons a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: #fff;
+    background: rgba(255,255,255,0.04);
+    overflow: hidden;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1), border-color .3s ease, box-shadow .3s ease;
+  }
+
+  .footer-social-icons a svg {
+    position: relative;
+    z-index: 1;
+    width: 18px;
+    height: 18px;
+    transition: transform .3s ease;
+  }
+
+  .footer-social-icons a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--coral);
+    transform: translateY(100%);
+    transition: transform .3s ease;
+    z-index: 0;
+  }
+
+  .footer-social-icons a:hover {
+    transform: translateY(-5px) rotate(-6deg);
+    border-color: var(--coral);
+    box-shadow: 0 10px 22px rgba(255,90,69,0.35);
+  }
+
+  .footer-social-icons a:hover::before {
+    transform: translateY(0%);
+  }
+
+  .footer-social-icons a:hover svg {
+    transform: scale(1.1);
+  }
+
+  .footer-social-icons a[data-brand="instagram"]:hover { border-color: #E1306C; box-shadow: 0 10px 22px rgba(225,48,108,0.35); }
+  .footer-social-icons a[data-brand="instagram"]:hover::before { background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); }
+  .footer-social-icons a[data-brand="twitter"]:hover { border-color: #1DA1F2; box-shadow: 0 10px 22px rgba(29,161,242,0.35); }
+  .footer-social-icons a[data-brand="twitter"]:hover::before { background: #1DA1F2; }
+  .footer-social-icons a[data-brand="linkedin"]:hover { border-color: #0A66C2; box-shadow: 0 10px 22px rgba(10,102,194,0.35); }
+  .footer-social-icons a[data-brand="linkedin"]:hover::before { background: #0A66C2; }
+  .footer-social-icons a[data-brand="youtube"]:hover { border-color: #FF0000; box-shadow: 0 10px 22px rgba(255,0,0,0.35); }
+  .footer-social-icons a[data-brand="youtube"]:hover::before { background: #FF0000; }
+
+  /* Full-width copyright bar */
+  .footer-bottom-wrap {
+    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: .82rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .footer-bottom .heart {
+    display: inline-block;
+    font-size: 1.6rem;
+    vertical-align: middle;
+    color: var(--coral);
+    animation: beat 1.4s ease-in-out infinite;
+  }
+
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.25); }
+    40% { transform: scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-social-icons a,
+    .footer-social-icons a::before,
+    .footer-social-icons a svg,
+    .footer-links a::after,
+    .footer-bottom .heart {
+      transition: none;
+      animation: none;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .footer-inner { padding: 0 1.5rem; }
+    .footer-top { gap: 2rem; }
+    .footer-social { margin-right: 0; }
+    .footer-bottom { justify-content: center; text-align: center; }
+  }
 </style>
 
-<div class="container">
+<div class="container events-catalog">
 
-    <h2 class="mb-4">Available Events</h2>
-
-    <div class="row">
-
-        {% for event in events %}
-
-        <div class="col-md-4 mb-4">
-
-            <div class="card shadow">
-
-                <div class="event-img-wrap">
-
-                    {% if event.image %}
-                    <img src="{{ event.image.url }}" class="card-img-top" height="220">
-                    {% else %}
-                    <img src="https://via.placeholder.com/400x220" class="card-img-top">
-                    {% endif %}
-
-                    {% if event.is_open %}
-                        <span class="status-badge status-open">{{ event.status_label }}</span>
-                    {% else %}
-                        <span class="status-badge status-closed">{{ event.status_label }}</span>
-                    {% endif %}
-
-                </div>
-
-                <div class="card-body">
-
-                    <h4>{{ event.title }}</h4>
-
-                    <p><b>Date:</b> {{ event.event_date }}</p>
-
-                    <p><b>Venue:</b> {{ event.venue }}</p>
-
-                    <p><b>Fee:</b> ₹{{ event.registration_fee }}</p>
-
-                    {% if event.is_open %}
-                        <div class="mini-countdown" data-event-date="{{ event.last_date|date:'c' }}">
-                            <div class="mini-countdown-item"><span class="cd-days">--</span><small>D</small></div>
-                            <div class="mini-countdown-item"><span class="cd-hours">--</span><small>H</small></div>
-                            <div class="mini-countdown-item"><span class="cd-mins">--</span><small>M</small></div>
-                            <div class="mini-countdown-item"><span class="cd-secs">--</span><small>S</small></div>
-                        </div>
-                    {% endif %}
-
-                    <div class="actions-row">
-                        <a href="{% url 'event_detail' event.id %}" class="btn btn-primary">
-                            View Details
-                        </a>
-
-                        {% if event.brochure %}
-                            <a href="{{ event.brochure.url }}" class="btn-brochure" target="_blank" rel="noopener noreferrer" title="Download brochure">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-                            </a>
-                        {% endif %}
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% empty %}
-
-        <div class="alert alert-warning">
-
-            No Events Available
-
-        </div>
-
-        {% endfor %}
-
+  <!-- Heading Area -->
+  <div class="catalog-header">
+    <div>
+      <span class="catalog-badge">
+        <i class="bi bi-stars"></i> What's Happening
+      </span>
+      <h1 class="catalog-title">Available Events</h1>
+      <p class="catalog-subtitle">Explore upcoming workshops, hackathons, seminars, and club activities.</p>
     </div>
+  </div>
+
+  <!-- Events Grid -->
+  <div class="row g-4">
+    {% for event in events %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="event-card">
+
+        <!-- Cover Image with Dynamic Badges -->
+        <div class="event-media-wrapper">
+          {% if event.image %}
+            <img src="{{ event.image.url }}" alt="{{ event.title }}" class="event-media-img" loading="lazy">
+          {% else %}
+            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=80" alt="{{ event.title }}" class="event-media-img" loading="lazy">
+          {% endif %}
+          <div class="media-overlay"></div>
+
+          <!-- Status Indicator -->
+          {% if event.is_open %}
+            <span class="event-status-pill status-open">
+              <i class="bi bi-circle-fill" style="font-size: 0.45rem;"></i>
+              {{ event.status_label|default:"Registration Open" }}
+            </span>
+          {% else %}
+            <span class="event-status-pill status-closed">
+              <i class="bi bi-lock-fill"></i>
+              {{ event.status_label|default:"Registration Closed" }}
+            </span>
+          {% endif %}
+
+          <!-- Price Tag Badge -->
+          <div class="event-fee-tag {% if not event.registration_fee or event.registration_fee == 0 %}free{% endif %}">
+            {% if event.registration_fee and event.registration_fee > 0 %}
+              ₹{{ event.registration_fee }}
+            {% else %}
+              Free Entry
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Card Content Body -->
+        <div class="event-card-content">
+          <h2 class="event-name" title="{{ event.title }}">{{ event.title }}</h2>
+
+          <!-- Event Specs List -->
+          <div class="event-spec-list">
+            <div class="spec-item">
+              <span class="spec-icon"><i class="bi bi-calendar3"></i></span>
+              <span class="spec-text">{{ event.event_date|date:"F d, Y"|default:event.event_date }}</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-icon"><i class="bi bi-geo-alt-fill text-danger"></i></span>
+              <span class="spec-text" title="{{ event.venue }}">{{ event.venue }}</span>
+            </div>
+          </div>
+
+          <!-- Mini Countdown Timer -->
+          {% if event.is_open and event.last_date %}
+            <div class="countdown-module">
+              <div class="countdown-caption">
+                <i class="bi bi-stopwatch"></i> Registration Closes In
+              </div>
+              <div class="mini-countdown-grid mini-countdown" data-event-date="{{ event.last_date|date:'c' }}">
+                <div class="countdown-cell">
+                  <span class="countdown-digit cd-days">--</span>
+                  <span class="countdown-unit">Days</span>
+                </div>
+                <div class="countdown-cell">
+                  <span class="countdown-digit cd-hours">--</span>
+                  <span class="countdown-unit">Hrs</span>
+                </div>
+                <div class="countdown-cell">
+                  <span class="countdown-digit cd-mins">--</span>
+                  <span class="countdown-unit">Mins</span>
+                </div>
+                <div class="countdown-cell">
+                  <span class="countdown-digit cd-secs">--</span>
+                  <span class="countdown-unit">Secs</span>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Action Row -->
+          <div class="event-card-actions">
+            <a href="{% url 'event_detail' event.id %}" class="btn-details">
+              <span>View Details</span>
+              <i class="bi bi-arrow-right-short fs-5"></i>
+            </a>
+
+            {% if event.brochure %}
+              <a href="{{ event.brochure.url }}" class="btn-brochure-round" target="_blank" rel="noopener noreferrer" title="Download Event Brochure">
+                <i class="bi bi-file-earmark-arrow-down"></i>
+              </a>
+            {% endif %}
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="empty-catalog">
+        <i class="bi bi-calendar-x" style="font-size: 3rem; color: var(--ink-muted); display: block; margin-bottom: 1rem;"></i>
+        <h3 class="fw-bold mb-2">No Events Available</h3>
+        <p class="text-muted mb-0">Check back soon! New events, workshops, and competitions will be listed here shortly.</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 
 </div>
 
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h5>CEMS</h5>
+        <p>Your one-stop hub for Technical, Cultural, Sports and Workshop events happening on campus.</p>
+      </div>
+
+      <div class="footer-social">
+        <h6>Follow Us</h6>
+        <div class="footer-social-icons">
+          <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-brand="instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X" data-brand="twitter">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22 5.9c-.7.3-1.5.5-2.3.6.8-.5 1.5-1.3 1.8-2.3-.8.5-1.7.8-2.6 1a4.1 4.1 0 0 0-7 3.7A11.6 11.6 0 0 1 3.4 4.6a4.1 4.1 0 0 0 1.3 5.5c-.7 0-1.3-.2-1.9-.5v.1c0 2 1.4 3.7 3.3 4.1-.6.2-1.2.2-1.8.1.5 1.6 2 2.8 3.8 2.9A8.3 8.3 0 0 1 2 18.6a11.6 11.6 0 0 0 6.3 1.8c7.5 0 11.6-6.2 11.6-11.6v-.5c.8-.6 1.5-1.3 2.1-2.2z"/></svg>
+          </a>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-brand="linkedin">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-.9 1.8-1.9 3.7-1.9 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9z"/></svg>
+          </a>
+          <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube" data-brand="youtube">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M23 12s0-3.4-.4-5a3 3 0 0 0-2.1-2.1C18.9 4.5 12 4.5 12 4.5s-6.9 0-8.5.4A3 3 0 0 0 1.4 7C1 8.6 1 12 1 12s0 3.4.4 5a3 3 0 0 0 2.1 2.1c1.6.4 8.5.4 8.5.4s6.9 0 8.5-.4A3 3 0 0 0 22.6 17c.4-1.6.4-5 .4-5z"/><path d="M9.8 15.5V8.5l6 3.5z" fill="var(--indigo-deep)"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h6>Quick Links</h6>
+        <ul>
+          <li><a href="{% url 'event_list' %}">All Events</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom-wrap">
+    <div class="footer-inner footer-bottom">
+      <span>&copy; {% now "Y" %} College Event Management System. All rights reserved.</span>
+      <span>Built with <span class="heart">♥</span> by the CEMS team</span>
+    </div>
+  </div>
+</footer>
+
 <script>
-  function updateCountdowns(){
-    document.querySelectorAll('.mini-countdown').forEach(function(el){
-      var target = new Date(el.getAttribute('data-event-date')).getTime();
+  function updateCountdowns() {
+    document.querySelectorAll('.mini-countdown').forEach(function(el) {
+      var dateAttr = el.getAttribute('data-event-date');
+      if (!dateAttr) return;
+
+      var target = new Date(dateAttr).getTime();
       var now = new Date().getTime();
       var diff = target - now;
 
@@ -184,7 +747,9 @@
       var minsEl = el.querySelector('.cd-mins');
       var secsEl = el.querySelector('.cd-secs');
 
-      if(diff <= 0){
+      if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+
+      if (diff <= 0) {
         daysEl.textContent = '00';
         hoursEl.textContent = '00';
         minsEl.textContent = '00';
@@ -207,5 +772,4 @@
   updateCountdowns();
   setInterval(updateCountdowns, 1000);
 </script>
-
 {% endblock %}

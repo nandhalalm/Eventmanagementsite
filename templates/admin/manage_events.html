@@ -1,71 +1,366 @@
 {% extends 'admin/base.html' %}
 
 {% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<h2>Manage Events</h2>
+<style>
+  :root {
+    --ink-primary: #0f172a;
+    --ink-muted: #64748b;
+    --border-color: #e2e8f0;
+    --surface-card: #ffffff;
+    --primary-indigo: #4f46e5;
+  }
 
-<a href="{% url 'create_event' %}" class="btn btn-success mb-3">
+  .events-workspace {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: var(--ink-primary);
+    max-width: 1400px;
+    margin: 1.5rem auto 3.5rem;
+    padding: 0 1rem;
+  }
 
-Add Event
+  /* Header Section */
+  .events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
 
-</a>
+  .events-header h2 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-<table class="table table-striped">
+  .header-icon-box {
+    width: 44px;
+    height: 44px;
+    background: #eef2ff;
+    color: var(--primary-indigo);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
 
-<tr>
+  .events-subtitle {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    margin: 6px 0 0;
+  }
 
-<th>Image</th>
+  /* Primary Action Button */
+  .btn-create-event {
+    background: var(--primary-indigo) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+    padding: 10px 20px !important;
+    border-radius: 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
 
-<th>Title</th>
+  .btn-create-event:hover {
+    background: #4338ca !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+  }
 
-<th>Date</th>
+  /* Events Card Surface */
+  .events-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px -6px rgba(15, 23, 42, 0.04);
+  }
 
-<th>Venue</th>
+  /* Custom Clean Table */
+  .events-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
 
-<th>Fee</th>
+  .events-table th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #94a3b8;
+    background: #f8fafc;
+    padding: 14px 20px;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+  }
 
-<th>Action</th>
+  .events-table td {
+    padding: 14px 20px;
+    border: none;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.92rem;
+    vertical-align: middle;
+    transition: background-color 0.15s ease;
+  }
 
-</tr>
+  .events-table tbody tr:last-child td {
+    border-bottom: none;
+  }
 
-{% for event in events %}
+  .events-table tbody tr:hover td {
+    background-color: #f8fafc;
+  }
 
-<tr>
+  /* Event Thumbnail Cover */
+  .event-poster-wrapper {
+    width: 64px;
+    height: 48px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    background: #f1f5f9;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+  }
 
-<td>
+  .event-poster-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-<img src="{{ event.image.url }}" width="90">
+  .event-poster-wrapper .no-image-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 1.1rem;
+  }
 
-</td>
+  /* Title & Context */
+  .event-title-text {
+    font-weight: 700;
+    color: var(--ink-primary);
+    font-size: 0.96rem;
+    line-height: 1.3;
+  }
 
-<td>{{ event.title }}</td>
+  .badge-fee {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 5px 10px;
+    border-radius: 8px;
+    display: inline-block;
+  }
 
-<td>{{ event.event_date }}</td>
+  .badge-fee.free {
+    color: #4f46e5;
+    background: #eef2ff;
+  }
 
-<td>{{ event.venue }}</td>
+  .meta-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-muted);
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
 
-<td>₹{{ event.registration_fee }}</td>
+  /* Action Buttons */
+  .action-btn-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
 
-<td>
+  .btn-action-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+  }
 
-<a href="{% url 'edit_event' event.id %}" class="btn btn-warning btn-sm">
+  .btn-action-edit:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
 
-Edit
+  .btn-action-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fee2e2;
+    transition: all 0.2s ease;
+  }
 
-</a>
+  .btn-action-delete:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fca5a5;
+  }
 
-<a href="{% url 'delete_event' event.id %}" class="btn btn-danger btn-sm">
+  .empty-state-box {
+    background: var(--surface-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+  }
+</style>
 
-Delete
+<div class="events-workspace">
+  <!-- Header & Create Action -->
+  <div class="events-header">
+    <div>
+      <h2>
+        <div class="header-icon-box">
+          <i class="bi bi-calendar4-event"></i>
+        </div>
+        Manage Events
+      </h2>
+      <p class="events-subtitle">Add, inspect schedules, configure venues, and update event listings.</p>
+    </div>
 
-</a>
+    <a href="{% url 'create_event' %}" class="btn-create-event">
+      <i class="bi bi-plus-lg"></i>
+      Add New Event
+    </a>
+  </div>
 
-</td>
+  <!-- Events Table -->
+  <div class="events-card">
+    <div class="table-responsive">
+      <table class="events-table">
+        <thead>
+          <tr>
+            <th style="width: 80px;">Poster</th>
+            <th>Title</th>
+            <th>Date & Schedule</th>
+            <th>Venue</th>
+            <th>Registration Fee</th>
+            <th style="width: 170px; text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+          <tr>
+            <!-- Event Image / Fallback -->
+            <td>
+              <div class="event-poster-wrapper">
+                {% if event.image %}
+                  <img src="{{ event.image.url }}" alt="{{ event.title }}" loading="lazy">
+                {% else %}
+                  <div class="no-image-fallback">
+                    <i class="bi bi-image"></i>
+                  </div>
+                {% endif %}
+              </div>
+            </td>
 
-</tr>
+            <!-- Event Title -->
+            <td>
+              <span class="event-title-text">{{ event.title }}</span>
+            </td>
 
-{% endfor %}
+            <!-- Event Date -->
+            <td>
+              <span class="meta-text">
+                <i class="bi bi-calendar3 text-primary"></i>
+                {{ event.event_date|date:"M d, Y" }}
+              </span>
+            </td>
 
-</table>
+            <!-- Venue -->
+            <td>
+              <span class="meta-text">
+                <i class="bi bi-geo-alt-fill text-danger"></i>
+                {{ event.venue }}
+              </span>
+            </td>
 
+            <!-- Fee Badge -->
+            <td>
+              {% if event.registration_fee and event.registration_fee > 0 %}
+                <span class="badge-fee">₹{{ event.registration_fee }}</span>
+              {% else %}
+                <span class="badge-fee free">Free</span>
+              {% endif %}
+            </td>
+
+            <!-- Action Buttons -->
+            <td>
+              <div class="action-btn-group">
+                <a href="{% url 'edit_event' event.id %}" class="btn-action-edit" title="Edit Event Details">
+                  <i class="bi bi-pencil-square"></i>
+                  Edit
+                </a>
+                <a href="{% url 'delete_event' event.id %}" class="btn-action-delete" title="Delete Event">
+                  <i class="bi bi-trash3"></i>
+                  Delete
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6">
+              <div class="empty-state-box border-0">
+                <div style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 0.75rem;">
+                  <i class="bi bi-calendar-x"></i>
+                </div>
+                <h5 class="fw-bold mb-1">No Events Found</h5>
+                <p class="text-muted mb-3">You haven't scheduled any events yet.</p>
+                <a href="{% url 'create_event' %}" class="btn-create-event">
+                  <i class="bi bi-plus-lg"></i>
+                  Create Your First Event
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock %}
