@@ -23,6 +23,13 @@ from django.conf import settings
 from datetime import timedelta
 from django.utils import timezone
 
+#PASSWORD RESET
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.views import PasswordResetView
+from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
 
 # HOME
 
@@ -115,38 +122,47 @@ def register(request):
 
 # LOGIN
 
-
 def user_login(request):
-
     if request.user.is_authenticated:
-
         if request.user.is_staff:
             return redirect('admin_dashboard')
-
         return redirect('user_dashboard')
 
     if request.method == "POST":
+        identifier = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "")
+        remember_me = request.POST.get("remember_me")
 
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        # Allow logging in via either email or username
+        username = identifier
+        if "@" in identifier:
+            user_obj = User.objects.filter(email__iexact=identifier).first()
+            if user_obj:
+                username = user_obj.username
 
-        user = authenticate(
-            request,
-            username=username,
-            password=password
-        )
+        user = authenticate(request, username=username, password=password)
 
-        if user:
-
+        if user is not None:
             login(request, user)
+
+            # "Remember me" session expiration handling
+            if remember_me:
+                # Keep active for 2 weeks (1,209,600 seconds)
+                request.session.set_expiry(1209600)
+            else:
+                # Session expires on browser close
+                request.session.set_expiry(0)
 
             messages.success(request, "Login Successful")
 
+            # Check for ?next=/path/ redirection
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
+
             if user.is_staff:
                 return redirect('admin_dashboard')
-
             return redirect('user_dashboard')
-
         else:
             messages.error(request, "Invalid username or password.")
 
@@ -876,3 +892,29 @@ def search_events(request):
     }
 
     return render(request, 'search_results.html', context)
+
+# PASSWORD RESET INTO  A PAGE
+
+class LocalPasswordResetView(PasswordResetView):
+    template_name = 'password_reset_form.html'
+
+    def form_valid(self, form):
+        email = form.cleaned_data.get('email')
+        # Find the active user matching the email
+        user = User.objects.filter(
+            email__iexact=email, is_active=True
+        ).first()
+
+        if user:
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            # Build the confirmation URL
+            reset_url = reverse(
+                'password_reset_confirm',
+                kwargs={'uidb64': uid, 'token': token},
+            )
+            # Store link and username in session for testing
+            self.request.session['dev_reset_url'] = reset_url
+            self.request.session['dev_reset_username'] = user.username
+
+        return super().form_valid(form)

@@ -85,20 +85,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization
@@ -148,3 +135,6 @@ STRIPE_SECRET_KEY = "sk_test_51Qmpxd3ajTZOywv2p0sHgc9XYoit62cwkxG0u27bl4djpyl9g5
 STRIPE_WEBHOOK_SECRET = ""
 
 DOMAIN = "http://127.0.0.1:8000"
+
+# Email Configuration - Console (Testing)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
