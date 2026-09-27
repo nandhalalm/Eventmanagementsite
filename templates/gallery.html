@@ -3,421 +3,778 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gallery — Preview</title>
+<title>Campus Gallery — CEMS</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --ink:#161320;
-    --indigo:#4A3FBF;
-    --indigo-deep:#1A1540;
-    --coral:#FF6B54;
-    --gold:#FFC24B;
-    --paper:#FFFFFF;
-    --surface:#FFFFFF;
-    --line:#e7e4dd;
-    --muted:#6b6880;
+  :root {
+    --ink-primary: #0f172a;
+    --ink-secondary: #475569;
+    --ink-muted: #94a3b8;
+    --bg-surface: #ffffff;
+    --bg-page: #f8fafc;
+    --border-subtle: #e2e8f0;
+    --indigo: #4f46e5;
+    --indigo-deep: #1A1540;
+    --indigo-footer: #2B2470;
+    --coral: #FF5A45;
+    --coral-hover: #fa412a;
+    --gold: #FFC24B;
+    --emerald: #10B981;
   }
-  body{ font-family:'Inter', sans-serif; color:var(--ink); background:var(--paper); }
 
-  .gallery-head{ display:flex; align-items:flex-end; flex-wrap:wrap; gap:1rem; margin:2.5rem 0 2rem; }
-  .gallery-head .eyebrow{ font-family:'Space Grotesk', sans-serif; font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--coral); margin-bottom:.4rem; display:block; }
-  .gallery-head h2{ font-family:'Space Grotesk', sans-serif; font-weight:700; color:var(--ink); font-size:2rem; margin:0; }
-  .gallery-head p{ font-family:'Inter', sans-serif; color:var(--muted); margin:.4rem 0 0; max-width:42ch; }
-
-  .filmstrip{ position:relative; overflow:hidden; border-radius:16px; margin-bottom:3rem; background:var(--indigo-deep); padding:14px 0; border:1px solid var(--line); }
-  .filmstrip::before, .filmstrip::after{ content:""; position:absolute; top:0; bottom:0; width:70px; z-index:2; pointer-events:none; }
-  .filmstrip::before{ left:0; background:linear-gradient(90deg, var(--indigo-deep), transparent); }
-  .filmstrip::after{ right:0; background:linear-gradient(270deg, var(--indigo-deep), transparent); }
-  .filmstrip-track{ display:flex; gap:14px; width:max-content; animation:scrollStrip 38s linear infinite; }
-  .filmstrip:hover .filmstrip-track{ animation-play-state:paused; }
-  .filmstrip-track img{ height:150px; width:220px; object-fit:cover; border-radius:10px; flex:none; filter:saturate(0.95); transition:transform .3s ease, filter .3s ease; }
-  .filmstrip-track img:hover{ transform:scale(1.04); filter:saturate(1.1); }
-  @keyframes scrollStrip{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
-
-  .masonry{ column-count:1; column-gap:1rem; }
-  @media (min-width:576px){ .masonry{ column-count:2; } }
-  @media (min-width:768px){ .masonry{ column-count:3; } }
-  @media (min-width:992px){ .masonry{ column-count:4; } }
-
-  .masonry-item{ break-inside:avoid; margin-bottom:1rem; border-radius:14px; overflow:hidden; position:relative; cursor:zoom-in;
-    background:var(--surface); border:1px solid var(--line);
-    box-shadow:0 1px 2px rgba(0,0,0,0.25), 0 8px 20px rgba(0,0,0,0.3); transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
-  .masonry-item:hover{ transform:translateY(-4px); box-shadow:0 16px 34px rgba(0,0,0,0.45); border-color:var(--coral); }
-  .masonry-item img{ width:100%; display:block; transition:transform .4s ease; opacity:.92; }
-  .masonry-item:hover img{ transform:scale(1.05); opacity:1; }
-  .masonry-item .tag{
-    position:absolute; left:10px; bottom:10px;
-    font-family:'Space Grotesk', sans-serif; font-size:.72rem; font-weight:600; letter-spacing:.03em;
-    color:#fff; background:rgba(10,8,26,0.75); padding:.3rem .7rem; border-radius:999px;
-    backdrop-filter: blur(4px);
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: var(--ink-primary);
+    background: var(--bg-page);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
   }
-  .masonry-item .zoom-hint{ position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%;
-    background:rgba(10,8,26,0.6); color:#fff; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s ease; }
-  .masonry-item:hover .zoom-hint{ opacity:1; }
-
-  .lightbox{ position:fixed; inset:0; background:rgba(5,4,14,0.96); display:none; align-items:center; justify-content:center; z-index:2000; padding:2rem; }
-  .lightbox.open{ display:flex; }
-  .lightbox img{ max-width:90vw; max-height:85vh; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,0.7); object-fit:contain; }
-  .lightbox-close, .lightbox-nav{ position:absolute; background:rgba(255,255,255,0.08); border:1px solid var(--line); color:#fff; width:44px; height:44px;
-    border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; cursor:pointer; transition:background .18s ease; }
-  .lightbox-close:hover, .lightbox-nav:hover{ background:var(--coral); border-color:var(--coral); }
-  .lightbox-close{ top:1.5rem; right:1.5rem; }
-  .lightbox-nav.prev{ left:1.5rem; top:50%; transform:translateY(-50%); }
-  .lightbox-nav.next{ right:1.5rem; top:50%; transform:translateY(-50%); }
 
   /* ---------- Navbar ---------- */
-  .site-nav{
-      background:var(--indigo-deep) !important;
-      box-shadow:0 2px 18px rgba(26,21,64,0.18);
-      padding-top:.85rem;
-      padding-bottom:.85rem;
+  .site-nav {
+    background: var(--indigo-deep) !important;
+    box-shadow: 0 4px 20px rgba(10, 8, 30, 0.25);
+    padding-top: .85rem;
+    padding-bottom: .85rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
-  .site-nav .navbar-brand{
-      font-family:'Space Grotesk', sans-serif;
-      font-weight:700;
-      font-size:1.2rem;
-      letter-spacing:-.01em;
-      display:flex;
-      align-items:center;
-      gap:.55rem;
+  .site-nav .navbar-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -.01em;
+    display: flex;
+    align-items: center;
+    gap: .55rem;
   }
 
-  .site-nav .navbar-brand::before{
-      content:"";
-      width:9px;
-      height:9px;
-      border-radius:50%;
-      background:var(--coral);
-      box-shadow:0 0 0 4px rgba(255,90,69,0.22);
+  .site-nav .navbar-brand::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--coral);
+    box-shadow: 0 0 0 4px rgba(255, 90, 69, 0.25);
   }
 
-  .site-nav .nav-link{
-      font-family:'Inter', sans-serif;
-      font-weight:500;
-      font-size:.93rem;
-      color:rgba(255,255,255,0.78) !important;
-      position:relative;
-      margin:0 .15rem;
-      padding:.5rem .1rem !important;
+  .site-nav .nav-link {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: .92rem;
+    color: rgba(255, 255, 255, 0.78) !important;
+    position: relative;
+    margin: 0 .15rem;
+    padding: .5rem .2rem !important;
+    transition: color .2s ease;
   }
 
-  .site-nav .nav-item{
-      margin:0 .75rem;
+  .site-nav .nav-item {
+    margin: 0 .65rem;
   }
 
-  .site-nav .nav-link::after{
-      content:"";
-      position:absolute;
-      left:0;
-      bottom:.15rem;
-      width:0;
-      height:2px;
-      background:var(--coral);
-      transition:width .2s ease;
+  .site-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: .15rem;
+    width: 0;
+    height: 2px;
+    background: var(--coral);
+    transition: width .2s ease;
   }
 
-  .site-nav .nav-link:hover{
-      color:#fff !important;
+  .site-nav .nav-link:hover {
+    color: #fff !important;
   }
 
   .site-nav .nav-link:hover::after,
-  .site-nav .nav-link.active::after{
-      width:100%;
+  .site-nav .nav-link.active::after {
+    width: 100%;
   }
 
-  .site-nav .nav-link.active{
-      color:#fff !important;
+  .site-nav .nav-link.active {
+    color: #fff !important;
   }
 
-  .site-nav .nav-link.nav-cta{
-      background:var(--coral);
-      color:#fff !important;
-      border-radius:999px;
-      padding:.5rem 1.2rem !important;
-      font-weight:600;
-      box-shadow:0 6px 16px rgba(255,90,69,0.35);
-      transition:transform .18s ease, box-shadow .18s ease;
+  .site-nav .nav-link.nav-cta {
+    background: var(--coral);
+    color: #fff !important;
+    border-radius: 999px;
+    padding: .48rem 1.2rem !important;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(255, 90, 69, 0.35);
+    transition: transform .18s ease, box-shadow .18s ease;
   }
 
-  .site-nav .nav-link.nav-cta:hover{
-      transform:translateY(-1px);
-      box-shadow:0 10px 22px rgba(255,90,69,0.45);
+  .site-nav .nav-link.nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(255, 90, 69, 0.45);
   }
 
-  .site-nav .nav-link.nav-cta::after{
-      display:none;
+  .site-nav .nav-link.nav-cta::after {
+    display: none;
   }
 
-  .site-nav .nav-link.nav-logout{
-      color:var(--gold) !important;
+  .site-nav .nav-link.nav-logout {
+    color: var(--gold) !important;
   }
 
-  .site-nav .navbar-toggler{
-      border-color:rgba(255,255,255,0.35);
+  .navbar-search {
+    display: flex;
+    align-items: center;
+    margin: 0 .8rem;
   }
 
-  .site-nav .navbar-toggler-icon{
-      background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  .navbar-search input {
+    width: 170px;
+    padding: .42rem .85rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: none;
+    border-radius: 999px 0 0 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    outline: none;
+    font-size: .88rem;
+    transition: all .2s ease;
   }
 
-  .navbar-search{
-      display:flex;
-      align-items:center;
-      margin:0 1rem;
+  .navbar-search input::placeholder {
+    color: rgba(255, 255, 255, 0.55);
   }
 
-  .navbar-search input{
-      width:180px;
-      padding:.45rem .85rem;
-      border:1px solid rgba(255,255,255,0.25);
-      border-right:none;
-      border-radius:999px 0 0 999px;
-      background:rgba(255,255,255,0.08);
-      color:#fff;
-      outline:none;
-      font-family:'Inter', sans-serif;
-      font-size:.9rem;
+  .navbar-search input:focus {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: var(--coral);
   }
 
-  .navbar-search input::placeholder{
-      color:rgba(255,255,255,0.65);
+  .navbar-search button {
+    padding: .42rem .75rem;
+    border: none;
+    border-radius: 0 999px 999px 0;
+    background: var(--coral);
+    color: #fff;
+    cursor: pointer;
+    transition: background .2s ease;
   }
 
-  .navbar-search input:focus{
-      background:rgba(255,255,255,0.12);
-      border-color:var(--coral);
+  .navbar-search button:hover {
+    background: var(--coral-hover);
   }
 
-  .navbar-search button{
-      padding:.45rem .8rem;
-      border:none;
-      border-radius:0 999px 999px 0;
-      background:var(--coral);
-      color:#fff;
-      cursor:pointer;
-      transition:background .2s ease;
+  /* ---------- Gallery Header ---------- */
+  .gallery-hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 2.75rem 0 2rem;
   }
 
-  .navbar-search button:hover{
-      background:#e94d3b;
+  .gallery-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--indigo);
+    background: #eef2ff;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: .6rem;
   }
 
-  @media(max-width:991px){
-      .navbar-search{
-          margin:1rem 0;
-          width:100%;
-      }
-      .navbar-search input{
-          width:100%;
-      }
+  .gallery-hero-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 3.8vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -.03em;
+    margin: 0;
+    color: var(--ink-primary);
   }
+
+  .gallery-hero-header p {
+    font-size: .98rem;
+    color: var(--ink-secondary);
+    margin: .4rem 0 0;
+    max-width: 52ch;
+    line-height: 1.6;
+  }
+
+  /* ---------- Modern Filmstrip Marquee ---------- */
+  .filmstrip-container {
+    position: relative;
+    border-radius: 24px;
+    margin-bottom: 2.5rem;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.35), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(255, 90, 69, 0.25), transparent 40%),
+      linear-gradient(135deg, #09071b 0%, #15103a 100%);
+    padding: 18px 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 40px -10px rgba(15, 23, 42, 0.25);
+  }
+
+  .filmstrip-container::before,
+  .filmstrip-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 90px;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .filmstrip-container::before {
+    left: 0;
+    background: linear-gradient(90deg, #09071b 20%, transparent);
+  }
+
+  .filmstrip-container::after {
+    right: 0;
+    background: linear-gradient(270deg, #09071b 20%, transparent);
+  }
+
+  .filmstrip-track {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+    animation: scrollMarquee 42s linear infinite;
+  }
+
+  .filmstrip-container:hover .filmstrip-track {
+    animation-play-state: paused;
+  }
+
+  .filmstrip-thumb {
+    position: relative;
+    height: 140px;
+    width: 220px;
+    border-radius: 14px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+  }
+
+  .filmstrip-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease;
+  }
+
+  .filmstrip-thumb:hover img {
+    transform: scale(1.08);
+  }
+
+  .filmstrip-thumb-tag {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    background: rgba(15, 23, 42, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 3px 8px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  @keyframes scrollMarquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ---------- Filter Pills ---------- */
+  .gallery-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .filter-chip {
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    color: var(--ink-secondary);
+    font-size: .84rem;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .filter-chip:hover {
+    border-color: var(--indigo);
+    color: var(--indigo);
+    background: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  .filter-chip.active {
+    background: var(--indigo);
+    color: #ffffff;
+    border-color: var(--indigo);
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  }
+
+  .filter-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .74rem;
+    opacity: .85;
+  }
+
+  /* ---------- CLEAN ORDERED GRID LAYOUT (NEW) ---------- */
+  .gallery-uniform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .gallery-card {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06);
+    cursor: pointer;
+    aspect-ratio: 4 / 3;
+    transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s ease, border-color .3s ease;
+  }
+
+  .gallery-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px -6px rgba(15, 23, 42, 0.16);
+    border-color: var(--indigo);
+  }
+
+  .gallery-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .gallery-card:hover img {
+    transform: scale(1.08);
+  }
+
+  .gallery-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.3) 50%, rgba(15, 23, 42, 0.05) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 1.1rem;
+    z-index: 2;
+    transition: opacity .25s ease;
+  }
+
+  .gallery-card:hover .gallery-card-overlay {
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.96) 0%, rgba(15, 23, 42, 0.45) 55%, transparent 100%);
+  }
+
+  .overlay-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .photo-category-pill {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--gold);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .zoom-trigger-bubble {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .85rem;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: all .25s ease;
+  }
+
+  .gallery-card:hover .zoom-trigger-bubble {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .photo-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #ffffff;
+    line-height: 1.3;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ---------- Studio Lightbox ---------- */
+  .studio-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 6, 20, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2100;
+    padding: 2rem;
+  }
+
+  .studio-lightbox.open {
+    display: flex;
+  }
+
+  .lightbox-content-wrap {
+    position: relative;
+    max-width: 92vw;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .studio-lightbox img {
+    max-width: 90vw;
+    max-height: 78vh;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    object-fit: contain;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .lightbox-meta-strip {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+  }
+
+  .lightbox-caption {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .lightbox-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .84rem;
+    color: var(--gold);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .lightbox-btn-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+
+  .lightbox-btn-close:hover {
+    background: var(--coral);
+    border-color: var(--coral);
+    transform: rotate(90deg);
+  }
+
+  .lightbox-btn-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+
+  .lightbox-btn-nav:hover {
+    background: var(--indigo);
+    border-color: var(--indigo);
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  .lightbox-btn-nav.prev { left: 1.75rem; }
+  .lightbox-btn-nav.next { right: 1.75rem; }
 
   /* ---------- Full-Width Footer ---------- */
-  .site-footer{
-    position:relative;
-    width:100%;
-    margin-top:5rem;
-    overflow:hidden;
+  .site-footer {
+    position: relative;
+    width: 100%;
+    margin-top: 5.5rem;
+    overflow: hidden;
     background:
-      radial-gradient(circle at 15% 10%, rgba(255,194,75,0.25), transparent 45%),
-      radial-gradient(circle at 90% 85%, rgba(255,90,69,0.25), transparent 40%),
-      linear-gradient(135deg, var(--indigo-deep), var(--indigo));
-    color:rgba(255,255,255,0.85);
-    isolation:isolate;
+      radial-gradient(circle at 15% 10%, rgba(255, 194, 75, 0.25), transparent 45%),
+      radial-gradient(circle at 90% 85%, rgba(255, 90, 69, 0.25), transparent 40%),
+      linear-gradient(135deg, var(--indigo-deep), var(--indigo-footer));
+    color: rgba(255, 255, 255, 0.85);
+    isolation: isolate;
   }
 
-  .site-footer::before{
-    content:"";
-    position:absolute;
-    inset:0;
+  .site-footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
     background-image:
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.035) 0 2px, transparent 2px 22px);
-    z-index:-1;
+      repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 22px);
+    z-index: -1;
   }
 
-  .footer-inner{
-    max-width:1320px;
-    margin:0 auto;
-    padding:0 2.5rem;
+  .footer-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
   }
 
-  .footer-top{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:space-between;
-    gap:2.5rem;
-    padding:3.5rem 0 2.25rem;
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding: 3.5rem 0 2.25rem;
   }
 
-  .footer-brand h5{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:1.3rem;
-    color:#fff;
-    margin-bottom:.6rem;
+  .footer-brand h5 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: #fff;
+    margin-bottom: .6rem;
   }
-  .footer-brand p{
-    font-family:'Inter', sans-serif;
-    font-size:.92rem;
-    color:rgba(255,255,255,0.68);
-    max-width:32ch;
-    line-height:1.55;
+
+  .footer-brand p {
+    font-size: .92rem;
+    color: rgba(255, 255, 255, 0.68);
+    max-width: 32ch;
+    line-height: 1.55;
   }
 
   .footer-links h6,
-  .footer-social h6{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:.72rem;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--gold);
-    margin-bottom:1rem;
-  }
-  .footer-links ul{
-    list-style:none;
-    padding:0;
-    margin:0;
-    display:flex;
-    flex-direction:column;
-    gap:.6rem;
-  }
-  .footer-links a{
-    font-family:'Inter', sans-serif;
-    font-size:.9rem;
-    color:rgba(255,255,255,0.75);
-    text-decoration:none;
-    position:relative;
-    width:fit-content;
-    transition:color .18s ease;
-  }
-  .footer-links a::after{
-    content:"";
-    position:absolute;
-    left:0; bottom:-2px;
-    width:0%;
-    height:1px;
-    background:var(--coral);
-    transition:width .25s ease;
-  }
-  .footer-links a:hover{
-    color:#fff;
-  }
-  .footer-links a:hover::after{
-    width:100%;
+  .footer-social h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
   }
 
-  .footer-social{
-    text-align:center;
-    margin-right:8rem;
-  }
-  .footer-social-icons{
-    display:flex;
-    justify-content:center;
-    gap:.7rem;
-  }
-  .footer-social-icons a{
-    position:relative;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    border:1.5px solid rgba(255,255,255,0.25);
-    color:#fff;
-    background:rgba(255,255,255,0.04);
-    overflow:hidden;
-    transition:transform .3s cubic-bezier(.34,1.56,.64,1), border-color .3s ease, box-shadow .3s ease;
-  }
-  .footer-social-icons a svg{
-    position:relative;
-    z-index:1;
-    width:18px;
-    height:18px;
-    transition:transform .3s ease;
-  }
-  .footer-social-icons a::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:var(--coral);
-    transform:translateY(100%);
-    transition:transform .3s ease;
-    z-index:0;
-  }
-  .footer-social-icons a:hover{
-    transform:translateY(-5px) rotate(-6deg);
-    border-color:var(--coral);
-    box-shadow:0 10px 22px rgba(255,90,69,0.35);
-  }
-  .footer-social-icons a:hover::before{
-    transform:translateY(0%);
-  }
-  .footer-social-icons a:hover svg{
-    transform:scale(1.1);
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
   }
 
-  .footer-social-icons a[data-brand="instagram"]:hover{ border-color:#E1306C; box-shadow:0 10px 22px rgba(225,48,108,0.35);}
-  .footer-social-icons a[data-brand="instagram"]:hover::before{ background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); }
-  .footer-social-icons a[data-brand="twitter"]:hover{ border-color:#1DA1F2; box-shadow:0 10px 22px rgba(29,161,242,0.35);}
-  .footer-social-icons a[data-brand="twitter"]:hover::before{ background:#1DA1F2; }
-  .footer-social-icons a[data-brand="linkedin"]:hover{ border-color:#0A66C2; box-shadow:0 10px 22px rgba(10,102,194,0.35);}
-  .footer-social-icons a[data-brand="linkedin"]:hover::before{ background:#0A66C2; }
-  .footer-social-icons a[data-brand="youtube"]:hover{ border-color:#FF0000; box-shadow:0 10px 22px rgba(255,0,0,0.35);}
-  .footer-social-icons a[data-brand="youtube"]:hover::before{ background:#FF0000; }
-
-  /* Full-width copyright bar */
-  .footer-bottom-wrap{
-    width:100%;
-    border-top:1px solid rgba(255,255,255,0.12);
-  }
-  .footer-bottom{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:space-between;
-    gap:1rem;
-    padding-top:1.25rem;
-    padding-bottom:1.5rem;
-    font-family:'Inter', sans-serif;
-    font-size:.82rem;
-    color:rgba(255,255,255,0.6);
-  }
-  .footer-bottom .heart{
-    display:inline-block;
-    font-size:1.6rem;
-    vertical-align:middle;
-    color:var(--coral);
-    animation:beat 1.4s ease-in-out infinite;
-  }
-  @keyframes beat{
-    0%, 100%{ transform:scale(1); }
-    25%{ transform:scale(1.25); }
-    40%{ transform:scale(1); }
+  .footer-links a {
+    font-size: .9rem;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    position: relative;
+    width: fit-content;
+    transition: color .18s ease;
   }
 
-  @media (prefers-reduced-motion: reduce){
-    .footer-social-icons a,
-    .footer-social-icons a::before,
-    .footer-social-icons a svg,
-    .footer-links a::after,
-    .footer-bottom .heart{
-      transition:none;
-      animation:none;
-      transform:none;
-    }
+  .footer-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 1px;
+    background: var(--coral);
+    transition: width .25s ease;
   }
 
-  @media (max-width: 767px){
-    .footer-inner{ padding:0 1.5rem; }
-    .footer-top{ gap:2rem; }
-    .footer-social{ margin-right:0; }
-    .footer-bottom{ justify-content:center; text-align:center; }
+  .footer-links a:hover {
+    color: #fff;
+  }
+
+  .footer-links a:hover::after {
+    width: 100%;
+  }
+
+  .footer-social {
+    text-align: center;
+    margin-right: 8rem;
+  }
+
+  .footer-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: .7rem;
+  }
+
+  .footer-social-icons a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+    transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), border-color .3s ease, box-shadow .3s ease;
+  }
+
+  .footer-social-icons a svg {
+    position: relative;
+    z-index: 1;
+    width: 18px;
+    height: 18px;
+    transition: transform .3s ease;
+  }
+
+  .footer-social-icons a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--coral);
+    transform: translateY(100%);
+    transition: transform .3s ease;
+    z-index: 0;
+  }
+
+  .footer-social-icons a:hover {
+    transform: translateY(-5px) rotate(-6deg);
+    border-color: var(--coral);
+    box-shadow: 0 10px 22px rgba(255, 90, 69, 0.35);
+  }
+
+  .footer-social-icons a:hover::before {
+    transform: translateY(0%);
+  }
+
+  .footer-social-icons a:hover svg {
+    transform: scale(1.1);
+  }
+
+  .footer-social-icons a[data-brand="instagram"]:hover { border-color: #E1306C; box-shadow: 0 10px 22px rgba(225, 48, 108, 0.35); }
+  .footer-social-icons a[data-brand="instagram"]:hover::before { background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); }
+  .footer-social-icons a[data-brand="twitter"]:hover { border-color: #1DA1F2; box-shadow: 0 10px 22px rgba(29, 161, 242, 0.35); }
+  .footer-social-icons a[data-brand="twitter"]:hover::before { background: #1DA1F2; }
+  .footer-social-icons a[data-brand="linkedin"]:hover { border-color: #0A66C2; box-shadow: 0 10px 22px rgba(10, 102, 194, 0.35); }
+  .footer-social-icons a[data-brand="linkedin"]:hover::before { background: #0A66C2; }
+  .footer-social-icons a[data-brand="youtube"]:hover { border-color: #FF0000; box-shadow: 0 10px 22px rgba(255, 0, 0, 0.35); }
+  .footer-social-icons a[data-brand="youtube"]:hover::before { background: #FF0000; }
+
+  .footer-bottom-wrap {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.5rem;
+    font-size: .82rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .footer-bottom .heart {
+    display: inline-block;
+    font-size: 1.5rem;
+    vertical-align: middle;
+    color: var(--coral);
+    animation: heartBeat 1.4s ease-in-out infinite;
+  }
+
+  @keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.25); }
+    40% { transform: scale(1); }
+  }
+
+  @media (max-width: 767px) {
+    .footer-inner { padding: 0 1.5rem; }
+    .footer-top { gap: 2rem; }
+    .footer-social { margin-right: 0; }
+    .footer-bottom { justify-content: center; text-align: center; }
+    .lightbox-btn-nav { width: 40px; height: 40px; font-size: 1.2rem; }
+    .lightbox-btn-nav.prev { left: .75rem; }
+    .lightbox-btn-nav.next { right: .75rem; }
   }
 </style>
 </head>
@@ -425,141 +782,170 @@
 
 <!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg navbar-dark site-nav">
-    <div class="container">
-        <!-- Logo -->
-        <a class="navbar-brand" href="{% url 'home' %}">
-            College Event
-        </a>
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      College Event
+    </a>
 
-        <!-- Mobile Menu Button -->
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbar"
-            aria-controls="navbar"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbar"
+      aria-controls="navbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <!-- Navbar Content -->
-        <div class="collapse navbar-collapse" id="navbar">
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-                <!-- Home -->
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
-                        Home
-                    </a>
-                </li>
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'event_list' %}active{% endif %}" href="{% url 'event_list' %}">
+            Events
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">
+            Gallery
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">
+            Contact
+          </a>
+        </li>
 
-                <!-- About -->
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">
-                        About
-                    </a>
-                </li>
+        <li class="nav-item">
+          <form method="GET" action="{% url 'search_events' %}" class="navbar-search">
+            <input
+              type="text"
+              name="q"
+              placeholder="Search events..."
+              value="{{ request.GET.q|default:'' }}"
+              aria-label="Search events">
+            <button type="submit" aria-label="Search">
+              <i class="bi bi-search"></i>
+            </button>
+          </form>
+        </li>
 
-                <!-- Events -->
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'event_list' %}active{% endif %}" href="{% url 'event_list' %}">
-                        Events
-                    </a>
-                </li>
-
-                <!-- Gallery -->
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">
-                        Gallery
-                    </a>
-                </li>
-
-                <!-- Contact -->
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">
-                        Contact
-                    </a>
-                </li>
-
-                <!-- Search -->
-                <li class="nav-item">
-                    <form method="GET" action="{% url 'search_events' %}" class="navbar-search">
-                        <input
-                            type="text"
-                            name="q"
-                            placeholder="Search events..."
-                            value="{{ request.GET.q|default:'' }}"
-                            aria-label="Search events">
-                        <button type="submit" aria-label="Search">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </form>
-                </li>
-
-                <!-- Authentication -->
-                {% if user.is_authenticated %}
-                    {% if user.is_staff %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">
-                                Dashboard
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}" href="{% url 'user_dashboard' %}">
-                                Dashboard
-                            </a>
-                        </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link nav-logout" href="{% url 'logout' %}">
-                            Logout
-                        </a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">
-                            Login
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-cta" href="{% url 'register' %}">
-                            Register
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+        {% if user.is_authenticated %}
+          {% if user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">
+                Dashboard
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}" href="{% url 'user_dashboard' %}">
+                Dashboard
+              </a>
+            </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link nav-logout" href="{% url 'logout' %}">
+              Logout
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">
+              Login
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-cta" href="{% url 'register' %}">
+              Register
+            </a>
+          </li>
+        {% endif %}
+      </ul>
     </div>
+  </div>
 </nav>
 
-<!-- ================= MAIN GALLERY CONTENT ================= -->
+<!-- ================= MAIN GALLERY CONTAINER ================= -->
 <div class="container">
-  <div class="gallery-head">
+  <!-- Page Header -->
+  <div class="gallery-hero-header">
     <div>
-      <span class="eyebrow">Moments from campus — preview data</span>
-      <h2>Gallery</h2>
-      <p>Real event photos across Technical, Cultural, Sports, and Workshop events for previewing the gallery layout.</p>
+      <span class="gallery-eyebrow">
+        <i class="bi bi-camera2"></i> Campus Highlights
+      </span>
+      <h1>Event Gallery</h1>
+      <p>Immerse yourself in student life across sports arenas, hackathons, concerts, academic exhibitions, and hands-on workshops.</p>
     </div>
   </div>
 
-  <!-- Auto-scrolling filmstrip -->
-  <div class="filmstrip">
+  <!-- Auto-Scrolling Marquee Tape -->
+  <div class="filmstrip-container">
     <div class="filmstrip-track" id="filmstripTrack"></div>
   </div>
 
-  <!-- Masonry grid with lightbox -->
-  <div class="masonry" id="masonryGrid"></div>
+  <!-- Category Filter Bar -->
+  <div class="gallery-filter-bar" id="filterBar">
+    <button type="button" class="filter-chip active" data-filter="all">
+      <i class="bi bi-grid-fill"></i> All Photos <span class="filter-count" id="count-all">0</span>
+    </button>
+    <button type="button" class="filter-chip" data-filter="Technical">
+      Technical <span class="filter-count" id="count-Technical">0</span>
+    </button>
+    <button type="button" class="filter-chip" data-filter="Cultural">
+      Cultural <span class="filter-count" id="count-Cultural">0</span>
+    </button>
+    <button type="button" class="filter-chip" data-filter="Sports">
+      Sports <span class="filter-count" id="count-Sports">0</span>
+    </button>
+    <button type="button" class="filter-chip" data-filter="Festive">
+      Festive <span class="filter-count" id="count-Festive">0</span>
+    </button>
+    <button type="button" class="filter-chip" data-filter="Academic">
+      Academic <span class="filter-count" id="count-Academic">0</span>
+    </button>
+    <button type="button" class="filter-chip" data-filter="Workshop">
+      Workshop <span class="filter-count" id="count-Workshop">0</span>
+    </button>
+  </div>
 
-  <div class="lightbox" id="lightbox">
-    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-    <button class="lightbox-nav prev" onclick="stepLightbox(-1)">&#8249;</button>
-    <img id="lightbox-img" src="" alt="">
-    <button class="lightbox-nav next" onclick="stepLightbox(1)">&#8250;</button>
+  <!-- Clean, Symmetrical Card Grid -->
+  <div class="gallery-uniform-grid" id="masonryGrid"></div>
+
+  <!-- Studio Lightbox Modal -->
+  <div class="studio-lightbox" id="lightbox">
+    <button class="lightbox-btn-close" onclick="closeLightbox()" title="Close (Esc)">
+      <i class="bi bi-x-lg"></i>
+    </button>
+    <button class="lightbox-btn-nav prev" onclick="stepLightbox(-1)" title="Previous (Left Arrow)">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+
+    <div class="lightbox-content-wrap">
+      <img id="lightbox-img" src="" alt="Event preview">
+      <div class="lightbox-meta-strip">
+        <span class="lightbox-caption" id="lightbox-caption">Photo Title</span>
+        <span class="lightbox-counter" id="lightbox-counter">1 / 24</span>
+      </div>
+    </div>
+
+    <button class="lightbox-btn-nav next" onclick="stepLightbox(1)" title="Next (Right Arrow)">
+      <i class="bi bi-chevron-right"></i>
+    </button>
   </div>
 </div>
 
-<!-- ================= BRAND FOOTER ================= -->
+<!-- ================= FULL BRAND FOOTER ================= -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-top">
@@ -606,13 +992,14 @@
   </div>
 </footer>
 
-<!-- Bootstrap JS -->
+<!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- Gallery Data & Dynamic Filtering Logic -->
 <script>
   const events = [
     { name: 'Sports Day', category: 'Sports', img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&auto=format&fit=crop' },
-    { name: 'Football Match', category: 'Sports', img:'https://images.unsplash.com/photo-1434648957308-5e6a859697e8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Zm9vdGJhbGx8ZW58MHx8MHx8fDA%3D'},
+    { name: 'Football Match', category: 'Sports', img: 'https://images.unsplash.com/photo-1434648957308-5e6a859697e8?w=600&auto=format&fit=crop&q=60' },
     { name: 'Cricket Match', category: 'Sports', img: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&auto=format&fit=crop' },
     { name: 'Basketball Finals', category: 'Sports', img: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop' },
     { name: 'Technical Coding Contest', category: 'Technical', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop' },
@@ -625,7 +1012,7 @@
     { name: 'Drama & Theatre', category: 'Cultural', img: 'https://images.unsplash.com/photo-1469488865564-c2de10f69f96?w=600&auto=format&fit=crop' },
     { name: 'Annual Day Celebration', category: 'Festive', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&auto=format&fit=crop' },
     { name: 'Freshers Party', category: 'Festive', img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&auto=format&fit=crop' },
-    { name: 'Diwali Celebration', category: 'Festive', img: 'https://images.unsplash.com/photo-1666352571312-db1557140bc4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGRlZXBhd2FsaXxlbnwwfHwwfHx8MA%3D%3D' },
+    { name: 'Diwali Celebration', category: 'Festive', img: 'https://images.unsplash.com/photo-1666352571312-db1557140bc4?w=600&auto=format&fit=crop&q=60' },
     { name: 'Farewell Event', category: 'Festive', img: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&auto=format&fit=crop' },
     { name: 'Term Paper Presentation', category: 'Academic', img: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&auto=format&fit=crop' },
     { name: 'Guest Lecture', category: 'Academic', img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop' },
@@ -634,65 +1021,128 @@
     { name: 'Photography Workshop', category: 'Workshop', img: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=600&auto=format&fit=crop' },
     { name: 'Entrepreneurship Workshop', category: 'Workshop', img: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&auto=format&fit=crop' },
     { name: 'AI/ML Bootcamp', category: 'Workshop', img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop' },
-    { name: 'Public Speaking Workshop', category: 'Workshop', img: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BlYWtlciUyMG9uJTIwc3RhZ2V8ZW58MHx8MHx8fDA%3D' },
+    { name: 'Public Speaking Workshop', category: 'Workshop', img: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=600&auto=format&fit=crop&q=60' }
   ];
 
-  const photos = events.map(ev => ({
-    url: ev.img,
-    strip: ev.img,
-    tag: `${ev.category} • ${ev.name}`
+  const photos = events.map((ev, index) => ({
+    id: index,
+    name: ev.name,
+    category: ev.category,
+    url: ev.img
   }));
 
   const track = document.getElementById('filmstripTrack');
   const grid = document.getElementById('masonryGrid');
-
-  function stripImg(p){
-    const img = document.createElement('img');
-    img.src = p.strip;
-    img.alt = p.tag;
-    return img;
-  }
-
-  // Filmstrip: render photos twice back-to-back for a seamless auto-scroll loop
-  [...photos, ...photos].forEach(p => track.appendChild(stripImg(p)));
-
-  // Masonry grid
-  photos.forEach((p, index) => {
-    const item = document.createElement('div');
-    item.className = 'masonry-item';
-    item.onclick = () => openLightbox(index);
-    item.innerHTML = `
-      <img src="${p.url}" alt="${p.tag}">
-      <span class="tag">${p.tag}</span>
-      <span class="zoom-hint">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
-      </span>`;
-    grid.appendChild(item);
-  });
-
-  const lightboxImages = photos.map(p => p.url);
+  let activeFilter = 'all';
+  let filteredPhotos = [...photos];
   let currentIndex = 0;
 
-  function openLightbox(index){
-    currentIndex = index;
-    document.getElementById('lightbox-img').src = lightboxImages[currentIndex];
-    document.getElementById('lightbox').classList.add('open');
-  }
-  function closeLightbox(){
-    document.getElementById('lightbox').classList.remove('open');
-  }
-  function stepLightbox(delta){
-    currentIndex = (currentIndex + delta + lightboxImages.length) % lightboxImages.length;
-    document.getElementById('lightbox-img').src = lightboxImages[currentIndex];
-  }
-  document.addEventListener('keydown', function(e){
-    if(!document.getElementById('lightbox').classList.contains('open')) return;
-    if(e.key === 'Escape') closeLightbox();
-    if(e.key === 'ArrowRight') stepLightbox(1);
-    if(e.key === 'ArrowLeft') stepLightbox(-1);
+  // 1. Build Filmstrip (duped for seamless loop)
+  [...photos, ...photos].forEach((p) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'filmstrip-thumb';
+    thumb.onclick = () => openLightbox(p.id);
+    thumb.innerHTML = `
+      <img src="${p.url}" alt="${p.name}" loading="lazy">
+      <div class="filmstrip-thumb-tag">${p.category} &bull; ${p.name}</div>
+    `;
+    track.appendChild(thumb);
   });
-  document.getElementById('lightbox').addEventListener('click', function(e){
-    if(e.target === this) closeLightbox();
+
+  // 2. Count statistics for filter buttons
+  document.getElementById('count-all').textContent = photos.length;
+  ['Technical', 'Cultural', 'Sports', 'Festive', 'Academic', 'Workshop'].forEach(cat => {
+    const countEl = document.getElementById(`count-${cat}`);
+    if (countEl) {
+      countEl.textContent = photos.filter(p => p.category === cat).length;
+    }
+  });
+
+  // 3. Render Neat Uniform Cards
+  function renderGrid() {
+    grid.innerHTML = '';
+    filteredPhotos = activeFilter === 'all' 
+      ? [...photos] 
+      : photos.filter(p => p.category === activeFilter);
+
+    filteredPhotos.forEach((p) => {
+      const card = document.createElement('div');
+      card.className = 'gallery-card';
+      card.onclick = () => openLightbox(p.id);
+      card.innerHTML = `
+        <img src="${p.url}" alt="${p.name}" loading="lazy">
+        <div class="gallery-card-overlay">
+          <div class="overlay-top">
+            <span class="photo-category-pill">${p.category}</span>
+            <div class="zoom-trigger-bubble">
+              <i class="bi bi-arrows-angle-expand"></i>
+            </div>
+          </div>
+          <div>
+            <h4 class="photo-title">${p.name}</h4>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // 4. Handle Filter Clicks
+  document.querySelectorAll('.filter-chip').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      activeFilter = this.getAttribute('data-filter');
+      renderGrid();
+    });
+  });
+
+  // Initial render
+  renderGrid();
+
+  // 5. Studio Lightbox Logic
+  const lightboxModal = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxCounter = document.getElementById('lightbox-counter');
+
+  function openLightbox(photoId) {
+    const targetIdx = filteredPhotos.findIndex(p => p.id === photoId);
+    currentIndex = targetIdx !== -1 ? targetIdx : 0;
+    updateLightbox();
+    lightboxModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightboxModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function updateLightbox() {
+    const currentPhoto = filteredPhotos[currentIndex];
+    if (!currentPhoto) return;
+    lightboxImg.src = currentPhoto.url;
+    lightboxCaption.textContent = `${currentPhoto.category} — ${currentPhoto.name}`;
+    lightboxCounter.textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
+  }
+
+  function stepLightbox(direction) {
+    if (filteredPhotos.length === 0) return;
+    currentIndex = (currentIndex + direction + filteredPhotos.length) % filteredPhotos.length;
+    updateLightbox();
+  }
+
+  // Keyboard navigation & backdrop click
+  document.addEventListener('keydown', (e) => {
+    if (!lightboxModal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') stepLightbox(1);
+    if (e.key === 'ArrowLeft') stepLightbox(-1);
+  });
+
+  lightboxModal.addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
   });
 </script>
 

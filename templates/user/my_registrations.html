@@ -127,11 +127,41 @@
             background: #fef2f2;
         }
 
+        /* ================= DJANGO MESSAGES ================= */
+        .messages-container {
+            max-width: 1180px;
+            margin: 1.5rem auto 0;
+            padding: 0 24px;
+        }
+
+        .alert-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .alert-success {
+            background: var(--emerald-bg);
+            color: #059669;
+            border: 1px solid var(--emerald-border);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* ================= PAGE HEADER ================= */
         .page-header-wrap {
             max-width: 1180px;
             margin: 0 auto;
-            padding: 2.5rem 24px 1.5rem;
+            padding: 1.5rem 24px 1.5rem;
         }
 
         .page-title {
@@ -416,6 +446,18 @@
     </div>
 </nav>
 
+<!-- DJANGO MESSAGES BLOCK -->
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+        <div class="alert-box {% if message.tags %}alert-{{ message.tags }}{% else %}alert-success{% endif %}">
+            <i class="bi bi-info-circle-fill"></i>
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <!-- Page Header -->
 <div class="page-header-wrap">
     <h1 class="page-title">Registration Desk</h1>
@@ -464,7 +506,7 @@
                     </a>
 
                     {% if reg.can_cancel %}
-                    <a class="action-btn cancel" href="{% url 'cancel_registration' reg.id %}" onclick="return confirm('Cancel this registration?');">
+                    <a class="action-btn cancel" href="{% url 'cancel_registration' reg.id %}" onclick="if(confirm('Are you sure you want to cancel this ticket?')) { alert('Your amount will be credited to you in 5 working days.'); return true; } else { return false; }">
                         <i class="bi bi-x-circle"></i> Cancel
                     </a>
                     {% else %}
@@ -516,7 +558,7 @@
                     </a>
 
                     {% if reg.can_cancel %}
-                    <a class="action-btn cancel" href="{% url 'cancel_registration' reg.id %}" onclick="return confirm('Cancel this registration?');">
+                    <a class="action-btn cancel" href="{% url 'cancel_registration' reg.id %}" onclick="if(confirm('Are you sure you want to cancel this ticket?')) { alert('Your amount will be credited to you in 5 working days.'); return true; } else { return false; }">
                         <i class="bi bi-x-circle"></i> Cancel
                     </a>
                     {% else %}
