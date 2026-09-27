@@ -30,19 +30,29 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
+from .models import Event, Gallery
+
 
 # HOME
 
 
 def home(request):
-    events = Event.objects.filter(status=True).order_by('event_date')[:6]
+    # Get today's date
+    today = timezone.now().date()
+
+    # Filter out finished/sold-out events and sort by newest added (-id)
+    events = Event.objects.filter(
+        status=True,                 # Must be marked as active
+        available_seats__gt=0,       # Must have seats remaining (greater than 0)
+        last_date__gte=today         # Registration date must be today or in the future
+    ).order_by('-id')[:6]            # '-id' puts the most recently added events first
+
     gallery = Gallery.objects.all()[:6]
 
     return render(request, 'home.html', {
         'events': events,
         'gallery': gallery,
     })
-
 
 
 # ABOUT
