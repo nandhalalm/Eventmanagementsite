@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 # Event Table
 class Event(models.Model):
     title = models.CharField(max_length=200)
@@ -13,10 +12,19 @@ class Event(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to='events/')
     total_seats = models.IntegerField()
-    available_seats = models.IntegerField()
+    
+    # removed: available_seats = models.IntegerField()
+    
     registration_fee = models.DecimalField(max_digits=8, decimal_places=2)
     brochure = models.FileField(upload_to='brochures/', blank=True, null=True)
     status = models.BooleanField(default=True)
+
+    @property
+    def available_seats(self):
+        # Dynamically counts registrations linked to this event
+        booked_seats = self.registration_set.count() 
+        seats_left = self.total_seats - booked_seats
+        return seats_left if seats_left > 0 else 0
 
     def __str__(self):
         return self.title
@@ -40,12 +48,9 @@ class Registration(models.Model):
     email = models.EmailField()
 
     payment_status = models.CharField(max_length=20, choices=STATUS, default='Pending')
-    registration_date = models.DateTimeField(auto_now_add=True)
-
     
     # NEW
     attendance = models.BooleanField(default=False)
-
     registration_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -102,4 +107,3 @@ class Gallery(models.Model):
 
     def __str__(self):
         return self.title
-

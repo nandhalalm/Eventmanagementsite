@@ -7,8 +7,6 @@ from django.contrib.auth.models import User
 from django.db.models import Q, F
 from django.db import transaction
 
-from .models import Event
-
 from .models import Event, Registration, Payment, Token, Contact, Gallery
 from .forms import RegisterForm, EventRegistrationForm, ContactForm
 
@@ -23,27 +21,22 @@ from django.conf import settings
 from datetime import timedelta
 from django.utils import timezone
 
-#PASSWORD RESET
+# PASSWORD RESET
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetView
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
-from .models import Event, Gallery
-
 
 # HOME
-
-
 def home(request):
     # Get today's date
     today = timezone.now().date()
 
     # Filter out finished/sold-out events and sort by newest added (-id)
     events = Event.objects.filter(
-        status=True,                 # Must be marked as active
-        available_seats__gt=0,       # Must have seats remaining (greater than 0)
+        status=True,                 # Must be marked as active      
         last_date__gte=today         # Registration date must be today or in the future
     ).order_by('-id')[:6]            # '-id' puts the most recently added events first
 
@@ -56,39 +49,26 @@ def home(request):
 
 
 # ABOUT
-
-
 def about(request):
     return render(request, 'about.html')
 
 
-
 # GALLERY
-
-
 def gallery(request):
     gallery = Gallery.objects.all()
-
     return render(request, 'gallery.html', {
         'gallery': gallery
     })
 
 
-
 # CONTACT
-
-
 def contact(request):
-
     if request.method == "POST":
-
         form = ContactForm(request.POST)
-
         if form.is_valid():
             form.save()
             messages.success(request, "Message sent successfully.")
             return redirect('contact')
-
     else:
         form = ContactForm()
 
@@ -97,30 +77,21 @@ def contact(request):
     })
 
 
-
 # REGISTER
-
-
 def register(request):
-
     if request.user.is_authenticated:
         if request.user.is_staff:
             return redirect('admin_dashboard')
         return redirect('user_dashboard')
 
     if request.method == "POST":
-
         form = RegisterForm(request.POST)
-
         if form.is_valid():
-
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-
             messages.success(request, "Account created successfully.")
             return redirect('login')
-
     else:
         form = RegisterForm()
 
@@ -129,9 +100,7 @@ def register(request):
     })
 
 
-
 # LOGIN
-
 def user_login(request):
     if request.user.is_authenticated:
         if request.user.is_staff:
@@ -179,32 +148,20 @@ def user_login(request):
     return render(request, "login.html")
 
 
-
 # LOGOUT
-
-
 @login_required(login_url='login')
 def user_logout(request):
-
     logout(request)
-
     messages.success(request, "Logged out successfully.")
-
     return redirect("home")
 
 
 # USER DASHBOARD
-
-
 @login_required(login_url='login')
 def user_dashboard(request):
-
     total_events = Event.objects.filter(status=True).count()
-
     registrations = Registration.objects.filter(user=request.user)
-
     total_registered = registrations.count()
-
     total_paid = registrations.filter(payment_status='Paid').count()
 
     context = {
@@ -217,18 +174,12 @@ def user_dashboard(request):
     return render(request, 'user/dashboard.html', context)
 
 
-
 # EVENT LIST
-# EVENT LIST new
-
 def event_list(request):
-
     events = Event.objects.filter(status=True).order_by('event_date')
-
     today = timezone.now().date()
 
     for event in events:
-
         if not event.status:
             event.is_open = False
             event.status_label = 'Closed'
@@ -247,14 +198,9 @@ def event_list(request):
     })
 
 
-
 # EVENT DETAILS
-
-
 def event_detail(request, id):
-
     event = get_object_or_404(Event, id=id)
-
     already_registered = False
 
     if request.user.is_authenticated:
@@ -271,19 +217,13 @@ def event_detail(request, id):
     return render(request, 'user/event_detail.html', context)
 
 
-
 # REGISTER EVENT
-
-
 @login_required(login_url='login')
 def register_event(request, id):
-
     event = get_object_or_404(Event, id=id)
 
     if Registration.objects.filter(user=request.user, event=event).exists():
-
         messages.warning(request, "You have already registered for this event.")
-
         return redirect('my_registrations')
 
     # Block registration if the event is closed, sold out, or past its deadline
@@ -300,13 +240,10 @@ def register_event(request, id):
         return redirect('event_detail', id=event.id)
 
     if request.method == "POST":
-
         form = EventRegistrationForm(request.POST)
 
         if form.is_valid():
-
             with transaction.atomic():
-
                 # lock the row so two people can't grab the last seat at once
                 locked_event = Event.objects.select_for_update().get(id=event.id)
 
@@ -319,22 +256,16 @@ def register_event(request, id):
                     return redirect('event_detail', id=event.id)
 
                 registration = form.save(commit=False)
-
                 registration.user = request.user
                 registration.event = locked_event
-
                 registration.save()
 
-                Event.objects.filter(id=locked_event.id).update(
-                    available_seats=F('available_seats') - 1
-                )
+                # Notice: We no longer manually update available_seats here 
+                # because saving the registration automatically recalculates the property.
 
             messages.success(request, "Registration Successful.")
-
             return redirect('my_registrations')
-
     else:
-
         form = EventRegistrationForm(initial={
             'full_name': request.user.get_full_name(),
             'email': request.user.email,
@@ -348,13 +279,9 @@ def register_event(request, id):
     return render(request, 'user/register_event.html', context)
 
 
-
-# MY REGISTRATIONS new
 # MY REGISTRATIONS
-
 @login_required(login_url='login')
 def my_registrations(request):
-
     registrations = Registration.objects.filter(
         user=request.user
     ).order_by('-registration_date')
@@ -370,10 +297,8 @@ def my_registrations(request):
 
 
 # CANCEL REGISTRATION
-
 @login_required(login_url='login')
 def cancel_registration(request, id):
-
     registration = get_object_or_404(
         Registration,
         id=id,
@@ -381,51 +306,32 @@ def cancel_registration(request, id):
     )
 
     if timezone.now() - registration.registration_date > timedelta(days=7):
-
         messages.error(request, "Cancellation window has closed. Registrations can only be cancelled within 1 week.")
-
         return redirect('my_registrations')
 
     with transaction.atomic():
-
-        # only give the seat back if the event's registration deadline hasn't passed
-        if registration.event.last_date >= timezone.now().date():
-            Event.objects.filter(id=registration.event_id).update(
-                available_seats=F('available_seats') + 1
-            )
-
+        # Deleting the registration will now automatically increase the available_seats property.
         registration.delete()
 
     messages.success(request, "Registration cancelled successfully.")
-
     return redirect('my_registrations')
 
 
-
 # PROFILE
-
-
 @login_required(login_url='login')
 def profile(request):
+    return render(request, 'user/profile.html')
 
-    return render(request,
-                  'user/profile.html')
 
 @login_required(login_url='login')
 def edit_profile(request):
-
     user = request.user
-
     if request.method == "POST":
-
         user.first_name = request.POST.get('first_name')
         user.last_name = request.POST.get('last_name')
         user.email = request.POST.get('email')
-
         user.save()
-
         messages.success(request, "Profile Updated Successfully")
-
         return redirect('profile')
 
     return render(request, 'user/edit_profile.html', {
@@ -434,11 +340,8 @@ def edit_profile(request):
 
 
 # ADMIN DASHBOARD
-
-
 @staff_member_required(login_url='login')
 def admin_dashboard(request):
-
     total_events = Event.objects.count()
     total_students = User.objects.filter(is_staff=False).count()
     total_registrations = Registration.objects.count()
@@ -457,17 +360,11 @@ def admin_dashboard(request):
     return render(request, 'admin/dashboard.html', context)
 
 
-
 # CREATE EVENT
-
-
 @staff_member_required(login_url='login')
 def create_event(request):
-
     if request.method == "POST":
-
         Event.objects.create(
-
             title=request.POST.get('title'),
             category=request.POST.get('category'),
             venue=request.POST.get('venue'),
@@ -477,29 +374,21 @@ def create_event(request):
             description=request.POST.get('description'),
             image=request.FILES.get('image'),
             total_seats=request.POST.get('total_seats'),
-            available_seats=request.POST.get('total_seats'),
             registration_fee=request.POST.get('registration_fee'),
             brochure=request.FILES.get('brochure'),
             status=True
-
+            # available_seats is removed since it's a model property now
         )
-
         messages.success(request, "Event Added Successfully")
-
         return redirect('admin_dashboard')
 
     return render(request, 'admin/create_event.html')
 
 
-
 # MANAGE EVENTS
-
-
 @staff_member_required(login_url='login')
 def manage_events(request):
-
     events = Event.objects.all().order_by('-event_date')
-
     return render(request,
                   'admin/manage_events.html',
                   {
@@ -507,17 +396,12 @@ def manage_events(request):
                   })
 
 
-
 # EDIT EVENT
-
-
 @staff_member_required(login_url='login')
 def edit_event(request, id):
-
     event = get_object_or_404(Event, id=id)
 
     if request.method == "POST":
-
         event.title = request.POST.get('title')
         event.category = request.POST.get('category')
         event.venue = request.POST.get('venue')
@@ -526,7 +410,6 @@ def edit_event(request, id):
         event.last_date = request.POST.get('last_date')
         event.description = request.POST.get('description')
         event.total_seats = request.POST.get('total_seats')
-        event.available_seats = request.POST.get('available_seats')
         event.registration_fee = request.POST.get('registration_fee')
 
         if request.FILES.get('image'):
@@ -538,7 +421,6 @@ def edit_event(request, id):
         event.save()
 
         messages.success(request, "Event Updated Successfully")
-
         return redirect('manage_events')
 
     return render(request,
@@ -548,27 +430,18 @@ def edit_event(request, id):
                   })
 
 
-
 # DELETE EVENT
-
-
 @staff_member_required(login_url='login')
 def delete_event(request, id):
-
     event = get_object_or_404(Event, id=id)
-
     event.delete()
-
     messages.success(request, "Event Deleted Successfully")
-
     return redirect('manage_events')
 
 
 # VIEW REGISTRATIONS + SEARCH
-
 @staff_member_required(login_url='login')
 def view_registrations(request):
-
     query = request.GET.get('q', '').strip()
 
     registrations = Registration.objects.select_related(
@@ -599,11 +472,8 @@ def view_registrations(request):
 
 
 # VIEW PAYMENTS
-
-
 @staff_member_required(login_url='login')
 def view_payments(request):
-
     payments = Payment.objects.select_related(
         'registration'
     ).all()
@@ -616,19 +486,14 @@ def view_payments(request):
 
 
 # ATTENDANCE
-# ATTENDANCE new
-
 @login_required(login_url='login')
 def attendance(request):
-
     if not request.user.is_staff:
         return redirect('home')
 
     # MARK / UNMARK ATTENDANCE
     if request.method == 'POST':
-
         registration_id = request.POST.get('registration_id')
-
         registration = get_object_or_404(
             Registration,
             id=registration_id
@@ -676,7 +541,6 @@ def attendance(request):
     ).all()
 
     if query:
-
         registrations = registrations.filter(
             Q(full_name__icontains=query) |
             Q(user__username__icontains=query) |
@@ -690,7 +554,6 @@ def attendance(request):
         registrations = registrations.filter(event_id=selected_event_id)
 
     # Ordering by event first is required for the {% regroup %} tag
-    # in the template to group rows correctly.
     registrations = registrations.order_by('event__title', 'full_name')
 
     selected_event_name = ''
@@ -711,12 +574,11 @@ def attendance(request):
             'selected_event_name': selected_event_name,
         }
     )
+
+
 # REPORTS
-
-
 @staff_member_required(login_url='login')
 def reports(request):
-
     return render(request,
                   'admin/reports.html',
                   {
@@ -728,23 +590,18 @@ def reports(request):
 
 
 # MESSAGES
-
-
 @staff_member_required(login_url='login')
 def messages_page(request):
-
     contacts = Contact.objects.all().order_by('-created_at')
-
     return render(request,
                   'admin/messages.html',
                   {
                       'contacts': contacts
                   })
 
-@login_required(login_url='login')
+
 @login_required(login_url='login')
 def payment(request, id):
-
     registration = get_object_or_404(
         Registration,
         id=id,
@@ -752,51 +609,34 @@ def payment(request, id):
     )
 
     checkout_session = stripe.checkout.Session.create(
-
         payment_method_types=['card'],
-
         line_items=[
-
             {
-
                 'price_data': {
-
                     'currency': 'inr',
-
                     'unit_amount': int(
                         registration.event.registration_fee * 100
                     ),
-
                     'product_data': {
-
                         'name': registration.event.title,
-
                     },
-
                 },
-
                 'quantity': 1,
-
             },
-
         ],
-
         mode='payment',
-
         success_url=settings.DOMAIN +
         '/payment-success/' +
         str(registration.id),
-
         cancel_url=settings.DOMAIN +
         '/payment-cancel/',
-
     )
 
     return redirect(checkout_session.url)
 
+
 @login_required(login_url='login')
 def payment_success(request, id):
-
     registration = get_object_or_404(
         Registration,
         id=id,
@@ -808,53 +648,41 @@ def payment_success(request, id):
     ).exists():
 
         Payment.objects.create(
-
             registration=registration,
-
             stripe_payment_id="Stripe",
-
             amount=registration.event.registration_fee,
-
             payment_status="Paid"
-
         )
 
         registration.payment_status = "Paid"
-
         registration.save()
 
         Token.objects.create(
-
             registration=registration,
-
             token_number="EVT" +
             ''.join(random.choices(
                 string.ascii_uppercase +
                 string.digits,
                 k=6
             )),
-
             seat_number="S-" +
             str(random.randint(
                 1,
                 registration.event.total_seats
             ))
-
         )
 
     return redirect("ticket", registration.id)
 
+
 @login_required(login_url='login')
 def payment_cancel(request):
-
     messages.error(request, "Payment Cancelled")
-
     return redirect("my_registrations")
 
 
 @login_required(login_url='login')
 def ticket(request, id):
-
     registration = get_object_or_404(
         Registration,
         id=id,
@@ -879,13 +707,14 @@ def ticket(request, id):
         }
     )
 
+
 #payment
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 # user search
 def search_events(request):
     query = request.GET.get('q', '').strip()
-
     events = Event.objects.filter(status=True)
 
     if query:
@@ -903,8 +732,8 @@ def search_events(request):
 
     return render(request, 'search_results.html', context)
 
-# PASSWORD RESET INTO  A PAGE
 
+# PASSWORD RESET INTO A PAGE
 class LocalPasswordResetView(PasswordResetView):
     template_name = 'password_reset_form.html'
 

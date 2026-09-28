@@ -626,6 +626,17 @@
               <span class="spec-icon"><i class="bi bi-geo-alt-fill text-danger"></i></span>
               <span class="spec-text" title="{{ event.venue }}">{{ event.venue }}</span>
             </div>
+            <!-- Seat Availability matching the Home Page -->
+            <div class="spec-item">
+              <span class="spec-icon"><i class="bi bi-people-fill text-primary"></i></span>
+              <span class="spec-text">
+                {% if event.available_seats > 0 %}
+                  <strong>{{ event.available_seats }}</strong> / {{ event.total_seats }} seats left
+                {% else %}
+                  <span class="text-danger fw-bold">Sold Out</span>
+                {% endif %}
+              </span>
+            </div>
           </div>
 
           <!-- Mini Countdown Timer -->
